@@ -2,7 +2,7 @@
 ### Names 
 Hayden Lau - hpl5
 Jack Ellwood - jce22
-Jaosn Qiu - jq39
+Jason Qiu - jq39
 
 ## Team Roles and Responsibilities
 
