@@ -1,10 +1,11 @@
 # Simulation Design Plan
-### Team Number
-### Names
+### 7
+### Jack Ellwood (jce22), 
 
 
 ## Design Overview
 
+Our main classes will include a `Simulation`, `Cell`, `Grid`, and `Neighbor` classes.
 
 ## Design Details
 
