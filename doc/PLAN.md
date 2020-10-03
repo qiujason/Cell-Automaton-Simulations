@@ -74,9 +74,13 @@ made from [a tool that generates UML from existing code](http://staruml.io/).
 
 Here is our amazing UI:
 
-![This is cool, too bad you can't see it](29-sketched-ui-wireframe.jpg "An alternate design")
+![sketch image](sketch_wireframe.jpg "UI Design")
 
-taken from [Brilliant Examples of Sketched UI Wireframes and Mock-Ups](https://onextrapixel.com/40-brilliant-examples-of-sketched-ui-wireframes-and-mock-ups/).
+Users can load in a file by clicking on Choose File button and picking their CSV file from the File
+Dialog that pops up. The user can also click the top animation buttons to step through. In order from
+left to right, the button's functionalities are as follows: reset to step 1, go back 1 step and pause, play
+animation, pause, and go forward 1 step and pause.
+
 
 
 ## Team Responsibilities
