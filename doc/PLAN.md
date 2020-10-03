@@ -1,10 +1,11 @@
 # Simulation Design Plan
-### Team Number
-### Names
+### 7
+### Jack Ellwood (jce22), 
 
 
 ## Design Overview
 
+Our main classes will include a `Simulation`, `Cell`, `Grid`, and `Neighbor` classes.
 
 ## Design Details
 
@@ -18,6 +19,11 @@ made from [a tool that generates UML from existing code](http://staruml.io/).
 ## Design Considerations
 
 * How the neighborhoods interact with other neighborhoods and how the neighborhoods' cells interact with each other.
+
+ Probably one of the major challenges we'll face as the project progresses will be dealing with different
+ sets of rules for different games and different types of neighborhoods.  While the basic implementation
+ of the GUI and Cell objects will remain the same, the actual interactions could be very different
+ from simulation to simulation.
 
 
 ## User Interface
