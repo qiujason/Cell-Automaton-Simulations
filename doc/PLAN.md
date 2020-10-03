@@ -17,6 +17,8 @@ made from [a tool that generates UML from existing code](http://staruml.io/).
 
 ## Design Considerations
 
+* How the neighborhoods interact with other neighborhoods and how the neighborhoods' cells interact with each other.
+
 
 ## User Interface
 
@@ -29,8 +31,13 @@ taken from [Brilliant Examples of Sketched UI Wireframes and Mock-Ups](https://o
 
 ## Team Responsibilities
 
- * Team Member #1
-
- * Team Member #2
-
- * Team Member #3
+ * Team Member #1 - Hayden Lau
+    * CSV file handling (Configuration)
+    * Implementation of 2D grid of rectangular cells
+    
+ * Team Member #2 - Jack Ellwood
+    * Display of the current state of the 2D grid of cells
+    * Overall Visualization
+     
+ * Team Member #3 - Jason Qiu
+    * Implement Rules for the Game of Life
