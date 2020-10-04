@@ -25,11 +25,12 @@ public class Simulation extends Application{
 
 ```java
 public class Cell {
-  private String myValue; // Could store some basic info about the cell
+  private int myValue; // store some basic info about the cell
   private Neighborhood myNeighbors;
   
   public Cell(int value, Grid grid); // Might need a grid to initialize its neighbors
   public void updateCell(); // Use information about my neighbors to update myself
+  public int getMyValue();
 
 }
 ```
@@ -48,18 +49,40 @@ public class Neighborhood {
 
   public Neighborhood(Cell cell, Grid grid); // Builds a neighborhood for a given cell
   public updateCells(Grid grid); // Performs calculations for a given neighborhood and updates a grid
+  public numberOfLiveCells();
 
 }
 ```
 
 ## Design Details
 
-Here is a graphical look at my design:
 
-![This is cool, too bad you can't see it](online-shopping-uml-example.png "An initial UI")
+ * Live cell with fewer than two live neighbors dies.
+ ```java
+    if(getMyValue()==1){
+      if(myNeighbors.numberOfLiveCells() < 2){
+        updateCell();
+      }   
+    }
+ ```
 
-made from [a tool that generates UML from existing code](http://staruml.io/).
+* Dead cell with three live neighbors becomes a live cell.
+ ```java
+    if(getMyValue()==0){
+          if(myNeighbors.numberOfLiveCells() == 3){
+            updateCell();
+          }   
+        }
+ ```
 
+* Live cell with more than three live neighbors dies.
+ ```java
+    if(getMyValue()==1){
+          if(myNeighbors.numberOfLiveCells() > 2){
+            updateCell();
+          }   
+        }
+ ```
 
 ## Design Considerations
 
