@@ -39,13 +39,13 @@ public class Cell {
 public class Grid {
   private List<List<Cell>> myCells;
 
-  public Grid(String cellFile); // This constructor should take in a path to the csv file, doesn't necessarily have to be a String
+  public Grid(Path cellFile); // This constructor should take in a path to the csv file, doesn't necessarily have to be a String
 }
 ```
 
 ```java
 public class Neighborhood {
-  private List<List<Cell>> myCells;
+  private Cell[][] myCells;
 
   public Neighborhood(Cell cell, Grid grid); // Builds a neighborhood for a given cell
   public updateCells(Grid grid); // Performs calculations for a given neighborhood and updates a grid
@@ -86,12 +86,16 @@ public class Neighborhood {
 
 ## Design Considerations
 
-* How the neighborhoods interact with other neighborhoods and how the neighborhoods' cells interact with each other.
+   * How the neighborhoods interact with other neighborhoods and how the neighborhoods' cells interact with each other.
 
- Probably one of the major challenges we'll face as the project progresses will be dealing with different
- sets of rules for different games and different types of neighborhoods.  While the basic implementation
- of the GUI and Cell objects will remain the same, the actual interactions could be very different
- from simulation to simulation.
+   * Probably one of the major challenges we'll face as the project progresses will be dealing with different
+    sets of rules for different games and different types of neighborhoods.  While the basic implementation
+    of the GUI and Cell objects will remain the same, the actual interactions could be very different
+    from simulation to simulation.
+ 
+   * We also needed to decide whether to with 2D arrays or lists of lists for the implementation of the grid.
+   We decided to go with a list of list because it allows the possibility to expand the grid size if that ever
+   becomes a deliverable need and the only downside is the time complexity of updating cells.
 
 ## User Interface
 
