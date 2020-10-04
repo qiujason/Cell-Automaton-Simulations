@@ -5,7 +5,7 @@
 
 ## Design Overview
 
-Our main classes will include a `Simulation`, `Cell`, `Grid`, `Neighborhood`, classes. `Simulation`
+Our main classes will include a `Simulation`, `Cell`, `Grid`, and `Neighborhood` classes. `Simulation`
 will be used to visualize the actual simulation.  `Cell` serve as an object for each cell in the
 simulation. `Grid` will configure the locations of cells by storing their locations in a 2D array and
 updating itself on each frame. `Neighborhood` will be used to assess the neighbors of a cell and update
@@ -78,7 +78,7 @@ public class Neighborhood {
 * Live cell with more than three live neighbors dies.
  ```java
     if(getMyValue()==1){
-          if(myNeighbors.numberOfLiveCells() > 2){
+          if(myNeighbors.numberOfLiveCells() > 3){
             updateCell();
           }   
         }
@@ -93,7 +93,7 @@ public class Neighborhood {
     of the GUI and Cell objects will remain the same, the actual interactions could be very different
     from simulation to simulation.
  
-   * We also needed to decide whether to with 2D arrays or lists of lists for the implementation of the grid.
+   * We also needed to decide whether to work with 2D arrays or lists of lists for the implementation of the grid.
    We decided to go with a list of list because it allows the possibility to expand the grid size if that ever
    becomes a deliverable need and the only downside is the time complexity of updating cells.
 
