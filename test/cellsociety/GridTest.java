@@ -12,12 +12,13 @@ class GridTest {
 
   @Test
   void squareGridTest() throws URISyntaxException {
-    Path path = Paths.get(getClass().getClassLoader().getResource("initial_states/Square.csv").toURI());
+    Path path = Paths
+        .get(getClass().getClassLoader().getResource("initial_states/Square.csv").toURI());
     Cell[][] expected = {{new Cell(1), new Cell(1)}, {new Cell(1), new Cell(1)}};
     try {
       Grid grid = new Grid(path);
-      for(int i = 0; i < expected.length; i++){
-        for(int j = 0; j < expected[i].length; j++){
+      for (int i = 0; i < expected.length; i++) {
+        for (int j = 0; j < expected[i].length; j++) {
           assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());
         }
       }
@@ -28,20 +29,22 @@ class GridTest {
 
   @Test
   void beaconGridTest() throws URISyntaxException {
-    Path path = Paths.get(getClass().getClassLoader().getResource("initial_states/Beacon.csv").toURI());
+    Path path = Paths
+        .get(getClass().getClassLoader().getResource("initial_states/Beacon.csv").toURI());
     Cell[][] expected = {
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(1),new Cell(1), new Cell(0),new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(1),new Cell(1), new Cell(0),new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(1),new Cell(1), new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(1),new Cell(1), new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(0), new Cell(0)}
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(1), new Cell(1), new Cell(0), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(1), new Cell(1), new Cell(0), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(1), new Cell(1), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(1), new Cell(1), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)}
     };
     try {
       Grid grid = new Grid(path);
-      for(int i = 0; i < expected.length; i++){
-        for(int j = 0; j < expected[i].length; j++){
-          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());        }
+      for (int i = 0; i < expected.length; i++) {
+        for (int j = 0; j < expected[i].length; j++) {
+          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());
+        }
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -50,20 +53,22 @@ class GridTest {
 
   @Test
   void ToadGridTest() throws URISyntaxException {
-    Path path = Paths.get(getClass().getClassLoader().getResource("initial_states/Toad.csv").toURI());
+    Path path = Paths
+        .get(getClass().getClassLoader().getResource("initial_states/Toad.csv").toURI());
     Cell[][] expected = {
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(1), new Cell(1),new Cell(1), new Cell(0)},
-        {new Cell(0), new Cell(1),new Cell(1), new Cell(1),new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(0), new Cell(0)}
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(1), new Cell(1), new Cell(1), new Cell(0)},
+        {new Cell(0), new Cell(1), new Cell(1), new Cell(1), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)}
     };
     try {
       Grid grid = new Grid(path);
-      for(int i = 0; i < expected.length; i++){
-        for(int j = 0; j < expected[i].length; j++){
-          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());        }
+      for (int i = 0; i < expected.length; i++) {
+        for (int j = 0; j < expected[i].length; j++) {
+          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());
+        }
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -72,19 +77,21 @@ class GridTest {
 
   @Test
   void BlinkerGridTest() throws URISyntaxException {
-    Path path = Paths.get(getClass().getClassLoader().getResource("initial_states/Blinker.csv").toURI());
+    Path path = Paths
+        .get(getClass().getClassLoader().getResource("initial_states/Blinker.csv").toURI());
     Cell[][] expected = {
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(1), new Cell(0),new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(1), new Cell(0),new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(1), new Cell(0),new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(1), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(1), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(1), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
     };
     try {
       Grid grid = new Grid(path);
-      for(int i = 0; i < expected.length; i++){
-        for(int j = 0; j < expected[i].length; j++){
-          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());        }
+      for (int i = 0; i < expected.length; i++) {
+        for (int j = 0; j < expected[i].length; j++) {
+          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());
+        }
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -93,19 +100,21 @@ class GridTest {
 
   @Test
   void TubGridTest() throws URISyntaxException {
-    Path path = Paths.get(getClass().getClassLoader().getResource("initial_states/Tub.csv").toURI());
+    Path path = Paths
+        .get(getClass().getClassLoader().getResource("initial_states/Tub.csv").toURI());
     Cell[][] expected = {
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(1), new Cell(0),new Cell(0)},
-        {new Cell(0), new Cell(1),new Cell(0), new Cell(1),new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(1), new Cell(0),new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(1), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(1), new Cell(0), new Cell(1), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(1), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
     };
     try {
       Grid grid = new Grid(path);
-      for(int i = 0; i < expected.length; i++){
-        for(int j = 0; j < expected[i].length; j++){
-          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());        }
+      for (int i = 0; i < expected.length; i++) {
+        for (int j = 0; j < expected[i].length; j++) {
+          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());
+        }
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -114,19 +123,21 @@ class GridTest {
 
   @Test
   void BoatGridTest() throws URISyntaxException {
-    Path path = Paths.get(getClass().getClassLoader().getResource("initial_states/Boat.csv").toURI());
+    Path path = Paths
+        .get(getClass().getClassLoader().getResource("initial_states/Boat.csv").toURI());
     Cell[][] expected = {
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(0)},
-        {new Cell(0), new Cell(1),new Cell(1), new Cell(0),new Cell(0)},
-        {new Cell(0), new Cell(1),new Cell(0), new Cell(1),new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(1), new Cell(0),new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(1), new Cell(1), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(1), new Cell(0), new Cell(1), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(1), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
     };
     try {
       Grid grid = new Grid(path);
-      for(int i = 0; i < expected.length; i++){
-        for(int j = 0; j < expected[i].length; j++){
-          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());        }
+      for (int i = 0; i < expected.length; i++) {
+        for (int j = 0; j < expected[i].length; j++) {
+          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());
+        }
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -135,19 +146,21 @@ class GridTest {
 
   @Test
   void CornerGridTest() throws URISyntaxException {
-    Path path = Paths.get(getClass().getClassLoader().getResource("initial_states/Corner.csv").toURI());
+    Path path = Paths
+        .get(getClass().getClassLoader().getResource("initial_states/Corner.csv").toURI());
     Cell[][] expected = {
-        {new Cell(1), new Cell(0),new Cell(0), new Cell(0),new Cell(1)},
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(0)},
-        {new Cell(1), new Cell(0),new Cell(0), new Cell(0),new Cell(1)},
+        {new Cell(1), new Cell(0), new Cell(0), new Cell(0), new Cell(1)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
+        {new Cell(1), new Cell(0), new Cell(0), new Cell(0), new Cell(1)},
     };
     try {
       Grid grid = new Grid(path);
-      for(int i = 0; i < expected.length; i++){
-        for(int j = 0; j < expected[i].length; j++){
-          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());        }
+      for (int i = 0; i < expected.length; i++) {
+        for (int j = 0; j < expected[i].length; j++) {
+          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());
+        }
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -156,19 +169,21 @@ class GridTest {
 
   @Test
   void EdgesGridTest() throws URISyntaxException {
-    Path path = Paths.get(getClass().getClassLoader().getResource("initial_states/Edges.csv").toURI());
+    Path path = Paths
+        .get(getClass().getClassLoader().getResource("initial_states/Edges.csv").toURI());
     Cell[][] expected = {
-        {new Cell(1), new Cell(1),new Cell(1), new Cell(1),new Cell(1)},
-        {new Cell(1), new Cell(0),new Cell(0), new Cell(0),new Cell(1)},
-        {new Cell(1), new Cell(0),new Cell(0), new Cell(0),new Cell(1)},
-        {new Cell(1), new Cell(0),new Cell(0), new Cell(0),new Cell(1)},
-        {new Cell(1), new Cell(1),new Cell(1), new Cell(1),new Cell(1)},
+        {new Cell(1), new Cell(1), new Cell(1), new Cell(1), new Cell(1)},
+        {new Cell(1), new Cell(0), new Cell(0), new Cell(0), new Cell(1)},
+        {new Cell(1), new Cell(0), new Cell(0), new Cell(0), new Cell(1)},
+        {new Cell(1), new Cell(0), new Cell(0), new Cell(0), new Cell(1)},
+        {new Cell(1), new Cell(1), new Cell(1), new Cell(1), new Cell(1)},
     };
     try {
       Grid grid = new Grid(path);
-      for(int i = 0; i < expected.length; i++){
-        for(int j = 0; j < expected[i].length; j++){
-          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());        }
+      for (int i = 0; i < expected.length; i++) {
+        for (int j = 0; j < expected[i].length; j++) {
+          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());
+        }
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -177,7 +192,8 @@ class GridTest {
 
   @Test
   void updateCellsSquareTest() throws URISyntaxException {
-    Path path = Paths.get(getClass().getClassLoader().getResource("initial_states/Square.csv").toURI());
+    Path path = Paths
+        .get(getClass().getClassLoader().getResource("initial_states/Square.csv").toURI());
     Cell[][] expected = {
         {new Cell(1), new Cell(1)},
         {new Cell(1), new Cell(1)}
@@ -186,9 +202,10 @@ class GridTest {
       Grid grid = new Grid(path);
       grid.updateNewStates();
 
-      for(int i = 0; i < expected.length; i++){
-        for(int j = 0; j < expected[i].length; j++){
-          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());        }
+      for (int i = 0; i < expected.length; i++) {
+        for (int j = 0; j < expected[i].length; j++) {
+          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());
+        }
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -197,22 +214,25 @@ class GridTest {
 
   @Test
   void updateCellsBeaconTest() throws URISyntaxException {
-    Path path = Paths.get(getClass().getClassLoader().getResource("initial_states/Beacon.csv").toURI());
+    Path path = Paths
+        .get(getClass().getClassLoader().getResource("initial_states/Beacon.csv").toURI());
     Cell[][] expectedUpdate = {
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(1),new Cell(1), new Cell(0),new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(1),new Cell(0), new Cell(0),new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(1), new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(1),new Cell(1), new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(0), new Cell(0)}
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(1), new Cell(1), new Cell(0), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(1), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(1), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(1), new Cell(1), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)}
     };
     try {
       Grid grid = new Grid(path);
       grid.updateNewStates();
 
-      for(int i = 0; i < expectedUpdate.length; i++){
-        for(int j = 0; j < expectedUpdate[i].length; j++){
-          assertEquals(expectedUpdate[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());        }
+      for (int i = 0; i < expectedUpdate.length; i++) {
+        for (int j = 0; j < expectedUpdate[i].length; j++) {
+          assertEquals(expectedUpdate[i][j].getMyValue(),
+              grid.getMyCells().get(i).get(j).getMyValue());
+        }
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -221,22 +241,24 @@ class GridTest {
 
   @Test
   void updateCellsToadTest() throws URISyntaxException {
-    Path path = Paths.get(getClass().getClassLoader().getResource("initial_states/Toad.csv").toURI());
+    Path path = Paths
+        .get(getClass().getClassLoader().getResource("initial_states/Toad.csv").toURI());
     Cell[][] expected = {
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(1),new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(1),new Cell(0), new Cell(0),new Cell(1), new Cell(0)},
-        {new Cell(0), new Cell(1),new Cell(0), new Cell(0),new Cell(1), new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(1), new Cell(0),new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(0), new Cell(0)}
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(1), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(1), new Cell(0), new Cell(0), new Cell(1), new Cell(0)},
+        {new Cell(0), new Cell(1), new Cell(0), new Cell(0), new Cell(1), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(1), new Cell(0), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)}
     };
     try {
       Grid grid = new Grid(path);
       grid.updateNewStates();
 
-      for(int i = 0; i < expected.length; i++){
-        for(int j = 0; j < expected[i].length; j++){
-          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());        }
+      for (int i = 0; i < expected.length; i++) {
+        for (int j = 0; j < expected[i].length; j++) {
+          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());
+        }
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -245,21 +267,23 @@ class GridTest {
 
   @Test
   void updateCellsBlinkerTest() throws URISyntaxException {
-    Path path = Paths.get(getClass().getClassLoader().getResource("initial_states/Blinker.csv").toURI());
+    Path path = Paths
+        .get(getClass().getClassLoader().getResource("initial_states/Blinker.csv").toURI());
     Cell[][] expected = {
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(0)},
-        {new Cell(0), new Cell(1),new Cell(1), new Cell(1),new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(0)}
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(1), new Cell(1), new Cell(1), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)}
     };
     try {
       Grid grid = new Grid(path);
       grid.updateNewStates();
 
-      for(int i = 0; i < expected.length; i++){
-        for(int j = 0; j < expected[i].length; j++){
-          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());}
+      for (int i = 0; i < expected.length; i++) {
+        for (int j = 0; j < expected[i].length; j++) {
+          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());
+        }
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -268,20 +292,22 @@ class GridTest {
 
   @Test
   void updateCellsTubTest() throws URISyntaxException {
-    Path path = Paths.get(getClass().getClassLoader().getResource("initial_states/Tub.csv").toURI());
+    Path path = Paths
+        .get(getClass().getClassLoader().getResource("initial_states/Tub.csv").toURI());
     Cell[][] expected = {
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(1), new Cell(0),new Cell(0)},
-        {new Cell(0), new Cell(1),new Cell(0), new Cell(1),new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(1), new Cell(0),new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(1), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(1), new Cell(0), new Cell(1), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(1), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
     };
     try {
       Grid grid = new Grid(path);
       grid.updateNewStates();
-      for(int i = 0; i < expected.length; i++){
-        for(int j = 0; j < expected[i].length; j++){
-          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());        }
+      for (int i = 0; i < expected.length; i++) {
+        for (int j = 0; j < expected[i].length; j++) {
+          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());
+        }
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -290,20 +316,22 @@ class GridTest {
 
   @Test
   void updateCellsBoatTest() throws URISyntaxException {
-    Path path = Paths.get(getClass().getClassLoader().getResource("initial_states/Boat.csv").toURI());
+    Path path = Paths
+        .get(getClass().getClassLoader().getResource("initial_states/Boat.csv").toURI());
     Cell[][] expected = {
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(0)},
-        {new Cell(0), new Cell(1),new Cell(1), new Cell(0),new Cell(0)},
-        {new Cell(0), new Cell(1),new Cell(0), new Cell(1),new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(1), new Cell(0),new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(1), new Cell(1), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(1), new Cell(0), new Cell(1), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(1), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
     };
     try {
       Grid grid = new Grid(path);
       grid.updateNewStates();
-      for(int i = 0; i < expected.length; i++){
-        for(int j = 0; j < expected[i].length; j++){
-          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());        }
+      for (int i = 0; i < expected.length; i++) {
+        for (int j = 0; j < expected[i].length; j++) {
+          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());
+        }
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -312,20 +340,22 @@ class GridTest {
 
   @Test
   void updateCellsCornerTest() throws URISyntaxException {
-    Path path = Paths.get(getClass().getClassLoader().getResource("initial_states/Corner.csv").toURI());
+    Path path = Paths
+        .get(getClass().getClassLoader().getResource("initial_states/Corner.csv").toURI());
     Cell[][] expected = {
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(0)},
-        {new Cell(0), new Cell(0),new Cell(0), new Cell(0),new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
     };
     try {
       Grid grid = new Grid(path);
       grid.updateNewStates();
-      for(int i = 0; i < expected.length; i++){
-        for(int j = 0; j < expected[i].length; j++){
-          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());        }
+      for (int i = 0; i < expected.length; i++) {
+        for (int j = 0; j < expected[i].length; j++) {
+          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());
+        }
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -334,20 +364,22 @@ class GridTest {
 
   @Test
   void updateCellsEdgesTest() throws URISyntaxException {
-    Path path = Paths.get(getClass().getClassLoader().getResource("initial_states/Edges.csv").toURI());
+    Path path = Paths
+        .get(getClass().getClassLoader().getResource("initial_states/Edges.csv").toURI());
     Cell[][] expected = {
-        {new Cell(1), new Cell(1),new Cell(1), new Cell(1),new Cell(1)},
-        {new Cell(1), new Cell(0),new Cell(1), new Cell(0),new Cell(1)},
-        {new Cell(1), new Cell(1),new Cell(0), new Cell(1),new Cell(1)},
-        {new Cell(1), new Cell(0),new Cell(1), new Cell(0),new Cell(1)},
-        {new Cell(1), new Cell(1),new Cell(1), new Cell(1),new Cell(1)},
+        {new Cell(1), new Cell(1), new Cell(1), new Cell(1), new Cell(1)},
+        {new Cell(1), new Cell(0), new Cell(1), new Cell(0), new Cell(1)},
+        {new Cell(1), new Cell(1), new Cell(0), new Cell(1), new Cell(1)},
+        {new Cell(1), new Cell(0), new Cell(1), new Cell(0), new Cell(1)},
+        {new Cell(1), new Cell(1), new Cell(1), new Cell(1), new Cell(1)},
     };
     try {
       Grid grid = new Grid(path);
       grid.updateNewStates();
-      for(int i = 0; i < expected.length; i++){
-        for(int j = 0; j < expected[i].length; j++){
-          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());        }
+      for (int i = 0; i < expected.length; i++) {
+        for (int j = 0; j < expected[i].length; j++) {
+          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());
+        }
       }
     } catch (IOException e) {
       e.printStackTrace();

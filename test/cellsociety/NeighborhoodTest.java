@@ -13,7 +13,8 @@ class NeighborhoodTest {
 
   @Test
   void getNumberOfLiveNeighborsCorner() throws URISyntaxException {
-    Path path = Paths.get(getClass().getClassLoader().getResource("initial_states/Square.csv").toURI());
+    Path path = Paths
+        .get(getClass().getClassLoader().getResource("initial_states/Square.csv").toURI());
     try {
       Grid grid = new Grid(path);
       int numberOfLiveNeighbors = grid.getMyCells().get(0).get(0).getMyNeighbors()
@@ -26,7 +27,8 @@ class NeighborhoodTest {
 
   @Test
   void getNumberOfLiveNeighborsMiddle() throws URISyntaxException {
-    Path path = Paths.get(getClass().getClassLoader().getResource("initial_states/Boat.csv").toURI());
+    Path path = Paths
+        .get(getClass().getClassLoader().getResource("initial_states/Boat.csv").toURI());
     try {
       Grid grid = new Grid(path);
       int numberOfLiveNeighbors = grid.getMyCells().get(1).get(1).getMyNeighbors()
@@ -39,7 +41,8 @@ class NeighborhoodTest {
 
   @Test
   void getNumberOfLiveNeighborsDead() throws URISyntaxException {
-    Path path = Paths.get(getClass().getClassLoader().getResource("initial_states/Boat.csv").toURI());
+    Path path = Paths
+        .get(getClass().getClassLoader().getResource("initial_states/Boat.csv").toURI());
     try {
       Grid grid = new Grid(path);
       int numberOfLiveNeighbors = grid.getMyCells().get(2).get(2).getMyNeighbors()

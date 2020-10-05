@@ -1,14 +1,15 @@
 package cellsociety;
 
 public class Cell {
+
   private int myValue; // store some basic info about the cell
   private Neighborhood myNeighbors;
 
-  public Cell(int value){
+  public Cell(int value) {
     myValue = value;
   }
 
-  public void updateCell(int state){
+  public void updateCell(int state) {
     myValue = state;
   }
 
@@ -26,7 +27,7 @@ public class Cell {
     return 0;
   }
 
-  public int getMyValue(){
+  public int getMyValue() {
     return myValue;
   }
 

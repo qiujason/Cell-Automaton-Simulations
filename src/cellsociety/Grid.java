@@ -10,8 +10,9 @@ import java.util.Map.Entry;
 import java.util.Scanner;
 
 public class Grid {
+
   private List<List<Cell>> myCells;
-  private Map<Cell,Integer> newState;
+  private Map<Cell, Integer> newState;
 
   public Grid(Path cellFile) throws IOException {
     newState = new HashMap<>();
@@ -25,14 +26,14 @@ public class Grid {
     int rows = getNextInteger(sc);
     int cols = getNextInteger(sc);
     List<List<Cell>> ret = new ArrayList<>();
-    for(int k = cols - 2; k > 0; k--){ // gets to end of header line
+    for (int k = cols - 2; k > 0; k--) { // gets to end of header line
       sc.next();
     }
-    for(int i = 0; i < rows; i++){
+    for (int i = 0; i < rows; i++) {
       ret.add(i, new ArrayList<>());
-      for(int j = 0; j < cols; j++){
+      for (int j = 0; j < cols; j++) {
         int cellValue = getNextInteger(sc);
-        if(cellValue == -1){
+        if (cellValue == -1) {
           return null;
         }
         Cell newCell = new Cell(cellValue);
@@ -44,31 +45,32 @@ public class Grid {
     return ret;
   }
 
-  private void establishNeighbors(){
-    for (List<Cell> cells: myCells) {
-      for (Cell cell: cells) {
+  private void establishNeighbors() {
+    for (List<Cell> cells : myCells) {
+      for (Cell cell : cells) {
         cell.setMyNeighbors(this);
       }
     }
   }
 
-  private int getNextInteger(Scanner sc){
+  private int getNextInteger(Scanner sc) {
     final String UTF8_BOM = "\uFEFF";
     final String CARRIAGE_RETURN = "\r";
-    if(sc.hasNext()){
+    if (sc.hasNext()) {
       String nextNumber = sc.next();
       nextNumber = nextNumber.replace(UTF8_BOM, ""); // accounts for the BOM Character
-      nextNumber = nextNumber.replace(CARRIAGE_RETURN, ""); // accounts for the carriage return character
+      nextNumber = nextNumber
+          .replace(CARRIAGE_RETURN, ""); // accounts for the carriage return character
       return Integer.parseInt(nextNumber);
     }
     return -1;
   }
 
-  public List<List<Cell>> getMyCells(){
+  public List<List<Cell>> getMyCells() {
     return myCells;
   }
 
-  public Map<Cell,Integer> getNewState() {
+  public Map<Cell, Integer> getNewState() {
     return newState;
   }
 

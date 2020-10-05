@@ -1,11 +1,11 @@
 package cellsociety;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.util.ResourceBundle;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +20,7 @@ public class SimulationTest extends DukeApplicationTest {
   private Button myPlayButton;
   private Button myPauseButton;
   private Button myStepButton;
-  private Button mySimulationSelectButton;
+  private ComboBox<String> mySimulations;
 
   @Override
   public void start(Stage stage) throws Exception {
@@ -35,7 +35,7 @@ public class SimulationTest extends DukeApplicationTest {
     myPlayButton = lookup("#PlayButton").query();
     myPauseButton = lookup("#PauseButton").query();
     myStepButton = lookup("#StepButton").query();
-    mySimulationSelectButton = lookup("#SimulationSelect").query();
+    mySimulations = lookup("#SimulationSelect").query();
   }
 
   @Test
@@ -44,7 +44,7 @@ public class SimulationTest extends DukeApplicationTest {
     assertEquals(myResources.getString("PlayButton"), myPlayButton.getText());
     assertEquals(myResources.getString("PauseButton"), myPauseButton.getText());
     assertEquals(myResources.getString("StepButton"), myStepButton.getText());
-    assertEquals(myResources.getString("SimulationSelect"), mySimulationSelectButton.getText());
+    assertEquals(myResources.getString("SimulationSelect"), mySimulations.getPromptText());
   }
 
 }
