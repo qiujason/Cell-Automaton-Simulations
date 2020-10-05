@@ -3,13 +3,18 @@ package cellsociety;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
 
 public class Grid {
   private List<List<Cell>> myCells;
+  private Map<Cell,Integer> newState;
 
   public Grid(Path cellFile) throws IOException {
+    newState = new HashMap<>();
     myCells = build2DArray(cellFile);
     establishNeighbors();
   }
@@ -30,7 +35,9 @@ public class Grid {
         if(cellValue == -1){
           return null;
         }
-        ret.get(i).add(j, new Cell(cellValue));
+        Cell newCell = new Cell(cellValue);
+        ret.get(i).add(j, newCell);
+        newState.put(newCell, cellValue);
       }
     }
     sc.close();  //closes the scanner
@@ -59,6 +66,29 @@ public class Grid {
 
   public List<List<Cell>> getMyCells(){
     return myCells;
+  }
+
+  public Map<Cell,Integer> getNewState() {
+    return newState;
+  }
+
+  public void updateNewStates() {
+    getNewStates();
+    updateStates();
+  }
+
+  private void getNewStates() {
+    for (List<Cell> cells : myCells) {
+      for (Cell cell : cells) {
+        newState.put(cell, cell.getNewState());
+      }
+    }
+  }
+
+  private void updateStates() {
+    for (Entry<Cell, Integer> cellState : newState.entrySet()) {
+      cellState.getKey().updateCell(cellState.getValue());
+    }
   }
 }
 

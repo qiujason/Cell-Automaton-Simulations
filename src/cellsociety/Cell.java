@@ -8,8 +8,22 @@ public class Cell {
     myValue = value;
   }
 
-  public void updateCell(){
-    myValue = Math.abs(myValue-1);
+  public void updateCell(int state){
+    myValue = state;
+  }
+
+  public int getNewState() {
+    switch(myNeighbors.getNumberOfLiveNeighbors()) {
+      case 2 -> {
+        if (myValue == 1) {
+          return 1;
+        }
+      }
+      case 3 -> {
+        return 1;
+      }
+    }
+    return 0;
   }
 
   public int getMyValue(){
