@@ -8,6 +8,8 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -21,6 +23,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class Simulation extends Application {
 
@@ -32,6 +35,8 @@ public class Simulation extends Application {
   public static final double WIDTH = 600;
   public static final double GRID_SIZE = 3 * WIDTH / 4;
   public static final double GRID_UPPER_LEFT_CORNER = WIDTH / 8;
+  public static final double FRAMES_PER_SECOND = 2;
+  public static final double SIMULATION_DELAY = 1 / FRAMES_PER_SECOND;
   public static final Color ALIVE_COLOR = Color.BLACK;
   public static final Color DEAD_COLOR = Color.WHITE;
 
@@ -40,6 +45,7 @@ public class Simulation extends Application {
   private Grid myGrid;
   private Group myGridGroup;
   private ResourceBundle myResources;
+  private Timeline myAnimation;
 
   private Button myRestartButton;
   private Button myPlayButton;
@@ -61,6 +67,11 @@ public class Simulation extends Application {
     myGridGroup = new Group();
     myGridGroup.setId("GridGroup");
     myRoot.setCenter(myGridGroup);
+
+    myAnimation = new Timeline();
+    myAnimation.setCycleCount(Timeline.INDEFINITE);
+    KeyFrame frame = new KeyFrame(Duration.seconds(SIMULATION_DELAY), e -> step());
+    myAnimation.getKeyFrames().add(frame);
 
     myRoot.setTop(makeNavigationPane());
     Scene scene = new Scene(myRoot, width, height);
@@ -118,11 +129,11 @@ public class Simulation extends Application {
   }
 
   private void play() {
-
+    myAnimation.play();
   }
 
   private void pause() {
-
+    myAnimation.stop();
   }
 
   private void step() {
@@ -153,10 +164,12 @@ public class Simulation extends Application {
     myGridGroup.getChildren().clear();
     double x = GRID_UPPER_LEFT_CORNER;
     double y = GRID_UPPER_LEFT_CORNER;
+    int cellLabel = 0;
     double cellSize = GRID_SIZE / myGrid.getMyCells().size();
-    for(List<Cell> row : myGrid.getMyCells()){
-      for(Cell cell : row){
+    for (List<Cell> row : myGrid.getMyCells()) {
+      for (Cell cell : row) {
         Rectangle cellRectangle = new Rectangle(x, y, cellSize, cellSize);
+        cellRectangle.setId("cell" + cellLabel);
         if (cell.getMyValue() == 0) {
           cellRectangle.setFill(DEAD_COLOR);
           cellRectangle.setStroke(ALIVE_COLOR);
@@ -166,10 +179,15 @@ public class Simulation extends Application {
         }
         myGridGroup.getChildren().add(cellRectangle);
         x += cellSize;
+        cellLabel++;
       }
       y += cellSize;
       x = GRID_UPPER_LEFT_CORNER;
     }
+  }
+
+  public static void main(String[] args) {
+    launch(args);
   }
 
 }

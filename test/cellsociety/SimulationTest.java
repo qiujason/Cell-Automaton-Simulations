@@ -7,6 +7,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 
@@ -69,6 +70,21 @@ public class SimulationTest extends DukeApplicationTest {
     assertEquals(25, myGridGroup.getChildren().size());
   }
 
+  @Test
+  public void testStepButton() {
+    select(mySimulations, "Beacon");
+    clickOn(myStepButton);
+    Rectangle cellRectangle = lookup("#cell14").query();
+    assertEquals(Simulation.DEAD_COLOR, cellRectangle.getFill());
+  }
 
+  @Test
+  public void testRestartButton() {
+    select(mySimulations, "Beacon");
+    clickOn(myStepButton);
+    clickOn(myRestartButton);
+    Rectangle cellRectangle = lookup("#cell14").query();
+    assertEquals(Simulation.ALIVE_COLOR, cellRectangle.getFill());
+  }
 
 }
