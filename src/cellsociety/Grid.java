@@ -1,5 +1,8 @@
 package cellsociety;
 
+import com.opencsv.CSVWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -17,7 +20,9 @@ public class Grid {
   public Grid(Path cellFile) throws IOException {
     newState = new HashMap<>();
     myCells = build2DArray(cellFile);
-    establishNeighbors();
+    if(myCells!=null){
+      establishNeighbors();
+    }
   }
 
   private List<List<Cell>> build2DArray(Path cellFile) throws IOException {
@@ -45,6 +50,33 @@ public class Grid {
     return ret;
   }
 
+  public Path saveCurrentGrid(String filePath) throws IOException {
+    File file = new File(filePath);
+    FileWriter outputFile = new FileWriter(file,false);
+    int row = myCells.size();
+    if(row == 0){
+      return null;
+    }
+    int col = myCells.get(row-1).size();
+    CSVWriter csvWriter = new CSVWriter(outputFile);
+
+    List<String[]> data = new ArrayList<>();
+    String[] header = new String[col];
+    header[0] = String.valueOf(row);
+    header[1] = String.valueOf(col);
+    data.add(header);
+    for(int i = 0; i<row; i++){
+      String[] newRow = new String[col];
+      for(int j = 0; j<col; j++){
+        newRow[j] = String.valueOf(myCells.get(i).get(j).getMyValue());
+      }
+      data.add(newRow);
+    }
+    csvWriter.writeAll(data);
+    csvWriter.close();
+    return Path.of(filePath);
+  }
+
   private void establishNeighbors() {
     for (List<Cell> cells : myCells) {
       for (Cell cell : cells) {
@@ -61,6 +93,7 @@ public class Grid {
       nextNumber = nextNumber.replace(UTF8_BOM, ""); // accounts for the BOM Character
       nextNumber = nextNumber
           .replace(CARRIAGE_RETURN, ""); // accounts for the carriage return character
+      nextNumber = nextNumber.replace("\"","");
       return Integer.parseInt(nextNumber);
     }
     return -1;

@@ -1,6 +1,8 @@
 package cellsociety;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -142,6 +144,35 @@ class GridTest {
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  @Test
+  void saveCSVFile() throws URISyntaxException, IOException {
+    Path path = Paths
+        .get(getClass().getClassLoader().getResource("initial_states/Boat.csv").toURI());
+    Grid grid = new Grid(path);
+    grid.saveCurrentGrid("test_data/BoatTest.csv");
+    Grid gridTest = new Grid(Path.of("test_data/BoatTest.csv"));
+    Cell[][] expected = {
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(1), new Cell(1), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(1), new Cell(0), new Cell(1), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(1), new Cell(0), new Cell(0)},
+        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
+    };
+    for (int i = 0; i < expected.length; i++) {
+      for (int j = 0; j < expected[i].length; j++) {
+        assertEquals(expected[i][j].getMyValue(), gridTest.getMyCells().get(i).get(j).getMyValue());
+      }
+    }
+  }
+
+  @Test
+  void saveEmptyCSVFile() throws IOException {
+    Grid grid = new Grid(Path.of("test_data/EmptyTest.csv"));
+    grid.saveCurrentGrid("test_data/EmptyData.csv");
+    Grid gridTest = new Grid(Path.of("test_data/EmptyData.csv"));
+    assertTrue(gridTest.getMyCells().isEmpty());
   }
 
   @Test
