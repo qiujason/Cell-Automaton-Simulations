@@ -29,6 +29,7 @@ public class Simulation extends Application {
 
   public static final String STYLESHEET = "/myStyles.css";
   public static final String INITIAL_STATES = "initial_states";
+  public static final String SAVED_SIMULATION = "SavedSimulation.csv";
   public static final String PROPERTIES = "SimulationButtons";
   public static final String HEADER = "Jack, Hayden, and Jason's Simulation";
   public static final double HEIGHT = 600;
@@ -51,6 +52,7 @@ public class Simulation extends Application {
   private Button myPlayButton;
   private Button myPauseButton;
   private Button myStepButton;
+  private Button mySaveSimulationButton;
   private ComboBox<String> mySimulations;
 
   @Override
@@ -90,6 +92,8 @@ public class Simulation extends Application {
     navigationPane.getChildren().add(myPauseButton);
     myStepButton = makeButton("StepButton", event -> step());
     navigationPane.getChildren().add(myStepButton);
+    mySaveSimulationButton = makeButton("SavedSimulation", event -> saveSimulation());
+    navigationPane.getChildren().add(mySaveSimulationButton);
     initializeSimulationOptions();
     navigationPane.getChildren().add(mySimulations);
     return navigationPane;
@@ -183,6 +187,14 @@ public class Simulation extends Application {
       }
       y += cellSize;
       x = GRID_UPPER_LEFT_CORNER;
+    }
+  }
+
+  private void saveSimulation() {
+    try {
+      myGrid.saveCurrentGrid("data/" + INITIAL_STATES + "/" + SAVED_SIMULATION);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
   }
 
