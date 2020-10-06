@@ -3,9 +3,11 @@ package cellsociety;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ResourceBundle;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +15,6 @@ public class SimulationTest extends DukeApplicationTest {
 
   private Simulation mySimulation;
   private Scene myScene;
-  private Grid myGrid;
   private ResourceBundle myResources;
 
   private Button myRestartButton;
@@ -21,6 +22,7 @@ public class SimulationTest extends DukeApplicationTest {
   private Button myPauseButton;
   private Button myStepButton;
   private ComboBox<String> mySimulations;
+  private Group myGridGroup;
 
   @Override
   public void start(Stage stage) throws Exception {
@@ -36,6 +38,7 @@ public class SimulationTest extends DukeApplicationTest {
     myPauseButton = lookup("#PauseButton").query();
     myStepButton = lookup("#StepButton").query();
     mySimulations = lookup("#SimulationSelect").query();
+    myGridGroup = lookup("#GridGroup").query();
   }
 
   @Test
@@ -45,6 +48,43 @@ public class SimulationTest extends DukeApplicationTest {
     assertEquals(myResources.getString("PauseButton"), myPauseButton.getText());
     assertEquals(myResources.getString("StepButton"), myStepButton.getText());
     assertEquals(myResources.getString("SimulationSelect"), mySimulations.getPromptText());
+  }
+
+  @Test
+  public void testBlockConfiguration() {
+    select(mySimulations, "Beacon");
+    assertEquals(36, myGridGroup.getChildren().size());
+    select(mySimulations, "Blinker");
+    assertEquals(25, myGridGroup.getChildren().size());
+    select(mySimulations, "Boat");
+    assertEquals(25, myGridGroup.getChildren().size());
+    select(mySimulations, "Corner");
+    assertEquals(25, myGridGroup.getChildren().size());
+    select(mySimulations, "Edges");
+    assertEquals(25, myGridGroup.getChildren().size());
+    select(mySimulations, "Square");
+    assertEquals(4, myGridGroup.getChildren().size());
+    select(mySimulations, "Toad");
+    assertEquals(36, myGridGroup.getChildren().size());
+    select(mySimulations, "Tub");
+    assertEquals(25, myGridGroup.getChildren().size());
+  }
+
+  @Test
+  public void testStepButton() {
+    select(mySimulations, "Beacon");
+    clickOn(myStepButton);
+    Rectangle cellRectangle = lookup("#cell14").query();
+    assertEquals(Simulation.DEAD_COLOR, cellRectangle.getFill());
+  }
+
+  @Test
+  public void testRestartButton() {
+    select(mySimulations, "Beacon");
+    clickOn(myStepButton);
+    clickOn(myRestartButton);
+    Rectangle cellRectangle = lookup("#cell14").query();
+    assertEquals(Simulation.ALIVE_COLOR, cellRectangle.getFill());
   }
 
 }
