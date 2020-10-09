@@ -1,5 +1,7 @@
 package cellsociety;
 
+import cellsociety.visualization.Simulation;
+
 /**
  * Feel free to completely change this code or delete it entirely.
  */

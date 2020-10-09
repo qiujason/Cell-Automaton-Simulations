@@ -1,5 +1,9 @@
-package cellsociety;
+package cellsociety.visualization;
 
+import cellsociety.State;
+import cellsociety.configuration.Grid;
+import cellsociety.model.Cell;
+import cellsociety.model.cellmodel.GameOfLifeCell;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -174,7 +178,7 @@ public class Simulation extends Application {
       for (Cell cell : row) {
         Rectangle cellRectangle = new Rectangle(x, y, cellSize, cellSize);
         cellRectangle.setId("cell" + cellLabel);
-        if (cell.getMyValue() == 0) {
+        if (cell.getMyState() == State.DEAD) {
           cellRectangle.setFill(DEAD_COLOR);
           cellRectangle.setStroke(ALIVE_COLOR);
         } else {

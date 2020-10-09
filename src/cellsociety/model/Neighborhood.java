@@ -1,13 +1,16 @@
-package cellsociety;
+package cellsociety.model;
 
 
+import cellsociety.State;
+import cellsociety.configuration.Grid;
+import cellsociety.model.cellmodel.GameOfLifeCell;
 import java.util.List;
 
 public class Neighborhood {
 
   private final int NEIGHBORHOOD_SIZE = 3; // size of row and col
-  private Cell[][] myCells;
-  private Cell mainCell;
+  private final Cell[][] myCells;
+  private final Cell mainCell;
 
   public Neighborhood(Cell cell, Grid grid) { // Builds a neighborhood for a given cell
     mainCell = cell;
@@ -15,8 +18,8 @@ public class Neighborhood {
   }
 
   private Cell[][] determineNeighbors(Cell cell, Grid grid) {
-    Cell[][] ret = new Cell[NEIGHBORHOOD_SIZE][NEIGHBORHOOD_SIZE];
-    List<List<Cell>> gridCells = grid.getMyCells();
+    GameOfLifeCell[][] ret = new GameOfLifeCell[NEIGHBORHOOD_SIZE][NEIGHBORHOOD_SIZE];
+    List<List<GameOfLifeCell>> gridCells = grid.getMyCells();
     int cellRow = -1;
     int cellCol = -1;
     for (int i = 0; i < gridCells.size(); i++) {
@@ -46,17 +49,20 @@ public class Neighborhood {
     return myCells;
   }
 
-  public int getNumberOfLiveNeighbors() {
-    int numberLive = 0;
+  public int getNumberOfNeighborsWithState(State state) {
+    int count = 0;
     for (int r = 0; r < NEIGHBORHOOD_SIZE; r++) {
       for (int c = 0; c < NEIGHBORHOOD_SIZE; c++) {
         Cell neighbor = myCells[r][c];
-        if (neighbor != null
-            && neighbor != mainCell) { // skip cell if it is the main cell and not a neighbor
-          numberLive += neighbor.getMyValue();
+        if (neighbor != null && neighbor != mainCell) {
+          // skip cell if it is this cell and not a neighbor
+          if (neighbor.getMyState() == state) {
+            count++;
+          }
         }
       }
     }
-    return numberLive;
+    return count;
   }
+
 }

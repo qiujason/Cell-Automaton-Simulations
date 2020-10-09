@@ -1,9 +1,12 @@
-package cellsociety;
+package cellsociety.configuration;
 
+import cellsociety.State;
+import cellsociety.model.Cell;
 import com.opencsv.CSVWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,12 +17,14 @@ import java.util.Scanner;
 
 public class Grid {
 
+  private Map<Cell, State> newState;
   private List<List<Cell>> myCells;
-  private Map<Cell, Integer> newState;
+  private String simulationClassName;
 
-  public Grid(Path cellFile) throws IOException {
+  public Grid(Path cellFile, String simulation) throws IOException {
     newState = new HashMap<>();
     myCells = build2DArray(cellFile);
+    this.simulationClassName = simulation;
     if(myCells!=null){
       establishNeighbors();
     }
@@ -41,9 +46,15 @@ public class Grid {
         if (cellValue == -1) {
           return null;
         }
-        Cell newCell = new Cell(cellValue);
-        ret.get(i).add(j, newCell);
-        newState.put(newCell, cellValue);
+        try {
+          Class<?> simulation = Class.forName(simulationClassName);
+          Constructor<?> simConstructor = simulation.getConstructor(State.class);
+          Cell newCell = simConstructor.newInstance();
+          ret.get(i).add(j, newCell);
+          newState.put(newCell, cellValue);
+        } catch (ClassNotFoundException | NoSuchMethodException e) {
+
+        }
       }
     }
     sc.close();  //closes the scanner
@@ -68,7 +79,7 @@ public class Grid {
     for(int i = 0; i<row; i++){
       String[] newRow = new String[col];
       for(int j = 0; j<col; j++){
-        newRow[j] = String.valueOf(myCells.get(i).get(j).getMyValue());
+        newRow[j] = String.valueOf(myCells.get(i).get(j).getMyState());
       }
       data.add(newRow);
     }
@@ -103,7 +114,7 @@ public class Grid {
     return myCells;
   }
 
-  public Map<Cell, Integer> getNewState() {
+  public Map<Cell, State> getNewState() {
     return newState;
   }
 
@@ -121,7 +132,7 @@ public class Grid {
   }
 
   private void updateStates() {
-    for (Entry<Cell, Integer> cellState : newState.entrySet()) {
+    for (Entry<Cell, State> cellState : newState.entrySet()) {
       cellState.getKey().updateCell(cellState.getValue());
     }
   }
