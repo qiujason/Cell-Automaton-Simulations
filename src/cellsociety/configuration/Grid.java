@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,14 +18,16 @@ import java.util.Scanner;
 
 public class Grid {
 
+  private static final String MODEL_PATH = "cellsociety.model.cellmodel.";
+
   private Map<Cell, State> newState;
   private List<List<Cell>> myCells;
-  private String simulationClassName;
+  private String simulationName;
 
-  public Grid(Path cellFile, String simulation) throws IOException {
+  public Grid(Path cellFile, String simulationName) throws IOException {
     newState = new HashMap<>();
     myCells = build2DArray(cellFile);
-    this.simulationClassName = simulation;
+    this.simulationName = simulationName;
     if(myCells!=null){
       establishNeighbors();
     }
@@ -47,13 +50,16 @@ public class Grid {
           return null;
         }
         try {
-          Class<?> simulation = Class.forName(simulationClassName);
+          State state = State.getState(simulationName, cellValue);
+          Class<?> simulation = Class.forName(MODEL_PATH + simulationName + "Cell");
           Constructor<?> simConstructor = simulation.getConstructor(State.class);
-          Cell newCell = simConstructor.newInstance();
+          Cell newCell = (Cell) simConstructor.newInstance(state);
           ret.get(i).add(j, newCell);
-          newState.put(newCell, cellValue);
-        } catch (ClassNotFoundException | NoSuchMethodException e) {
-
+          newState.put(newCell, state);
+        } catch (InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
+          System.out.println("Error with creating simulation from file");
+        } catch (ClassNotFoundException e) {
+          System.out.println("Simulation class name not found");
         }
       }
     }
