@@ -2,9 +2,16 @@ package cellsociety;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import cellsociety.configuration.ConfigurationException;
+import cellsociety.configuration.Grid;
+import cellsociety.configuration.PropertyReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -245,5 +252,17 @@ class ConfigurationTest {
     grid.saveCurrentGrid("test_data/EmptyData.csv");
     Grid gridTest = new Grid(Path.of("test_data/EmptyData.csv"));
     assertTrue(gridTest.getMyCells().isEmpty());
+  }
+
+  @Test
+  void badPropertyFile(){
+    FileInputStream fileInputStream = null;
+    try {
+      fileInputStream = new FileInputStream("property_list/beacon_property");
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
+    FileInputStream finalFileInputStream = fileInputStream;
+    assertThrows(ConfigurationException.class, () -> new PropertyReader(finalFileInputStream));
   }
 }
