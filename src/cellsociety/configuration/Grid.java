@@ -2,18 +2,24 @@ package cellsociety.configuration;
 
 import cellsociety.State;
 import cellsociety.model.Cell;
+import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
+import com.opencsv.exceptions.CsvException;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.ResourceBundle;
 import java.util.Scanner;
 
 public class Grid {
@@ -22,48 +28,68 @@ public class Grid {
 
   private Map<Cell, State> newState;
   private List<List<Cell>> myCells;
+  private ResourceBundle resourceBundle;
   private String simulationName;
 
-  public Grid(Path cellFile, String simulationName) throws IOException {
+  public Grid(Path cellFile, String simulationName) throws ConfigurationException {
     newState = new HashMap<>();
-    myCells = build2DArray(cellFile);
     this.simulationName = simulationName;
+    resourceBundle = ResourceBundle.getBundle("ConfigurationErrors");
+    myCells = build2DArray(cellFile);
     if(myCells!=null){
       establishNeighbors();
     }
   }
 
-  private List<List<Cell>> build2DArray(Path cellFile) throws IOException {
-    Scanner sc = new Scanner(cellFile);
-    sc.useDelimiter(",|\\n");//sets the delimiter pattern
-    int rows = getNextInteger(sc);
-    int cols = getNextInteger(sc);
+  private List<List<Cell>> build2DArray(Path cellFile) throws ConfigurationException {
+    List<String[]> csvData = null;
     List<List<Cell>> ret = new ArrayList<>();
-    for (int k = cols - 2; k > 0; k--) { // gets to end of header line
-      sc.next();
+    int rows = 0;
+    int cols = 0;
+    try {
+      FileReader inputFile = new FileReader(String.valueOf(cellFile));
+      CSVReader csvReader = new CSVReader(inputFile);
+      csvData = csvReader.readAll();
+    } catch (CsvException | IOException e) {
+      throw new ConfigurationException(String.format(resourceBundle.getString("otherSimulationCreationErrors"), e.getMessage()));
+    }
+    Iterator<String[]> iterator = csvData.iterator();
+    if(iterator.hasNext()){
+      String[] headerRow = iterator.next();
+      rows = removeHiddenChars(headerRow[0]);
+      cols = removeHiddenChars(headerRow[1]);
+    } else {
+      throw new ConfigurationException(String.format(resourceBundle.getString("otherSimulationCreationErrors"), "no header row"));
     }
     for (int i = 0; i < rows; i++) {
+      if(iterator.hasNext()==false){
+        throw new ConfigurationException(String.format(resourceBundle.getString("mismatchedCSVData")));
+      }
+      String[] nextRow = iterator.next();
+      if(nextRow.length!=cols){
+        throw new ConfigurationException(String.format(resourceBundle.getString("mismatchedCSVData")));
+      }
       ret.add(i, new ArrayList<>());
       for (int j = 0; j < cols; j++) {
-        int cellValue = getNextInteger(sc);
-        if (cellValue == -1) {
-          return null;
-        }
-        try {
-          State state = State.getState(simulationName, cellValue);
-          Class<?> simulation = Class.forName(MODEL_PATH + simulationName + "Cell");
-          Constructor<?> simConstructor = simulation.getConstructor(State.class);
-          Cell newCell = (Cell) simConstructor.newInstance(state);
-          ret.get(i).add(j, newCell);
-          newState.put(newCell, state);
-        } catch (InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
-          System.out.println("Error with creating simulation from file");
-        } catch (ClassNotFoundException e) {
-          System.out.println("Simulation class name not found");
-        }
+        ret.get(i).add(convertStringToCell(nextRow[j]));
       }
     }
-    sc.close();  //closes the scanner
+    return ret;
+  }
+
+  private Cell convertStringToCell(String stringValueForCell) {
+    int cellValue = removeHiddenChars(stringValueForCell);
+    Cell ret = null;
+    try {
+      State state = State.getState(simulationName, cellValue);
+      Class<?> simulation = Class.forName(MODEL_PATH + simulationName + "Cell");
+      Constructor<?> simConstructor = simulation.getConstructor(State.class);
+      ret = (Cell) simConstructor.newInstance(state);
+    } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+      throw new ConfigurationException(String.format(resourceBundle.getString("otherSimulationCreationErrors"), e.getMessage()));
+    } catch (ClassNotFoundException e) {
+      throw new ConfigurationException(String.format(resourceBundle.getString("simulationNotSupported"), simulationName));
+    }
     return ret;
   }
 
@@ -102,18 +128,13 @@ public class Grid {
     }
   }
 
-  private int getNextInteger(Scanner sc) {
+  private int removeHiddenChars(String fileString) {
     final String UTF8_BOM = "\uFEFF";
     final String CARRIAGE_RETURN = "\r";
-    if (sc.hasNext()) {
-      String nextNumber = sc.next();
-      nextNumber = nextNumber.replace(UTF8_BOM, ""); // accounts for the BOM Character
-      nextNumber = nextNumber
-          .replace(CARRIAGE_RETURN, ""); // accounts for the carriage return character
-      nextNumber = nextNumber.replace("\"","");
-      return Integer.parseInt(nextNumber);
-    }
-    return -1;
+    fileString = fileString.replace(UTF8_BOM, ""); // accounts for the BOM Character
+    fileString = fileString.replace(CARRIAGE_RETURN, ""); // accounts for the carriage return character
+    fileString = fileString.replace("\"","");
+    return Integer.parseInt(fileString);
   }
 
   public List<List<Cell>> getMyCells() {
