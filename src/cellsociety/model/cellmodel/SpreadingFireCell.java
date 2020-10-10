@@ -4,13 +4,16 @@ import cellsociety.State;
 import cellsociety.configuration.Grid;
 import cellsociety.model.Cell;
 import cellsociety.model.Neighborhood;
+import java.util.ResourceBundle;
 
-public class GameOfLifeCell implements Cell {
+public class SpreadingFireCell implements Cell {
+
+  private static final ResourceBundle MODEL_VALUES = ResourceBundle.getBundle("ModelValues");
 
   private State myState;
   private Neighborhood myNeighbors;
 
-  public GameOfLifeCell(State state) {
+  public SpreadingFireCell(State state) {
     myState = state;
   }
 
@@ -21,17 +24,14 @@ public class GameOfLifeCell implements Cell {
 
   @Override
   public State getNewState() {
-    switch(myNeighbors.getNumberOfNeighborsWithState(State.ALIVE, false)) {
-      case 2 -> {
-        if (myState == State.ALIVE) {
-          return State.ALIVE;
-        }
+    if (myState == State.TREE) {
+      if (myNeighbors.getNumberOfNeighborsWithState(State.BURNING, true) > 0 &&
+          Math.random() < Integer.parseInt(MODEL_VALUES.getString("CatchFireProbability"))) {
+        return State.BURNING;
       }
-      case 3 -> {
-        return State.ALIVE;
-      }
+      return State.TREE;
     }
-    return State.DEAD;
+    return State.EMPTY;
   }
 
   @Override

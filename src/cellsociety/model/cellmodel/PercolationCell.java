@@ -21,7 +21,7 @@ public class PercolationCell implements Cell {
 
   @Override
   public State getNewState() {
-    if (myNeighbors.getNumberOfNeighborsWithState(State.FILLED) > 0) {
+    if (myNeighbors.getNumberOfNeighborsWithState(State.FILLED, false) > 0) {
       return State.FILLED;
     } else {
       return State.UNFILLED;

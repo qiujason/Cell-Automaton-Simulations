@@ -79,7 +79,7 @@ public class Grid {
 
   private Cell convertStringToCell(String stringValueForCell) {
     int cellValue = removeHiddenChars(stringValueForCell);
-    Cell ret = null;
+    Cell ret;
     try {
       State state = State.getState(simulationName, cellValue);
       Class<?> simulation = Class.forName(MODEL_PATH + simulationName + "Cell");

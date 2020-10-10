@@ -18,8 +18,8 @@ public class Neighborhood {
   }
 
   private Cell[][] determineNeighbors(Cell cell, Grid grid) {
-    GameOfLifeCell[][] ret = new GameOfLifeCell[NEIGHBORHOOD_SIZE][NEIGHBORHOOD_SIZE];
-    List<List<GameOfLifeCell>> gridCells = grid.getMyCells();
+    Cell[][] ret = new Cell[NEIGHBORHOOD_SIZE][NEIGHBORHOOD_SIZE];
+    List<List<Cell>> gridCells = grid.getMyCells();
     int cellRow = -1;
     int cellCol = -1;
     for (int i = 0; i < gridCells.size(); i++) {
@@ -49,15 +49,17 @@ public class Neighborhood {
     return myCells;
   }
 
-  public int getNumberOfNeighborsWithState(State state) {
+  public int getNumberOfNeighborsWithState(State state, boolean adjacentOnly) {
     int count = 0;
     for (int r = 0; r < NEIGHBORHOOD_SIZE; r++) {
       for (int c = 0; c < NEIGHBORHOOD_SIZE; c++) {
-        Cell neighbor = myCells[r][c];
-        if (neighbor != null && neighbor != mainCell) {
-          // skip cell if it is this cell and not a neighbor
-          if (neighbor.getMyState() == state) {
-            count++;
+        if (!adjacentOnly || (r + c) % 2 != 0) {
+          Cell neighbor = myCells[r][c];
+          if (neighbor != null && neighbor != mainCell) {
+            // skip cell if it is this cell and not a neighbor
+            if (neighbor.getMyState() == state) {
+              count++;
+            }
           }
         }
       }
