@@ -26,7 +26,7 @@ public class Grid {
 
   public Grid(Path cellFile, String simulationName) throws ConfigurationException {
     this.simulationName = simulationName;
-    resourceBundle = ResourceBundle.getBundle("ConfigurationErrors");
+    resourceBundle = ResourceBundle.getBundle(getClass().getPackageName()+".resources.ConfigurationErrors");
     myCells = build2DArray(cellFile);
     if(myCells!=null){
       establishNeighbors();

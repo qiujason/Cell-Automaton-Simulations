@@ -2,14 +2,16 @@ package cellsociety.configuration;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import javafx.util.Pair;
 
 public class PropertyReader {
 
-  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle("ConfigurationErrors");
+  private final ResourceBundle resourceBundle;
   private static final String[] REQUIRED_KEYS = new String[]{
       "simulationType", "simulationTitle", "configAuthor", "description", "csvFile"
   };
@@ -21,11 +23,12 @@ public class PropertyReader {
   private final Properties properties;
 
   public PropertyReader(InputStream inputStream) throws IOException, ConfigurationException {
+    resourceBundle = ResourceBundle.getBundle(getClass().getPackageName()+".resources.ConfigurationErrors");
     properties = new Properties();
     properties.load(inputStream);
     for(String requiredKey : REQUIRED_KEYS){
       if(properties.getProperty(requiredKey)==null){
-        throw new ConfigurationException(String.format(RESOURCE_BUNDLE.getString("missingRequiredProperty"), requiredKey));
+        throw new ConfigurationException(String.format(resourceBundle.getString("missingRequiredProperty"), requiredKey));
       }
     }
     for(Pair optionalKey : DEFAULT_OPTIONAL_KEYS){
@@ -36,7 +39,14 @@ public class PropertyReader {
   }
 
   public Grid gridFromPropertyFile() throws ConfigurationException {
-    Path path = Path.of(properties.getProperty("csvFile"));
+    Path path = null;
+    try {
+      path = Paths
+          .get(getClass().getClassLoader().getResource(String.format("initial_states/%s", properties.getProperty("csvFile"))).toURI());
+    } catch (URISyntaxException e) {
+      throw new ConfigurationException(String.format(resourceBundle.getString("otherSimulationCreationErrors"), e.getMessage()));
+    }
+
     String simulationName = properties.getProperty("simulationType");
     return new Grid(path, simulationName);
   }
