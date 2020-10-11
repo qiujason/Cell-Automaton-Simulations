@@ -9,11 +9,11 @@ import javafx.util.Pair;
 
 public class PropertyReader {
 
-  private static final ResourceBundle resourceBundle = ResourceBundle.getBundle("ConfigurationErrors");
-  private static final String[] requiredKeys = new String[]{
+  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle("ConfigurationErrors");
+  private static final String[] REQUIRED_KEYS = new String[]{
       "simulationType", "simulationTitle", "configAuthor", "description", "csvFile"
   };
-  private static final Pair[] defaultOptionalKeys = new Pair[]{
+  private static final Pair[] DEFAULT_OPTIONAL_KEYS = new Pair[]{
       new Pair<>("probCatch", 0.3),
       new Pair<>("winThreshold", 3)
   };
@@ -23,12 +23,12 @@ public class PropertyReader {
   public PropertyReader(InputStream inputStream) throws IOException, ConfigurationException {
     properties = new Properties();
     properties.load(inputStream);
-    for(String requiredKey : requiredKeys){
+    for(String requiredKey : REQUIRED_KEYS){
       if(properties.getProperty(requiredKey)==null){
-        throw new ConfigurationException(String.format(resourceBundle.getString("missingRequiredProperty"), requiredKey));
+        throw new ConfigurationException(String.format(RESOURCE_BUNDLE.getString("missingRequiredProperty"), requiredKey));
       }
     }
-    for(Pair optionalKey : defaultOptionalKeys){
+    for(Pair optionalKey : DEFAULT_OPTIONAL_KEYS){
       if(properties.getProperty((String) optionalKey.getKey())==null){
         properties.setProperty((String) optionalKey.getKey(), String.valueOf(optionalKey.getValue()));
       }
