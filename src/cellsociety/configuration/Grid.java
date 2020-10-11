@@ -1,6 +1,5 @@
 package cellsociety.configuration;
 
-import cellsociety.State;
 import cellsociety.model.Cell;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
@@ -9,30 +8,23 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.ResourceBundle;
-import java.util.Scanner;
 
 public class Grid {
 
-  private static final String MODEL_PATH = "cellsociety.model.cellmodel.";
+  private static final String MODEL_PATH = "cellsociety.model.";
 
-  private Map<Cell, State> newState;
-  private List<List<Cell>> myCells;
-  private ResourceBundle resourceBundle;
-  private String simulationName;
+  private final List<List<Cell>> myCells;
+  private final ResourceBundle resourceBundle;
+  private final String simulationName;
 
   public Grid(Path cellFile, String simulationName) throws ConfigurationException {
-    newState = new HashMap<>();
     this.simulationName = simulationName;
     resourceBundle = ResourceBundle.getBundle("ConfigurationErrors");
     myCells = build2DArray(cellFile);
@@ -62,7 +54,7 @@ public class Grid {
       throw new ConfigurationException(String.format(resourceBundle.getString("otherSimulationCreationErrors"), "no header row"));
     }
     for (int i = 0; i < rows; i++) {
-      if(iterator.hasNext()==false){
+      if(!iterator.hasNext()){
         throw new ConfigurationException(String.format(resourceBundle.getString("mismatchedCSVData")));
       }
       String[] nextRow = iterator.next();
@@ -81,14 +73,21 @@ public class Grid {
     int cellValue = removeHiddenChars(stringValueForCell);
     Cell ret;
     try {
-      State state = State.getState(simulationName, cellValue);
-      Class<?> simulation = Class.forName(MODEL_PATH + simulationName + "Cell");
-      Constructor<?> simConstructor = simulation.getConstructor(State.class);
+      String modelPackagePath = MODEL_PATH + simulationName + ".";
+
+      // get state from cell value and simulation name
+      Class<?> modelStates = Class.forName(modelPackagePath + simulationName + "States");
+      Method method = modelStates.getMethod("getStateFromValue", int.class);
+      Enum<?> state = (Enum<?>) method.invoke(null, cellValue);
+
+      // create a new cell from simulation name with defined state
+      Class<?> simulation = Class.forName(modelPackagePath + simulationName + "Cell");
+      Constructor<?> simConstructor = simulation.getConstructor(Enum.class);
       ret = (Cell) simConstructor.newInstance(state);
-    } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-      throw new ConfigurationException(String.format(resourceBundle.getString("otherSimulationCreationErrors"), e.getMessage()));
     } catch (ClassNotFoundException e) {
       throw new ConfigurationException(String.format(resourceBundle.getString("simulationNotSupported"), simulationName));
+    } catch (Exception e) {
+      throw new ConfigurationException(String.format(resourceBundle.getString("otherSimulationCreationErrors"), e.getMessage()));
     }
     return ret;
   }
@@ -141,27 +140,10 @@ public class Grid {
     return myCells;
   }
 
-  public Map<Cell, State> getNewState() {
-    return newState;
-  }
-
   public void updateNewStates() {
-    getNewStates();
-    updateStates();
+    myCells.forEach(cells -> cells.forEach(Cell::setNewState));
+    myCells.forEach(cells -> cells.forEach(Cell::updateCell));
   }
 
-  private void getNewStates() {
-    for (List<Cell> cells : myCells) {
-      for (Cell cell : cells) {
-        newState.put(cell, cell.getNewState());
-      }
-    }
-  }
-
-  private void updateStates() {
-    for (Entry<Cell, State> cellState : newState.entrySet()) {
-      cellState.getKey().updateCell(cellState.getValue());
-    }
-  }
 }
 

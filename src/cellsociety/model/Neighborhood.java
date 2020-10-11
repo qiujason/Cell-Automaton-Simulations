@@ -1,9 +1,7 @@
 package cellsociety.model;
 
 
-import cellsociety.State;
 import cellsociety.configuration.Grid;
-import cellsociety.model.cellmodel.GameOfLifeCell;
 import java.util.List;
 
 public class Neighborhood {
@@ -49,7 +47,7 @@ public class Neighborhood {
     return myCells;
   }
 
-  public int getNumberOfNeighborsWithState(State state, boolean adjacentOnly) {
+  public int getNumberOfNeighborsWithState(Enum<?> state, boolean adjacentOnly) {
     int count = 0;
     for (int r = 0; r < NEIGHBORHOOD_SIZE; r++) {
       for (int c = 0; c < NEIGHBORHOOD_SIZE; c++) {

@@ -3,7 +3,6 @@ package cellsociety.visualization;
 import cellsociety.State;
 import cellsociety.configuration.Grid;
 import cellsociety.model.Cell;
-import cellsociety.model.cellmodel.GameOfLifeCell;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;

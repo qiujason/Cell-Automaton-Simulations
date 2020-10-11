@@ -1,18 +1,36 @@
 package cellsociety.model;
 
-import cellsociety.State;
 import cellsociety.configuration.Grid;
 
-public interface Cell {
+public abstract class Cell {
 
-  void updateCell(State state);
+  protected Enum<?> myState;
+  protected Enum<?> nextState;
+  protected Neighborhood myNeighbors;
 
-  State getNewState();
+  public Cell(Enum<?> state) {
+    myState = state;
+    nextState = null;
+  }
+  public void updateCell() {
+    if (nextState != null) {
+      myState = nextState;
+      nextState = null;
+    }
+  }
 
-  State getMyState();
+  public Enum<?> getMyState() {
+    return myState;
+  }
 
-  void setMyNeighbors(Grid grid);
+  public void setMyNeighbors(Grid grid) {
+    myNeighbors = new Neighborhood(this, grid);
+  }
 
-  Neighborhood getMyNeighbors();
+  public Neighborhood getMyNeighbors() {
+    return myNeighbors;
+  }
+
+  public abstract void setNewState();
 
 }
