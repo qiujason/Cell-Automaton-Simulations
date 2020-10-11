@@ -256,13 +256,9 @@ class ConfigurationTest {
 
   @Test
   void badPropertyFile(){
-    FileInputStream fileInputStream = null;
-    try {
-      fileInputStream = new FileInputStream("property_list/beacon_property");
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    }
-    FileInputStream finalFileInputStream = fileInputStream;
+    InputStream fileInputStream = null;
+    fileInputStream = getClass().getClassLoader().getResourceAsStream("property_list/bad_property_file.properties");
+    InputStream finalFileInputStream = fileInputStream;
     assertThrows(ConfigurationException.class, () -> new PropertyReader(finalFileInputStream));
   }
 }
