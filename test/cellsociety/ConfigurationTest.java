@@ -1,15 +1,15 @@
 package cellsociety;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import cellsociety.configuration.ConfigurationException;
 import cellsociety.configuration.Grid;
 import cellsociety.configuration.PropertyReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import cellsociety.model.Cell;
+import cellsociety.model.GameOfLife.GameOfLifeCell;
+import cellsociety.model.GameOfLife.GameOfLifeStates;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -20,15 +20,17 @@ import org.junit.jupiter.api.Test;
 class ConfigurationTest {
 
   @Test
-  void squareGridTest() throws URISyntaxException {
+  void squareGridTest() throws URISyntaxException, IOException {
+    InputStream fileInputStream = getClass().getClassLoader().getResourceAsStream("property_list/bad_property_file.properties");
+    PropertyReader reader = new PropertyReader(fileInputStream);
     Path path = Paths
         .get(getClass().getClassLoader().getResource("initial_states/Square.csv").toURI());
-    Cell[][] expected = {{new Cell(1), new Cell(1)}, {new Cell(1), new Cell(1)}};
+    Cell[][] expected = {{new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE)}, {new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE)}};
     try {
       Grid grid = new Grid(path);
       for (int i = 0; i < expected.length; i++) {
         for (int j = 0; j < expected[i].length; j++) {
-          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());
+          assertEquals(expected[i][j].getMyState(), grid.getMyCells().get(i).get(j).getMyState());
         }
       }
     } catch (IOException e) {
@@ -41,18 +43,18 @@ class ConfigurationTest {
     Path path = Paths
         .get(getClass().getClassLoader().getResource("initial_states/Beacon.csv").toURI());
     Cell[][] expected = {
-        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(1), new Cell(1), new Cell(0), new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(1), new Cell(1), new Cell(0), new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(0), new Cell(0), new Cell(1), new Cell(1), new Cell(0)},
-        {new Cell(0), new Cell(0), new Cell(0), new Cell(1), new Cell(1), new Cell(0)},
-        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)}
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)}
     };
     try {
       Grid grid = new Grid(path);
       for (int i = 0; i < expected.length; i++) {
         for (int j = 0; j < expected[i].length; j++) {
-          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());
+          assertEquals(expected[i][j].getMyState(), grid.getMyCells().get(i).get(j).getMyState());
         }
       }
     } catch (IOException e) {
@@ -65,18 +67,18 @@ class ConfigurationTest {
     Path path = Paths
         .get(getClass().getClassLoader().getResource("initial_states/Toad.csv").toURI());
     Cell[][] expected = {
-        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(0), new Cell(1), new Cell(1), new Cell(1), new Cell(0)},
-        {new Cell(0), new Cell(1), new Cell(1), new Cell(1), new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)}
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)}
     };
     try {
       Grid grid = new Grid(path);
       for (int i = 0; i < expected.length; i++) {
         for (int j = 0; j < expected[i].length; j++) {
-          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());
+          assertEquals(expected[i][j].getMyState(), grid.getMyCells().get(i).get(j).getMyState());
         }
       }
     } catch (IOException e) {
@@ -89,17 +91,17 @@ class ConfigurationTest {
     Path path = Paths
         .get(getClass().getClassLoader().getResource("initial_states/Blinker.csv").toURI());
     Cell[][] expected = {
-        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(0), new Cell(1), new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(0), new Cell(1), new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(0), new Cell(1), new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
     };
     try {
       Grid grid = new Grid(path);
       for (int i = 0; i < expected.length; i++) {
         for (int j = 0; j < expected[i].length; j++) {
-          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());
+          assertEquals(expected[i][j].getMyState(), grid.getMyCells().get(i).get(j).getMyState());
         }
       }
     } catch (IOException e) {
@@ -112,17 +114,17 @@ class ConfigurationTest {
     Path path = Paths
         .get(getClass().getClassLoader().getResource("initial_states/Tub.csv").toURI());
     Cell[][] expected = {
-        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(0), new Cell(1), new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(1), new Cell(0), new Cell(1), new Cell(0)},
-        {new Cell(0), new Cell(0), new Cell(1), new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
     };
     try {
       Grid grid = new Grid(path);
       for (int i = 0; i < expected.length; i++) {
         for (int j = 0; j < expected[i].length; j++) {
-          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());
+          assertEquals(expected[i][j].getMyState(), grid.getMyCells().get(i).get(j).getMyState());
         }
       }
     } catch (IOException e) {
@@ -135,17 +137,17 @@ class ConfigurationTest {
     Path path = Paths
         .get(getClass().getClassLoader().getResource("initial_states/Boat.csv").toURI());
     Cell[][] expected = {
-        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(1), new Cell(1), new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(1), new Cell(0), new Cell(1), new Cell(0)},
-        {new Cell(0), new Cell(0), new Cell(1), new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
     };
     try {
       Grid grid = new Grid(path);
       for (int i = 0; i < expected.length; i++) {
         for (int j = 0; j < expected[i].length; j++) {
-          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());
+          assertEquals(expected[i][j].getMyState(), grid.getMyCells().get(i).get(j).getMyState());
         }
       }
     } catch (IOException e) {
@@ -158,17 +160,17 @@ class ConfigurationTest {
     Path path = Paths
         .get(getClass().getClassLoader().getResource("initial_states/Corner.csv").toURI());
     Cell[][] expected = {
-        {new Cell(1), new Cell(0), new Cell(0), new Cell(0), new Cell(1)},
-        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
-        {new Cell(1), new Cell(0), new Cell(0), new Cell(0), new Cell(1)},
+        {new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE)},
     };
     try {
       Grid grid = new Grid(path);
       for (int i = 0; i < expected.length; i++) {
         for (int j = 0; j < expected[i].length; j++) {
-          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());
+          assertEquals(expected[i][j].getMyState(), grid.getMyCells().get(i).get(j).getMyState());
         }
       }
     } catch (IOException e) {
@@ -181,17 +183,17 @@ class ConfigurationTest {
     Path path = Paths
         .get(getClass().getClassLoader().getResource("initial_states/Edges.csv").toURI());
     Cell[][] expected = {
-        {new Cell(1), new Cell(1), new Cell(1), new Cell(1), new Cell(1)},
-        {new Cell(1), new Cell(0), new Cell(0), new Cell(0), new Cell(1)},
-        {new Cell(1), new Cell(0), new Cell(0), new Cell(0), new Cell(1)},
-        {new Cell(1), new Cell(0), new Cell(0), new Cell(0), new Cell(1)},
-        {new Cell(1), new Cell(1), new Cell(1), new Cell(1), new Cell(1)},
+        {new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE)},
+        {new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE)},
+        {new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE)},
+        {new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE)},
+        {new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE)},
     };
     try {
       Grid grid = new Grid(path);
       for (int i = 0; i < expected.length; i++) {
         for (int j = 0; j < expected[i].length; j++) {
-          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());
+          assertEquals(expected[i][j].getMyState(), grid.getMyCells().get(i).get(j).getMyState());
         }
       }
     } catch (IOException e) {
@@ -216,7 +218,7 @@ class ConfigurationTest {
           if (expected[i][j] == null) {
             assertEquals(expected[i][j], actual[i][j]);
           } else {
-            assertEquals(expected[i][j].getMyValue(), actual[i][j].getMyValue());
+            assertEquals(expected[i][j].getMyState(), actual[i][j].getMyState());
           }
         }
       }
@@ -233,15 +235,15 @@ class ConfigurationTest {
     grid.saveCurrentGrid("test_data/BoatTest.csv");
     Grid gridTest = new Grid(Path.of("test_data/BoatTest.csv"));
     Cell[][] expected = {
-        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(1), new Cell(1), new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(1), new Cell(0), new Cell(1), new Cell(0)},
-        {new Cell(0), new Cell(0), new Cell(1), new Cell(0), new Cell(0)},
-        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
     };
     for (int i = 0; i < expected.length; i++) {
       for (int j = 0; j < expected[i].length; j++) {
-        assertEquals(expected[i][j].getMyValue(), gridTest.getMyCells().get(i).get(j).getMyValue());
+        assertEquals(expected[i][j].getMyState(), gridTest.getMyCells().get(i).get(j).getMyState());
       }
     }
   }
@@ -256,9 +258,7 @@ class ConfigurationTest {
 
   @Test
   void badPropertyFile(){
-    InputStream fileInputStream = null;
-    fileInputStream = getClass().getClassLoader().getResourceAsStream("property_list/bad_property_file.properties");
-    InputStream finalFileInputStream = fileInputStream;
-    assertThrows(ConfigurationException.class, () -> new PropertyReader(finalFileInputStream));
+    InputStream fileInputStream = getClass().getClassLoader().getResourceAsStream("property_list/bad_property_file.properties");
+    assertThrows(ConfigurationException.class, () -> new PropertyReader(fileInputStream));
   }
 }

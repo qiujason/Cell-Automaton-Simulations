@@ -1,6 +1,5 @@
 package cellsociety.visualization;
 
-import cellsociety.State;
 import cellsociety.configuration.Grid;
 import cellsociety.model.Cell;
 import java.io.File;
