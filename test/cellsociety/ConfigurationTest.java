@@ -10,11 +10,8 @@ import cellsociety.configuration.PropertyReader;
 import cellsociety.model.Cell;
 import cellsociety.model.GameOfLife.GameOfLifeCell;
 import cellsociety.model.GameOfLife.GameOfLifeStates;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import org.junit.jupiter.api.Test;
 
 class ConfigurationTest {
@@ -190,7 +187,7 @@ class ConfigurationTest {
   }
 
   @Test
-  void saveCSVFile() throws IOException {
+  void saveCSVFile() {
     InputStream fileInputStream = getClass().getClassLoader().getResourceAsStream("property_lists/boat.properties");
     PropertyReader reader = new PropertyReader(fileInputStream);
     Grid grid = reader.gridFromPropertyFile();
@@ -216,19 +213,16 @@ class ConfigurationTest {
   }
 
   @Test
-  void saveEmptyCSVFile() throws IOException {
-    InputStream fileInputStream = getClass().getClassLoader().getResourceAsStream("property_lists/boat.properties");
-    PropertyReader reader = new PropertyReader(fileInputStream);
-
-    Grid grid = new Grid(Path.of("test_data/EmptyTest.csv"));
+  void saveEmptyCSVFile() {
+    Grid grid = new Grid(Path.of("test_data/EmptyTest.csv"), "GameOfLife");
     grid.saveCurrentGrid("test_data/EmptyData.csv");
-    Grid gridTest = new Grid(Path.of("test_data/EmptyData.csv"));
+    Grid gridTest = new Grid(Path.of("test_data/EmptyData.csv"), "GameOfLife");
     assertTrue(gridTest.getMyCells().isEmpty());
   }
 
   @Test
   void badPropertyFile(){
-    InputStream fileInputStream = getClass().getClassLoader().getResourceAsStream("property_list/bad_property_file.properties");
+    InputStream fileInputStream = getClass().getClassLoader().getResourceAsStream("property_lists/bad_property_file.properties");
     assertThrows(ConfigurationException.class, () -> new PropertyReader(fileInputStream));
   }
 }
