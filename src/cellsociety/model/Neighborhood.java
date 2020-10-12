@@ -6,7 +6,9 @@ import java.util.List;
 
 public class Neighborhood {
 
-  private final int NEIGHBORHOOD_SIZE = 3; // size of row and col
+  public static final int NEIGHBORHOOD_SIZE = 9; // amount of cells in neighborhood
+
+  private static final int NEIGHBORHOOD_LENGTH = 3; // size of row and col
   private final Cell[][] myCells;
   private final Cell mainCell;
 
@@ -16,7 +18,7 @@ public class Neighborhood {
   }
 
   private Cell[][] determineNeighbors(Cell cell, Grid grid) {
-    Cell[][] ret = new Cell[NEIGHBORHOOD_SIZE][NEIGHBORHOOD_SIZE];
+    Cell[][] ret = new Cell[NEIGHBORHOOD_LENGTH][NEIGHBORHOOD_LENGTH];
     List<List<Cell>> gridCells = grid.getMyCells();
     int cellRow = -1;
     int cellCol = -1;
@@ -49,8 +51,8 @@ public class Neighborhood {
 
   public int getNumberOfNeighborsWithState(Enum<?> state, boolean adjacentOnly) {
     int count = 0;
-    for (int r = 0; r < NEIGHBORHOOD_SIZE; r++) {
-      for (int c = 0; c < NEIGHBORHOOD_SIZE; c++) {
+    for (int r = 0; r < NEIGHBORHOOD_LENGTH; r++) {
+      for (int c = 0; c < NEIGHBORHOOD_LENGTH; c++) {
         if (!adjacentOnly || (r + c) % 2 != 0) {
           Cell neighbor = myCells[r][c];
           if (neighbor != null && neighbor != mainCell) {

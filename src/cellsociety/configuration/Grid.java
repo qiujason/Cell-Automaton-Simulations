@@ -1,6 +1,8 @@
 package cellsociety.configuration;
 
 import cellsociety.model.Cell;
+import cellsociety.model.Percolation.PercolationCell;
+import cellsociety.model.Percolation.PercolationStates;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;

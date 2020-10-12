@@ -17,7 +17,8 @@ public class PropertyReader {
   };
   private static final Pair[] DEFAULT_OPTIONAL_KEYS = new Pair[]{
       new Pair<>("probCatch", 0.3),
-      new Pair<>("winThreshold", 3)
+      new Pair<>("winThreshold", 3),
+      new Pair<>("satisfiedThreshold", 0.3)
   };
 
   private final Properties properties;

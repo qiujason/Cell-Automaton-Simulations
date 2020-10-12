@@ -6,11 +6,12 @@ public class SpreadingFireCell extends Cell {
 
   private final double catchFireProbability;
 
-  public SpreadingFireCell(SpreadingFireStates state, double probability) {
+  public SpreadingFireCell(Enum<?> state, double probability) {
     super(state);
     catchFireProbability = probability;
   }
 
+  @Override
   public void setNewState() {
     if (myState == SpreadingFireStates.TREE) {
       if (myNeighbors.getNumberOfNeighborsWithState(SpreadingFireStates.BURNING, true) > 0 &&

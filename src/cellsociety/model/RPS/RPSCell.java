@@ -17,11 +17,12 @@ public class RPSCell extends Cell {
 
   private int winThreshold;
 
-  public RPSCell(RPSStates state, int winThreshold) {
+  public RPSCell(Enum<?> state, int winThreshold) {
     super(state);
     this.winThreshold = winThreshold;
   }
 
+  @Override
   public void setNewState() {
     if (myNeighbors.getNumberOfNeighborsWithState(RPSWinDynamics.get(myState), false) > winThreshold) {
       nextState = RPSWinDynamics.get(myState);
