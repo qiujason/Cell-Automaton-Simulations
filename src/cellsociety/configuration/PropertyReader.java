@@ -22,24 +22,30 @@ public class PropertyReader {
 
   private final Properties properties;
 
-  public PropertyReader(InputStream inputStream) throws IOException, ConfigurationException {
+  public PropertyReader(InputStream inputStream) throws ConfigurationException {
     resourceBundle = ResourceBundle.getBundle(getClass().getPackageName()+".resources.ConfigurationErrors");
-    properties = new Properties();
-    properties.load(inputStream);
-    for(String requiredKey : REQUIRED_KEYS){
-      if(properties.getProperty(requiredKey)==null){
-        throw new ConfigurationException(String.format(resourceBundle.getString("missingRequiredProperty"), requiredKey));
+    try {
+      properties = new Properties();
+      properties.load(inputStream);
+      for (String requiredKey : REQUIRED_KEYS) {
+        if (properties.getProperty(requiredKey) == null) {
+          throw new ConfigurationException(
+              String.format(resourceBundle.getString("missingRequiredProperty"), requiredKey));
+        }
       }
-    }
-    for(Pair optionalKey : DEFAULT_OPTIONAL_KEYS){
-      if(properties.getProperty((String) optionalKey.getKey())==null){
-        properties.setProperty((String) optionalKey.getKey(), String.valueOf(optionalKey.getValue()));
+      for (Pair optionalKey : DEFAULT_OPTIONAL_KEYS) {
+        if (properties.getProperty((String) optionalKey.getKey()) == null) {
+          properties
+              .setProperty((String) optionalKey.getKey(), String.valueOf(optionalKey.getValue()));
+        }
       }
+    } catch(IOException e) {
+      throw new ConfigurationException(resourceBundle.getString("errorReadingPropertiesFile"));
     }
   }
 
   public Grid gridFromPropertyFile() throws ConfigurationException {
-    Path path = null;
+    Path path;
     try {
       path = Paths
           .get(getClass().getClassLoader().getResource(String.format("initial_states/%s", properties.getProperty("csvFile"))).toURI());
