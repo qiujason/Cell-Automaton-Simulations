@@ -18,8 +18,7 @@ class ConfigurationTest {
 
   @Test
   void squareGridTest() {
-    InputStream fileInputStream = getClass().getClassLoader().getResourceAsStream("property_lists/square.properties");
-    PropertyReader reader = new PropertyReader(fileInputStream);
+    PropertyReader reader = new PropertyReader("property_lists/GameOfLife/square.properties");
     Cell[][] expected = {{new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE)}, {new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE)}};
     Grid grid = reader.gridFromPropertyFile();
     for (int i = 0; i < expected.length; i++) {
@@ -31,8 +30,7 @@ class ConfigurationTest {
 
   @Test
   void beaconGridTest() {
-    InputStream fileInputStream = getClass().getClassLoader().getResourceAsStream("property_lists/beacon.properties");
-    PropertyReader reader = new PropertyReader(fileInputStream);
+    PropertyReader reader = new PropertyReader("property_lists/GameOfLife/beacon.properties");
     Cell[][] expected = {
         {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
         {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
@@ -51,8 +49,7 @@ class ConfigurationTest {
 
   @Test
   void ToadGridTest() {
-    InputStream fileInputStream = getClass().getClassLoader().getResourceAsStream("property_lists/toad.properties");
-    PropertyReader reader = new PropertyReader(fileInputStream);
+    PropertyReader reader = new PropertyReader("property_lists/GameOfLife/toad.properties");
     Cell[][] expected = {
         {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
         {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
@@ -71,8 +68,7 @@ class ConfigurationTest {
 
   @Test
   void BlinkerGridTest() {
-    InputStream fileInputStream = getClass().getClassLoader().getResourceAsStream("property_lists/blinker.properties");
-    PropertyReader reader = new PropertyReader(fileInputStream);
+    PropertyReader reader = new PropertyReader("property_lists/GameOfLife/blinker.properties");
     Cell[][] expected = {
         {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
         {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
@@ -90,8 +86,7 @@ class ConfigurationTest {
 
   @Test
   void TubGridTest() {
-    InputStream fileInputStream = getClass().getClassLoader().getResourceAsStream("property_lists/tub.properties");
-    PropertyReader reader = new PropertyReader(fileInputStream);
+    PropertyReader reader = new PropertyReader("property_lists/GameOfLife/tub.properties");
     Cell[][] expected = {
         {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
         {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
@@ -109,8 +104,7 @@ class ConfigurationTest {
 
   @Test
   void BoatGridTest() {
-    InputStream fileInputStream = getClass().getClassLoader().getResourceAsStream("property_lists/boat.properties");
-    PropertyReader reader = new PropertyReader(fileInputStream);
+    PropertyReader reader = new PropertyReader("property_lists/GameOfLife/boat.properties");
     Cell[][] expected = {
         {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
         {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
@@ -128,8 +122,7 @@ class ConfigurationTest {
 
   @Test
   void CornerGridTest() {
-    InputStream fileInputStream = getClass().getClassLoader().getResourceAsStream("property_lists/corner.properties");
-    PropertyReader reader = new PropertyReader(fileInputStream);
+    PropertyReader reader = new PropertyReader("property_lists/GameOfLife/corner.properties");
     Cell[][] expected = {
         {new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE)},
         {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
@@ -147,8 +140,7 @@ class ConfigurationTest {
 
   @Test
   void EdgesGridTest() {
-    InputStream fileInputStream = getClass().getClassLoader().getResourceAsStream("property_lists/edges.properties");
-    PropertyReader reader = new PropertyReader(fileInputStream);
+    PropertyReader reader = new PropertyReader("property_lists/GameOfLife/edges.properties");
     Cell[][] expected = {
         {new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE)},
         {new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE)},
@@ -166,8 +158,7 @@ class ConfigurationTest {
 
   @Test
   void setMySquareNeighbors() {
-    InputStream fileInputStream = getClass().getClassLoader().getResourceAsStream("property_lists/square.properties");
-    PropertyReader reader = new PropertyReader(fileInputStream);
+    PropertyReader reader = new PropertyReader("property_lists/GameOfLife/square.properties");
     Grid grid = reader.gridFromPropertyFile();
     Cell[][] expected = {
         {null, null, null},
@@ -188,14 +179,13 @@ class ConfigurationTest {
 
   @Test
   void saveCSVFile() {
-    InputStream fileInputStream = getClass().getClassLoader().getResourceAsStream("property_lists/boat.properties");
-    PropertyReader reader = new PropertyReader(fileInputStream);
+    PropertyReader reader = new PropertyReader("property_lists/GameOfLife/boat.properties");
     Grid grid = reader.gridFromPropertyFile();
 
     grid.saveCurrentGrid("test_data/BoatTest.csv");
 
-    fileInputStream = getClass().getClassLoader().getResourceAsStream("property_lists/boat.properties");
-    reader = new PropertyReader(fileInputStream);
+    reader = new PropertyReader("property_lists/GameOfLife/boat.properties");
+    reader = new PropertyReader("property_lists/GameOfLife/boat.properties");
     Grid gridTest = reader.gridFromPropertyFile();
 
     Cell[][] expected = {
@@ -222,7 +212,6 @@ class ConfigurationTest {
 
   @Test
   void badPropertyFile(){
-    InputStream fileInputStream = getClass().getClassLoader().getResourceAsStream("property_lists/bad_property_file.properties");
-    assertThrows(ConfigurationException.class, () -> new PropertyReader(fileInputStream));
+    assertThrows(ConfigurationException.class, () -> new PropertyReader("property_lists/bad_property_file.properties"));
   }
 }
