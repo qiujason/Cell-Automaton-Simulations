@@ -20,8 +20,8 @@ public abstract class Cell {
     }
   }
 
-  public Enum<?> getMyState() {
-    return myState;
+  public void setNextState(Enum<?> nextState) {
+    this.nextState = nextState;
   }
 
   public void setMyNeighbors(Grid grid) {
@@ -30,6 +30,14 @@ public abstract class Cell {
 
   public Neighborhood getMyNeighbors() {
     return myNeighbors;
+  }
+
+  public Enum<?> getMyState() {
+    return myState;
+  }
+
+  public Enum<?> getNextState() {
+    return nextState;
   }
 
   public abstract void setNewState();
