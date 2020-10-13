@@ -2,6 +2,7 @@ package cellsociety.model;
 
 
 import cellsociety.configuration.Grid;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Neighborhood {
@@ -45,12 +46,12 @@ public class Neighborhood {
     return ret;
   }
 
-  public Cell[][] getMyCells() {
-    return myCells;
+  public int getNumberOfNeighborsWithState(Enum<?> state, boolean adjacentOnly) {
+    return getNeighborsWithState(state, adjacentOnly).size();
   }
 
-  public int getNumberOfNeighborsWithState(Enum<?> state, boolean adjacentOnly) {
-    int count = 0;
+  public List<Cell> getNeighborsWithState(Enum<?> state, boolean adjacentOnly) {
+    List<Cell> cells = new ArrayList<>();
     for (int r = 0; r < NEIGHBORHOOD_LENGTH; r++) {
       for (int c = 0; c < NEIGHBORHOOD_LENGTH; c++) {
         if (!adjacentOnly || (r + c) % 2 != 0) {
@@ -58,13 +59,17 @@ public class Neighborhood {
           if (neighbor != null && neighbor != mainCell) {
             // skip cell if it is this cell and not a neighbor
             if (neighbor.getMyState() == state) {
-              count++;
+              cells.add(neighbor);
             }
           }
         }
       }
     }
-    return count;
+    return cells;
+  }
+
+  public Cell[][] getMyCells() {
+    return myCells;
   }
 
 }
