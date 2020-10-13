@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.input.KeyCode;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
@@ -98,7 +99,7 @@ public class VisualizationTest extends DukeApplicationTest {
     select(mySimulations, "Beacon");
     clickOn(myStepButton);
     Rectangle cellRectangle = lookup("#cell14").query();
-    assertEquals(Simulation.DEAD_COLOR, cellRectangle.getFill());
+    assertEquals(Color.WHITE, cellRectangle.getFill());
   }
 
   @Test
@@ -107,7 +108,7 @@ public class VisualizationTest extends DukeApplicationTest {
     clickOn(myStepButton);
     clickOn(myRestartButton);
     Rectangle cellRectangle = lookup("#cell14").query();
-    assertEquals(Simulation.ALIVE_COLOR, cellRectangle.getFill());
+    assertEquals(Color.BLACK, cellRectangle.getFill());
     assertEquals(myAnimation.statusProperty().getValue(), Status.STOPPED);
   }
 

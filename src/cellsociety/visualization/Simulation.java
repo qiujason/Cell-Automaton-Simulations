@@ -45,8 +45,8 @@ public class Simulation extends Application {
   public static final double INITIAL_WIDTH = 800;
   public static final double FRAMES_PER_SECOND = 2;
   public static final double SIMULATION_DELAY = 1 / FRAMES_PER_SECOND;
-  public static final Color ALIVE_COLOR = Color.BLACK;
-  public static final Color DEAD_COLOR = Color.WHITE;
+//  public static final Color ALIVE_COLOR = Color.BLACK;
+//  public static final Color DEAD_COLOR = Color.WHITE;
 
   // TODO: Make it so these can be edited
   private double GRID_SIZE = 3 * INITIAL_WIDTH / 4;
@@ -219,18 +219,15 @@ public class Simulation extends Application {
     }
   }
 
-  // TODO: Need to generalize how to create a grid
   private void visualizeCell(double x, double y, int cellLabel, double cellSize, Cell cell) {
     Rectangle cellRectangle = new Rectangle(x, y, cellSize, cellSize);
     cellRectangle.setId("cell" + cellLabel);
     cellRectangle.setOnMouseClicked(e -> setCellState(cellRectangle));
-    if (cell.getMyState().toString().equals("DEAD")) {
-      cellRectangle.setFill(DEAD_COLOR);
-      cellRectangle.setStroke(ALIVE_COLOR);
-    } else {
-      cellRectangle.setFill(ALIVE_COLOR);
-      cellRectangle.setStroke(DEAD_COLOR);
-    }
+    Enum<?> currentState = cell.getMyState();
+    String myFillAsString = myPropertyReader.getProperty(currentState.toString());
+    Color myColor = Color.valueOf(myFillAsString);
+    cellRectangle.setFill(myColor);
+    cellRectangle.setStroke(Color.WHITE);
     myGridGroup.getChildren().add(cellRectangle);
   }
 
@@ -246,8 +243,6 @@ public class Simulation extends Application {
     String description = JOptionPane.showInputDialog(saver, "Description");
 
     String simType = myPropertyReader.getProperty("simulationType");
-
-    String[] keySet = new String[]{"simulationType", "simulationTitle", "configAuthor", "description", "csvFile"};
 
     myGrid.saveCurrentGrid("data/" + INITIAL_STATES + "/" + simType + "/" + filename + ".csv");
     File file = new File("data/" + PROPERTY_LISTS + "/" + simType + "/" + filename + ".properties");
