@@ -205,9 +205,10 @@ public class Simulation extends Application {
     }
 
     JFrame saver = new JFrame();
-    for(Object state : myStates){
+    for (Object state : myStates) {
       Enum<?> currentState = (Enum<?>) state;
-      String newColor = JOptionPane.showInputDialog(saver, "Input Color for State " + currentState.toString());
+      String newColor = JOptionPane
+          .showInputDialog(saver, "Input Color for State " + currentState.toString());
       myPropertyReader.setProperty(state.toString(), newColor);
     }
 
@@ -231,9 +232,10 @@ public class Simulation extends Application {
     }
 
     JFrame saver = new JFrame();
-    for(Object state : myStates){
+    for (Object state : myStates) {
       Enum<?> currentState = (Enum<?>) state;
-      String newPhoto = JOptionPane.showInputDialog(saver, "Choose photo for State " + currentState.toString());
+      String newPhoto = JOptionPane
+          .showInputDialog(saver, "Choose photo for State " + currentState.toString());
       myPropertyReader.setProperty(state.toString(), newPhoto);
     }
 
@@ -273,7 +275,7 @@ public class Simulation extends Application {
     cellRectangle.setOnMouseClicked(e -> setCellState(cellLabel));
     Enum<?> currentState = cell.getMyState();
     String myFillAsString = myPropertyReader.getProperty(currentState.toString());
-    if(myFillAsString.split("\\.").length > 0){
+    if (myFillAsString.split("\\.").length > 0) {
       Image stateImage = new Image("visualizationResources/images/" + myFillAsString);
       ImagePattern stateImagePattern = new ImagePattern(stateImage);
       cellRectangle.setFill(stateImagePattern);
@@ -303,9 +305,9 @@ public class Simulation extends Application {
       myStates = clazz.getEnumConstants();
     }
 
-    for(int i = 0; i < myStates.length - 1; i++){
-      if(myCell.getMyState().equals((Enum<?>) myStates[i])){
-        myCell.setMyState((Enum<?>) myStates[i+1]);
+    for (int i = 0; i < myStates.length - 1; i++) {
+      if (myCell.getMyState().equals((Enum<?>) myStates[i])) {
+        myCell.setMyState((Enum<?>) myStates[i + 1]);
         visualizeGrid();
         return;
       }
@@ -325,7 +327,7 @@ public class Simulation extends Application {
     myGrid.saveCurrentGrid("data/" + INITIAL_STATES + "/" + simType + "/" + filename + ".csv");
     File file = new File("data/" + PROPERTY_LISTS + "/" + simType + "/" + filename + ".properties");
     try {
-      FileWriter outputFile = new FileWriter(file,false);
+      FileWriter outputFile = new FileWriter(file, false);
       Properties savedProperty = new Properties();
       savedProperty.put("simulationType", simType);
       savedProperty.put("simulationTitle", filename);
