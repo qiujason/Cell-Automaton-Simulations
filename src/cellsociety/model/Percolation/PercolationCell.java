@@ -1,7 +1,6 @@
 package cellsociety.model.Percolation;
 
 import cellsociety.model.Cell;
-import java.util.Map;
 
 public class PercolationCell extends Cell {
 

@@ -209,8 +209,20 @@ class ConfigurationTest {
   }
 
   @Test
-  void badPropertyFile(){
+  void badPropertyFile() {
     assertThrows(ConfigurationException.class, () -> new PropertyReader(
         "property_lists/TestProperties/bad_property_file.properties"));
+  }
+
+  @Test
+  void testDefaultOptionalProperty() {
+    PropertyReader reader = new PropertyReader("property_lists/Segregation/preSegregated.properties");
+    assertEquals(0.3, PropertyReader.getOptionalProperty("satisfiedThreshold"));
+  }
+
+  @Test
+  void testChangedOptionalProperty() {
+    PropertyReader reader = new PropertyReader("property_lists/Segregation/checkerboard.properties");
+    assertEquals(0.75, PropertyReader.getOptionalProperty("satisfiedThreshold"));
   }
 }

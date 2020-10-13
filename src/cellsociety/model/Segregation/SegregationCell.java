@@ -3,7 +3,6 @@ package cellsociety.model.Segregation;
 import cellsociety.configuration.PropertyReader;
 import cellsociety.model.Cell;
 import cellsociety.model.Neighborhood;
-import java.util.Map;
 
 public class SegregationCell extends Cell {
 

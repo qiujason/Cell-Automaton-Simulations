@@ -14,7 +14,7 @@ import java.util.ResourceBundle;
 
 public class PropertyReader {
 
-  public static Map<String, Double> defaultOptionalKeys = new HashMap<>();
+  private static final Map<String, Double> defaultOptionalKeys = new HashMap<>();
 
   static {
     defaultOptionalKeys.put("probCatch", 0.3);
