@@ -8,6 +8,7 @@ public class GameOfLifeCell extends Cell {
     super(state);
   }
 
+  @Override
   public void setNewState() {
     switch(myNeighbors.getNumberOfNeighborsWithState(GameOfLifeStates.ALIVE, false)) {
       case 2 -> {

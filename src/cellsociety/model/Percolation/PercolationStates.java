@@ -2,7 +2,7 @@ package cellsociety.model.Percolation;
 
 
 public enum PercolationStates {
-  UNFILLED(0), FILLED(1);
+  BLOCKED(0), UNFILLED(1), FILLED(2);
 
   private final int value;
 

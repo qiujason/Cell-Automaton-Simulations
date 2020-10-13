@@ -1,6 +1,8 @@
 package cellsociety.configuration;
 
 import cellsociety.model.Cell;
+import cellsociety.model.Percolation.PercolationCell;
+import cellsociety.model.Percolation.PercolationStates;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
@@ -92,31 +94,34 @@ public class Grid {
     return ret;
   }
 
-  public Path saveCurrentGrid(String filePath) throws IOException {
+  public void saveCurrentGrid(String filePath) throws ConfigurationException {
     File file = new File(filePath);
-    FileWriter outputFile = new FileWriter(file,false);
-    int row = myCells.size();
-    if(row == 0){
-      return null;
-    }
-    int col = myCells.get(row-1).size();
-    CSVWriter csvWriter = new CSVWriter(outputFile);
-
-    List<String[]> data = new ArrayList<>();
-    String[] header = new String[col];
-    header[0] = String.valueOf(row);
-    header[1] = String.valueOf(col);
-    data.add(header);
-    for(int i = 0; i<row; i++){
-      String[] newRow = new String[col];
-      for(int j = 0; j<col; j++){
-        newRow[j] = String.valueOf(myCells.get(i).get(j).getMyState());
+    try {
+      FileWriter outputFile = new FileWriter(file,false);
+      int row = myCells.size();
+      if(row == 0){
+        return;
       }
-      data.add(newRow);
+      int col = myCells.get(row-1).size();
+      CSVWriter csvWriter = new CSVWriter(outputFile);
+
+      List<String[]> data = new ArrayList<>();
+      String[] header = new String[col];
+      header[0] = String.valueOf(row);
+      header[1] = String.valueOf(col);
+      data.add(header);
+      for (List<Cell> myCell : myCells) {
+        String[] newRow = new String[col];
+        for (int j = 0; j < col; j++) {
+          newRow[j] = String.valueOf(myCell.get(j).getMyState());
+        }
+        data.add(newRow);
+      }
+      csvWriter.writeAll(data);
+      csvWriter.close();
+    } catch (IOException e) {
+      throw new ConfigurationException(String.format(resourceBundle.getString("errorWritingToFile"), file));
     }
-    csvWriter.writeAll(data);
-    csvWriter.close();
-    return Path.of(filePath);
   }
 
   private void establishNeighbors() {

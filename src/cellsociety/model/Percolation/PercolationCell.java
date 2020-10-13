@@ -8,6 +8,7 @@ public class PercolationCell extends Cell {
     super(state);
   }
 
+  @Override
   public void setNewState() {
     if (myNeighbors.getNumberOfNeighborsWithState(PercolationStates.FILLED, false) > 0) {
       nextState = PercolationStates.FILLED;
