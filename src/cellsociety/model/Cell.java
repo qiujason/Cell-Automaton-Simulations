@@ -12,6 +12,7 @@ public abstract class Cell {
     myState = state;
     nextState = null;
   }
+
   public void updateCell() {
     if (nextState != null) {
       myState = nextState;
@@ -19,8 +20,8 @@ public abstract class Cell {
     }
   }
 
-  public Enum<?> getMyState() {
-    return myState;
+  public void setNextState(Enum<?> nextState) {
+    this.nextState = nextState;
   }
 
   public void setMyState(Enum<?> newState) { myState = newState; }
@@ -31,6 +32,14 @@ public abstract class Cell {
 
   public Neighborhood getMyNeighbors() {
     return myNeighbors;
+  }
+
+  public Enum<?> getMyState() {
+    return myState;
+  }
+
+  public Enum<?> getNextState() {
+    return nextState;
   }
 
   public abstract void setNewState();

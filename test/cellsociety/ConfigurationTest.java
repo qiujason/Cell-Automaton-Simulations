@@ -184,7 +184,6 @@ class ConfigurationTest {
     grid.saveCurrentGrid("test_data/BoatTest.csv");
 
     reader = new PropertyReader("property_lists/GameOfLife/boat.properties");
-    reader = new PropertyReader("property_lists/GameOfLife/boat.properties");
     Grid gridTest = reader.gridFromPropertyFile();
 
     Cell[][] expected = {
