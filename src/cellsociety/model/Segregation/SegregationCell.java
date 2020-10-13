@@ -5,10 +5,6 @@ import cellsociety.model.Neighborhood;
 
 public class SegregationCell extends Cell {
 
-  public static int numTotal;
-  public static int numATotal;
-  public static int numBTotal;
-  public static int numEmptyTotal;
   public static int unsatisfiedA;
   public static int unsatisfiedB;
   public static int numEmptyCanBeMoved;
@@ -20,16 +16,26 @@ public class SegregationCell extends Cell {
     super(state);
     this.satisfiedThreshold = satisfiedThreshold;
     satisfiedState = SegregationStates.UNSATISFIED;
-    if (state == SegregationStates.A) {
-      numATotal++;
-      unsatisfiedA++;
-    } else if (state == SegregationStates.B) {
-      numBTotal++;
-      unsatisfiedB++;
-    } else { // empty
-      numEmptyTotal++;
+  }
+
+  @Override
+  public void setNewState() {
+    if (myState != SegregationStates.EMPTY) {
+      int percentSimilar = myNeighbors.getNumberOfNeighborsWithState(myState, false) /
+          Neighborhood.NEIGHBORHOOD_SIZE;
+      if (percentSimilar < satisfiedThreshold) {
+        satisfiedState = SegregationStates.UNSATISFIED;
+        if (myState == SegregationStates.A) {
+          unsatisfiedA++;
+        } else if (myState == SegregationStates.B) {
+          unsatisfiedB++;
+        }
+      } else {
+        satisfiedState = SegregationStates.SATISFIED;
+      }
+    } else {
+      numEmptyCanBeMoved++;
     }
-    numTotal++;
   }
 
   @Override
@@ -41,19 +47,6 @@ public class SegregationCell extends Cell {
         changeStateFromB();
       } else {
         changeStateFromEmpty();
-      }
-    }
-  }
-
-  @Override
-  public void setNewState() {
-    if (myState != SegregationStates.EMPTY) {
-      int percentSimilar = myNeighbors.getNumberOfNeighborsWithState(myState, false) /
-          Neighborhood.NEIGHBORHOOD_SIZE;
-      if (percentSimilar < satisfiedThreshold) {
-        satisfiedState = SegregationStates.UNSATISFIED;
-      } else {
-        satisfiedState = SegregationStates.SATISFIED;
       }
     }
   }
