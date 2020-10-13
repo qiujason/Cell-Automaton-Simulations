@@ -9,10 +9,8 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Properties;
 import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -28,6 +26,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javax.swing.JFrame;
@@ -35,13 +34,13 @@ import javax.swing.JOptionPane;
 
 public class Simulation extends Application {
 
-  public static final String STYLESHEET = "/myStyles.css";
+  public static final String STYLESHEET = "/visualization_resources/myStyles.css";
   public static final String INITIAL_STATES = "initial_states";
   public static final String PROPERTY_LISTS = "property_lists";
-  public static final String PROPERTIES = "visualization";
+  public static final String PROPERTIES = "visualization_resources.visualization";
   public static final String HEADER = "Jack, Hayden, and Jason's Simulation";
   public static final double INITIAL_HEIGHT = 600;
-  public static final double INITIAL_WIDTH = 600;
+  public static final double INITIAL_WIDTH = 800;
   public static final double FRAMES_PER_SECOND = 2;
   public static final double SIMULATION_DELAY = 1 / FRAMES_PER_SECOND;
   public static final Color ALIVE_COLOR = Color.BLACK;
@@ -103,6 +102,10 @@ public class Simulation extends Application {
     navigationPane.getChildren().add(mySpeedUpButton);
     Button mySlowDownButton = makeButton("SlowDown", event -> slowDown());
     navigationPane.getChildren().add(mySlowDownButton);
+    Button mySetColorsButton = makeButton("SetColors", event -> setColors());
+    navigationPane.getChildren().add(mySetColorsButton);
+    Button mySetPhotosButton = makeButton("SetPhotos", event -> setPhotos());
+    navigationPane.getChildren().add(mySetPhotosButton);
     initializeSimulationOptions();
     navigationPane.getChildren().add(mySimulations);
     return navigationPane;
@@ -118,13 +121,13 @@ public class Simulation extends Application {
     Path simulations = null;
     try {
       simulations = Paths.get(
-          Objects.requireNonNull(Simulation.class.getClassLoader().getResource(INITIAL_STATES))
+          Objects.requireNonNull(Simulation.class.getClassLoader().getResource(PROPERTY_LISTS))
               .toURI());
     } catch (URISyntaxException e) {
       e.printStackTrace();
     }
     for (File file : Objects.requireNonNull(simulations.toFile().listFiles())) {
-      mySimulations.getItems().add(file.getName().split("\\.")[0]);
+      mySimulations.getItems().add(file.getName().split("_")[0]);
     }
   }
 
@@ -155,17 +158,33 @@ public class Simulation extends Application {
     visualizeGrid();
   }
 
-  private void speedUp(){
+  private void speedUp() {
     myAnimation.setRate(myAnimation.getRate() * 2);
+    myRoot.setLeft(new Text("x" + myAnimation.getRate()));
+    if(myAnimation.getRate() == 1){
+      myRoot.setLeft(null);
+    }
   }
 
   private void slowDown(){
     myAnimation.setRate(myAnimation.getRate() / 2);
+    myRoot.setLeft(new Text("x" + myAnimation.getRate()));
+    if(myAnimation.getRate() == 1){
+      myRoot.setLeft(null);
+    }
+  }
+
+  private void setColors() {
+
+  }
+
+  private void setPhotos() {
+
   }
 
   // TODO: Edit property reader input when merging
   private void chooseSimulation() {
-    String pathName = PROPERTY_LISTS + "/" + mySimulations.getValue().toLowerCase() + "_property.properties";
+    String pathName = PROPERTY_LISTS + "/" + mySimulations.getValue() + "_property.properties";
     Path pathToSimulation;
 
     try {
@@ -201,6 +220,7 @@ public class Simulation extends Application {
   private void visualizeCell(double x, double y, int cellLabel, double cellSize, Cell cell) {
     Rectangle cellRectangle = new Rectangle(x, y, cellSize, cellSize);
     cellRectangle.setId("cell" + cellLabel);
+    cellRectangle.setOnMouseClicked(e -> setCellState(cellRectangle));
     if (cell.getMyState().toString().equals("DEAD")) {
       cellRectangle.setFill(DEAD_COLOR);
       cellRectangle.setStroke(ALIVE_COLOR);
@@ -209,6 +229,11 @@ public class Simulation extends Application {
       cellRectangle.setStroke(DEAD_COLOR);
     }
     myGridGroup.getChildren().add(cellRectangle);
+  }
+  
+  private void setCellState(Rectangle cellRectangle) {
+    // TODO: Figure out how to access specific cell state
+
   }
 
   private void saveSimulation() {

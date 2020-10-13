@@ -30,6 +30,8 @@ public class VisualizationTest extends DukeApplicationTest {
   private Button mySaveSimulationButton;
   private Button mySpeedUpButton;
   private Button mySlowDownButton;
+  private Button mySetColorsButton;
+  private Button mySetPhotosButton;
   private ComboBox<String> mySimulations;
   private Group myGridGroup;
 
@@ -51,6 +53,8 @@ public class VisualizationTest extends DukeApplicationTest {
     mySaveSimulationButton = lookup("#SavedSimulation").query();
     mySpeedUpButton = lookup("#SpeedUp").query();
     mySlowDownButton = lookup("#SlowDown").query();
+    mySetColorsButton = lookup("#SetColors").query();
+    mySetPhotosButton = lookup("#SetPhotos").query();
     mySimulations = lookup("#SimulationSelect").query();
     myGridGroup = lookup("#GridGroup").query();
   }
@@ -65,6 +69,8 @@ public class VisualizationTest extends DukeApplicationTest {
     assertEquals(myResources.getString("SimulationSelect"), mySimulations.getPromptText());
     assertEquals(myResources.getString("SpeedUp"), mySpeedUpButton.getText());
     assertEquals(myResources.getString("SlowDown"), mySlowDownButton.getText());
+    assertEquals(myResources.getString("SetColors"), mySetColorsButton.getText());
+    assertEquals(myResources.getString("SetPhotos"), mySetPhotosButton.getText());
   }
 
   @Test
