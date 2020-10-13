@@ -1,333 +1,254 @@
-//package cellsociety;
-//
-//import static org.junit.jupiter.api.Assertions.*;
-//
-//import java.io.IOException;
-//import java.net.URISyntaxException;
-//import java.nio.file.Path;
-//import java.nio.file.Paths;
-//import java.util.Arrays;
-//import java.util.HashMap;
-//import java.util.Map;
-//import org.junit.jupiter.api.Test;
-//
-//class SimulationTest {
-//
-//  @Test
-//  void getNumberOfLiveNeighborsCorner() throws URISyntaxException {
-//    Path path = Paths
-//        .get(getClass().getClassLoader().getResource("initial_states/Square.csv").toURI());
-//    try {
-//      Grid grid = new Grid(path);
-//      int numberOfLiveNeighbors = grid.getMyCells().get(0).get(0).getMyNeighbors()
-//          .getNumberOfLiveNeighbors();
-//      assertEquals(3, numberOfLiveNeighbors);
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
-//  }
-//
-//  @Test
-//  void getNumberOfLiveNeighborsMiddle() throws URISyntaxException {
-//    Path path = Paths
-//        .get(getClass().getClassLoader().getResource("initial_states/Boat.csv").toURI());
-//    try {
-//      Grid grid = new Grid(path);
-//      int numberOfLiveNeighbors = grid.getMyCells().get(1).get(1).getMyNeighbors()
-//          .getNumberOfLiveNeighbors();
-//      assertEquals(2, numberOfLiveNeighbors);
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
-//  }
-//
-//  @Test
-//  void getNumberOfLiveNeighborsDead() throws URISyntaxException {
-//    Path path = Paths
-//        .get(getClass().getClassLoader().getResource("initial_states/Boat.csv").toURI());
-//    try {
-//      Grid grid = new Grid(path);
-//      int numberOfLiveNeighbors = grid.getMyCells().get(2).get(2).getMyNeighbors()
-//          .getNumberOfLiveNeighbors();
-//      assertEquals(5, numberOfLiveNeighbors);
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
-//  }
-//
-//  @Test
-//  void getNewState2NeighborsAlive() throws URISyntaxException {
-//    Path path = Paths
-//        .get(getClass().getClassLoader().getResource("initial_states/Edges.csv").toURI());
-//    try {
-//      Grid grid = new Grid(path);
-//      assertEquals(1, grid.getMyCells().get(0).get(0).getMyValue()); // assert alive
-//      assertEquals(2, grid.getMyCells().get(0).get(0).getMyNeighbors()
-//          .getNumberOfLiveNeighbors()); // assert 2 neighbors
-//      int actualNewState = grid.getMyCells().get(0).get(0).getNewState();
-//      assertEquals(1, actualNewState); // assert alive
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
-//  }
-//
-//  @Test
-//  void getNewState3NeighborsAlive() throws URISyntaxException {
-//    Path path = Paths
-//        .get(getClass().getClassLoader().getResource("initial_states/Beacon.csv").toURI());
-//    try {
-//      Grid grid = new Grid(path);
-//      assertEquals(1, grid.getMyCells().get(2).get(1).getMyValue()); // assert alive
-//      assertEquals(3, grid.getMyCells().get(2).get(1).getMyNeighbors()
-//          .getNumberOfLiveNeighbors()); // assert 3 neighbors
-//      int actualNewState = grid.getMyCells().get(2).get(1).getNewState();
-//      assertEquals(1, actualNewState); // assert alive
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
-//  }
-//
-//  @Test
-//  void getNewStateReproduction() throws URISyntaxException {
-//    Path path = Paths
-//        .get(getClass().getClassLoader().getResource("initial_states/Toad.csv").toURI());
-//    try {
-//      Grid grid = new Grid(path);
-//      assertEquals(0, grid.getMyCells().get(2).get(1).getMyValue()); // assert dead
-//      assertEquals(3, grid.getMyCells().get(2).get(1).getMyNeighbors()
-//          .getNumberOfLiveNeighbors()); // assert 3 neighbors
-//      int actualNewState = grid.getMyCells().get(2).get(1).getNewState();
-//      assertEquals(1, actualNewState); // assert alive
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
-//  }
-//
-//  @Test
-//  void getNewStateOverpopulation() throws URISyntaxException {
-//    Path path = Paths
-//        .get(getClass().getClassLoader().getResource("initial_states/Beacon.csv").toURI());
-//    try {
-//      Grid grid = new Grid(path);
-//      assertEquals(1, grid.getMyCells().get(2).get(2).getMyValue()); // assert alive
-//      assertTrue(grid.getMyCells().get(2).get(2).getMyNeighbors().getNumberOfLiveNeighbors()
-//          > 3); // assert overpopulation
-//      int actualNewState = grid.getMyCells().get(2).get(2).getNewState();
-//      assertEquals(0, actualNewState); // assert alive
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
-//  }
-//
-//  @Test
-//  void getNewStateUnderpopulation() throws URISyntaxException {
-//    Path path = Paths
-//        .get(getClass().getClassLoader().getResource("initial_states/Corner.csv").toURI());
-//    try {
-//      Grid grid = new Grid(path);
-//      assertEquals(1, grid.getMyCells().get(0).get(0).getMyValue()); // assert alive
-//      assertTrue(grid.getMyCells().get(0).get(0).getMyNeighbors().getNumberOfLiveNeighbors()
-//          < 2); // assert underpopulation
-//      int actualNewState = grid.getMyCells().get(0).get(0).getNewState();
-//      assertEquals(0, actualNewState); // assert dead
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
-//  }
-//
-//  @Test
-//  void updateCellsSquareTest() throws URISyntaxException {
-//    Path path = Paths
-//        .get(getClass().getClassLoader().getResource("initial_states/Square.csv").toURI());
-//    Cell[][] expected = {
-//        {new Cell(1), new Cell(1)},
-//        {new Cell(1), new Cell(1)}
-//    };
-//    try {
-//      Grid grid = new Grid(path);
-//      grid.updateNewStates();
-//
-//      for (int i = 0; i < expected.length; i++) {
-//        for (int j = 0; j < expected[i].length; j++) {
-//          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());
-//        }
-//      }
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
-//  }
-//
-//  @Test
-//  void updateCellsBeaconTest() throws URISyntaxException {
-//    Path path = Paths
-//        .get(getClass().getClassLoader().getResource("initial_states/Beacon.csv").toURI());
-//    Cell[][] expectedUpdate = {
-//        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
-//        {new Cell(0), new Cell(1), new Cell(1), new Cell(0), new Cell(0), new Cell(0)},
-//        {new Cell(0), new Cell(1), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
-//        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(1), new Cell(0)},
-//        {new Cell(0), new Cell(0), new Cell(0), new Cell(1), new Cell(1), new Cell(0)},
-//        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)}
-//    };
-//    try {
-//      Grid grid = new Grid(path);
-//      grid.updateNewStates();
-//
-//      for (int i = 0; i < expectedUpdate.length; i++) {
-//        for (int j = 0; j < expectedUpdate[i].length; j++) {
-//          assertEquals(expectedUpdate[i][j].getMyValue(),
-//              grid.getMyCells().get(i).get(j).getMyValue());
-//        }
-//      }
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
-//  }
-//
-//  @Test
-//  void updateCellsToadTest() throws URISyntaxException {
-//    Path path = Paths
-//        .get(getClass().getClassLoader().getResource("initial_states/Toad.csv").toURI());
-//    Cell[][] expected = {
-//        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
-//        {new Cell(0), new Cell(0), new Cell(0), new Cell(1), new Cell(0), new Cell(0)},
-//        {new Cell(0), new Cell(1), new Cell(0), new Cell(0), new Cell(1), new Cell(0)},
-//        {new Cell(0), new Cell(1), new Cell(0), new Cell(0), new Cell(1), new Cell(0)},
-//        {new Cell(0), new Cell(0), new Cell(1), new Cell(0), new Cell(0), new Cell(0)},
-//        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)}
-//    };
-//    try {
-//      Grid grid = new Grid(path);
-//      grid.updateNewStates();
-//
-//      for (int i = 0; i < expected.length; i++) {
-//        for (int j = 0; j < expected[i].length; j++) {
-//          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());
-//        }
-//      }
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
-//  }
-//
-//  @Test
-//  void updateCellsBlinkerTest() throws URISyntaxException {
-//    Path path = Paths
-//        .get(getClass().getClassLoader().getResource("initial_states/Blinker.csv").toURI());
-//    Cell[][] expected = {
-//        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
-//        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
-//        {new Cell(0), new Cell(1), new Cell(1), new Cell(1), new Cell(0)},
-//        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
-//        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)}
-//    };
-//    try {
-//      Grid grid = new Grid(path);
-//      grid.updateNewStates();
-//
-//      for (int i = 0; i < expected.length; i++) {
-//        for (int j = 0; j < expected[i].length; j++) {
-//          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());
-//        }
-//      }
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
-//  }
-//
-//  @Test
-//  void updateCellsTubTest() throws URISyntaxException {
-//    Path path = Paths
-//        .get(getClass().getClassLoader().getResource("initial_states/Tub.csv").toURI());
-//    Cell[][] expected = {
-//        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
-//        {new Cell(0), new Cell(0), new Cell(1), new Cell(0), new Cell(0)},
-//        {new Cell(0), new Cell(1), new Cell(0), new Cell(1), new Cell(0)},
-//        {new Cell(0), new Cell(0), new Cell(1), new Cell(0), new Cell(0)},
-//        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
-//    };
-//    try {
-//      Grid grid = new Grid(path);
-//      grid.updateNewStates();
-//      for (int i = 0; i < expected.length; i++) {
-//        for (int j = 0; j < expected[i].length; j++) {
-//          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());
-//        }
-//      }
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
-//  }
-//
-//  @Test
-//  void updateCellsBoatTest() throws URISyntaxException {
-//    Path path = Paths
-//        .get(getClass().getClassLoader().getResource("initial_states/Boat.csv").toURI());
-//    Cell[][] expected = {
-//        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
-//        {new Cell(0), new Cell(1), new Cell(1), new Cell(0), new Cell(0)},
-//        {new Cell(0), new Cell(1), new Cell(0), new Cell(1), new Cell(0)},
-//        {new Cell(0), new Cell(0), new Cell(1), new Cell(0), new Cell(0)},
-//        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
-//    };
-//    try {
-//      Grid grid = new Grid(path);
-//      grid.updateNewStates();
-//      for (int i = 0; i < expected.length; i++) {
-//        for (int j = 0; j < expected[i].length; j++) {
-//          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());
-//        }
-//      }
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
-//  }
-//
-//  @Test
-//  void updateCellsCornerTest() throws URISyntaxException {
-//    Path path = Paths
-//        .get(getClass().getClassLoader().getResource("initial_states/Corner.csv").toURI());
-//    Cell[][] expected = {
-//        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
-//        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
-//        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
-//        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
-//        {new Cell(0), new Cell(0), new Cell(0), new Cell(0), new Cell(0)},
-//    };
-//    try {
-//      Grid grid = new Grid(path);
-//      grid.updateNewStates();
-//      for (int i = 0; i < expected.length; i++) {
-//        for (int j = 0; j < expected[i].length; j++) {
-//          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());
-//        }
-//      }
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
-//  }
-//
-//  @Test
-//  void updateCellsEdgesTest() throws URISyntaxException {
-//    Path path = Paths
-//        .get(getClass().getClassLoader().getResource("initial_states/Edges.csv").toURI());
-//    Cell[][] expected = {
-//        {new Cell(1), new Cell(1), new Cell(1), new Cell(1), new Cell(1)},
-//        {new Cell(1), new Cell(0), new Cell(1), new Cell(0), new Cell(1)},
-//        {new Cell(1), new Cell(1), new Cell(0), new Cell(1), new Cell(1)},
-//        {new Cell(1), new Cell(0), new Cell(1), new Cell(0), new Cell(1)},
-//        {new Cell(1), new Cell(1), new Cell(1), new Cell(1), new Cell(1)},
-//    };
-//    try {
-//      Grid grid = new Grid(path);
-//      grid.updateNewStates();
-//      for (int i = 0; i < expected.length; i++) {
-//        for (int j = 0; j < expected[i].length; j++) {
-//          assertEquals(expected[i][j].getMyValue(), grid.getMyCells().get(i).get(j).getMyValue());
-//        }
-//      }
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
-//  }
-//}
+package cellsociety;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import cellsociety.configuration.Grid;
+import cellsociety.configuration.PropertyReader;
+import cellsociety.model.GameOfLife.GameOfLifeCell;
+import cellsociety.model.GameOfLife.GameOfLifeStates;
+import org.junit.jupiter.api.Test;
+
+class SimulationTest {
+
+  @Test
+  void getNumberOfLiveNeighborsCorner() {
+    PropertyReader reader = new PropertyReader("property_lists/GameOfLife/square.properties");
+    Grid grid = reader.gridFromPropertyFile();
+    int numberOfLiveNeighbors = grid.getMyCells().get(0).get(0).getMyNeighbors()
+        .getNumberOfNeighborsWithState(GameOfLifeStates.ALIVE, false);
+    assertEquals(3, numberOfLiveNeighbors);
+  }
+
+  @Test
+  void getNumberOfLiveNeighborsMiddle() {
+    PropertyReader reader = new PropertyReader("property_lists/GameOfLife/boat.properties");
+    Grid grid = reader.gridFromPropertyFile();
+    int numberOfLiveNeighbors = grid.getMyCells().get(1).get(1).getMyNeighbors()
+        .getNumberOfNeighborsWithState(GameOfLifeStates.ALIVE, false);
+    assertEquals(2, numberOfLiveNeighbors);
+  }
+
+  @Test
+  void getNumberOfLiveNeighborsDead() {
+    PropertyReader reader = new PropertyReader("property_lists/GameOfLife/boat.properties");
+    Grid grid = reader.gridFromPropertyFile();
+    int numberOfLiveNeighbors = grid.getMyCells().get(2).get(2).getMyNeighbors()
+        .getNumberOfNeighborsWithState(GameOfLifeStates.ALIVE, false);
+    assertEquals(5, numberOfLiveNeighbors);
+  }
+
+  @Test
+  void getNewState2NeighborsAlive() {
+    PropertyReader reader = new PropertyReader("property_lists/GameOfLife/edges.properties");
+    Grid grid = reader.gridFromPropertyFile();
+    assertEquals(GameOfLifeStates.ALIVE, grid.getMyCells().get(0).get(0).getMyState()); // assert alive
+    assertEquals(2, grid.getMyCells().get(0).get(0).getMyNeighbors()
+        .getNumberOfNeighborsWithState(GameOfLifeStates.ALIVE, false)); // assert 2 neighbors
+    grid.updateNewStates();
+    assertEquals(GameOfLifeStates.ALIVE, grid.getMyCells().get(0).get(0).getMyState()); // assert alive
+  }
+
+  @Test
+  void getNewState3NeighborsAlive() {
+    PropertyReader reader = new PropertyReader("property_lists/GameOfLife/beacon.properties");
+    Grid grid = reader.gridFromPropertyFile();
+    assertEquals(GameOfLifeStates.ALIVE, grid.getMyCells().get(2).get(1).getMyState()); // assert alive
+    assertEquals(3, grid.getMyCells().get(2).get(1).getMyNeighbors()
+          .getNumberOfNeighborsWithState(GameOfLifeStates.ALIVE, false)); // assert 3 neighbors
+    grid.updateNewStates();
+    assertEquals(GameOfLifeStates.ALIVE, grid.getMyCells().get(2).get(1).getMyState());
+  }
+
+  @Test
+  void getNewStateReproduction() {
+    PropertyReader reader = new PropertyReader("property_lists/GameOfLife/toad.properties");
+    Grid grid = reader.gridFromPropertyFile();
+    assertEquals(GameOfLifeStates.DEAD, grid.getMyCells().get(2).get(1).getMyState()); // assert dead
+    assertEquals(3, grid.getMyCells().get(2).get(1).getMyNeighbors()
+        .getNumberOfNeighborsWithState(GameOfLifeStates.ALIVE, false)); // assert 3 neighbors
+    grid.updateNewStates();
+    assertEquals(GameOfLifeStates.ALIVE, grid.getMyCells().get(2).get(1).getMyState());
+  }
+
+  @Test
+  void getNewStateOverpopulation() {
+    PropertyReader reader = new PropertyReader("property_lists/GameOfLife/beacon.properties");
+    Grid grid = reader.gridFromPropertyFile();
+    assertEquals(GameOfLifeStates.ALIVE, grid.getMyCells().get(2).get(2).getMyState()); // assert alive
+    assertTrue(grid.getMyCells().get(2).get(2).getMyNeighbors()
+        .getNumberOfNeighborsWithState(GameOfLifeStates.ALIVE, false) > 3); // assert overpopulation
+    grid.updateNewStates();
+    assertEquals(GameOfLifeStates.DEAD, grid.getMyCells().get(2).get(2).getMyState());
+  }
+
+  @Test
+  void getNewStateUnderpopulation() {
+    PropertyReader reader = new PropertyReader("property_lists/GameOfLife/corner.properties");
+    Grid grid = reader.gridFromPropertyFile();
+    assertEquals(GameOfLifeStates.ALIVE, grid.getMyCells().get(0).get(0).getMyState()); // assert alive
+    assertTrue(grid.getMyCells().get(0).get(0).getMyNeighbors()
+        .getNumberOfNeighborsWithState(GameOfLifeStates.ALIVE, false) < 2); // assert underpopulation
+    grid.updateNewStates();
+    assertEquals(GameOfLifeStates.DEAD, grid.getMyCells().get(0).get(0).getMyState());
+  }
+
+  @Test
+  void updateCellsSquareTest() {
+    GameOfLifeCell[][] expected = {
+        {new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE)},
+        {new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE)}
+    };
+    PropertyReader reader = new PropertyReader("property_lists/GameOfLife/square.properties");
+    Grid grid = reader.gridFromPropertyFile();
+    grid.updateNewStates();
+
+    for (int i = 0; i < expected.length; i++) {
+      for (int j = 0; j < expected[i].length; j++) {
+        assertEquals(expected[i][j].getMyState(), grid.getMyCells().get(i).get(j).getMyState());
+      }
+    }
+  }
+
+  @Test
+  void updateCellsBeaconTest() {
+    GameOfLifeCell[][] expectedUpdate = {
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)}
+    };
+    PropertyReader reader = new PropertyReader("property_lists/GameOfLife/beacon.properties");
+    Grid grid = reader.gridFromPropertyFile();
+    grid.updateNewStates();
+
+    for (int i = 0; i < expectedUpdate.length; i++) {
+      for (int j = 0; j < expectedUpdate[i].length; j++) {
+        assertEquals(expectedUpdate[i][j].getMyState(),
+            grid.getMyCells().get(i).get(j).getMyState());
+      }
+    }
+  }
+
+  @Test
+  void updateCellsToadTest() {
+    GameOfLifeCell[][] expected = {
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)}
+    };
+    PropertyReader reader = new PropertyReader("property_lists/GameOfLife/toad.properties");
+    Grid grid = reader.gridFromPropertyFile();
+    grid.updateNewStates();
+
+    for (int i = 0; i < expected.length; i++) {
+      for (int j = 0; j < expected[i].length; j++) {
+        assertEquals(expected[i][j].getMyState(), grid.getMyCells().get(i).get(j).getMyState());
+      }
+    }
+  }
+
+  @Test
+  void updateCellsBlinkerTest() {
+    GameOfLifeCell[][] expected = {
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)}
+    };
+    PropertyReader reader = new PropertyReader("property_lists/GameOfLife/blinker.properties");
+    Grid grid = reader.gridFromPropertyFile();
+    grid.updateNewStates();
+
+    for (int i = 0; i < expected.length; i++) {
+      for (int j = 0; j < expected[i].length; j++) {
+        assertEquals(expected[i][j].getMyState(), grid.getMyCells().get(i).get(j).getMyState());
+      }
+    }
+  }
+
+  @Test
+  void updateCellsTubTest() {
+    GameOfLifeCell[][] expected = {
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+    };
+    PropertyReader reader = new PropertyReader("property_lists/GameOfLife/tub.properties");
+    Grid grid = reader.gridFromPropertyFile();
+    grid.updateNewStates();
+
+      for (int i = 0; i < expected.length; i++) {
+        for (int j = 0; j < expected[i].length; j++) {
+          assertEquals(expected[i][j].getMyState(), grid.getMyCells().get(i).get(j).getMyState());
+        }
+      }
+  }
+
+  @Test
+  void updateCellsBoatTest() {
+    GameOfLifeCell[][] expected = {
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+    };
+    PropertyReader reader = new PropertyReader("property_lists/GameOfLife/boat.properties");
+    Grid grid = reader.gridFromPropertyFile();
+    grid.updateNewStates();
+
+    for (int i = 0; i < expected.length; i++) {
+      for (int j = 0; j < expected[i].length; j++) {
+        assertEquals(expected[i][j].getMyState(), grid.getMyCells().get(i).get(j).getMyState());
+      }
+    }
+  }
+
+  @Test
+  void updateCellsCornerTest() {
+    GameOfLifeCell[][] expected = {
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
+    };
+    PropertyReader reader = new PropertyReader("property_lists/GameOfLife/corner.properties");
+    Grid grid = reader.gridFromPropertyFile();
+    grid.updateNewStates();
+
+    for (int i = 0; i < expected.length; i++) {
+      for (int j = 0; j < expected[i].length; j++) {
+        assertEquals(expected[i][j].getMyState(), grid.getMyCells().get(i).get(j).getMyState());
+      }
+    }
+  }
+
+  @Test
+  void updateCellsEdgesTest() {
+    GameOfLifeCell[][] expected = {
+        {new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE)},
+        {new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE)},
+        {new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE)},
+        {new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE)},
+        {new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE)},
+    };
+    PropertyReader reader = new PropertyReader("property_lists/GameOfLife/edges.properties");
+    Grid grid = reader.gridFromPropertyFile();
+    grid.updateNewStates();
+
+    for (int i = 0; i < expected.length; i++) {
+      for (int j = 0; j < expected[i].length; j++) {
+        assertEquals(expected[i][j].getMyState(), grid.getMyCells().get(i).get(j).getMyState());
+      }
+    }
+  }
+}
