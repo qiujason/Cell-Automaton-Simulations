@@ -210,6 +210,7 @@ class ConfigurationTest {
 
   @Test
   void badPropertyFile(){
-    assertThrows(ConfigurationException.class, () -> new PropertyReader("property_lists/bad_property_file.properties"));
+    assertThrows(ConfigurationException.class, () -> new PropertyReader(
+        "property_lists/TestProperties/bad_property_file.properties"));
   }
 }
