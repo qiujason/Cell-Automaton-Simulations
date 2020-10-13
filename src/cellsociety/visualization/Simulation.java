@@ -9,8 +9,10 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -28,14 +30,15 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 public class Simulation extends Application {
 
   public static final String STYLESHEET = "/myStyles.css";
   public static final String INITIAL_STATES = "initial_states";
   public static final String PROPERTY_LISTS = "property_lists";
-  public static final String SAVED_SIMULATION = "SavedSimulation.csv";
-  public static final String PROPERTIES = "SimulationButtons";
+  public static final String PROPERTIES = "visualization";
   public static final String HEADER = "Jack, Hayden, and Jason's Simulation";
   public static final double INITIAL_HEIGHT = 600;
   public static final double INITIAL_WIDTH = 600;
@@ -54,7 +57,7 @@ public class Simulation extends Application {
   private Group myGridGroup;
   private ResourceBundle myResources;
   private Timeline myAnimation;
-
+  private PropertyReader myPropertyReader;
   private ComboBox<String> mySimulations;
 
   @Override
@@ -135,6 +138,7 @@ public class Simulation extends Application {
   }
 
   private void restart() {
+    myAnimation.stop();
     chooseSimulation();
   }
 
@@ -143,7 +147,7 @@ public class Simulation extends Application {
   }
 
   private void pause() {
-    myAnimation.stop();
+    myAnimation.pause();
   }
 
   private void step() {
@@ -159,20 +163,20 @@ public class Simulation extends Application {
     myAnimation.setRate(myAnimation.getRate() / 2);
   }
 
+  // TODO: Edit property reader input when merging
   private void chooseSimulation() {
     String pathName = PROPERTY_LISTS + "/" + mySimulations.getValue().toLowerCase() + "_property.properties";
     Path pathToSimulation;
-    PropertyReader reader = null;
 
     try {
       pathToSimulation = Paths.get(
           Objects.requireNonNull(Simulation.class.getClassLoader().getResource(pathName)).toURI());
-      reader = new PropertyReader(Files.newInputStream(pathToSimulation));
+      myPropertyReader = new PropertyReader(Files.newInputStream(pathToSimulation));
     } catch (URISyntaxException | IOException e) {
       e.printStackTrace();
     }
 
-    myGrid = reader.gridFromPropertyFile();
+    myGrid = myPropertyReader.gridFromPropertyFile();
     visualizeGrid();
   }
 
@@ -208,11 +212,25 @@ public class Simulation extends Application {
   }
 
   private void saveSimulation() {
+    JFrame saver = new JFrame();
+    String filename = JOptionPane.showInputDialog(saver, "SaveSimulationAs");
+    String author = JOptionPane.showInputDialog(saver, "Author");
+    String description = JOptionPane.showInputDialog(saver, "Description");
+
     try {
-      myGrid.saveCurrentGrid("data/" + INITIAL_STATES + "/" + SAVED_SIMULATION);
+      myGrid.saveCurrentGrid("data/" + INITIAL_STATES + "/" + filename + ".csv");
     } catch (IOException e) {
       e.printStackTrace();
     }
+
+    // TODO: Edit property reader and use new methods
+
+    mySimulations.getItems().add(filename);
+  }
+
+  // Necessary for testing
+  public Timeline getAnimation() {
+    return myAnimation;
   }
 
   public static void main(String[] args) {

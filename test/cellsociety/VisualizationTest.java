@@ -1,24 +1,26 @@
 package cellsociety;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import cellsociety.visualization.Simulation;
 import java.util.ResourceBundle;
-import javafx.animation.KeyFrame;
+import javafx.animation.Animation.Status;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.input.KeyCode;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import org.junit.jupiter.api.Test;
 
 public class VisualizationTest extends DukeApplicationTest {
 
   private Simulation mySimulation;
   private Scene myScene;
+  private Timeline myAnimation;
   private ResourceBundle myResources;
 
   private Button myRestartButton;
@@ -39,6 +41,8 @@ public class VisualizationTest extends DukeApplicationTest {
     myScene = mySimulation.setupScene(Simulation.INITIAL_WIDTH, Simulation.INITIAL_HEIGHT);
     stage.setScene(myScene);
     stage.show();
+
+    myAnimation = mySimulation.getAnimation();
 
     myRestartButton = lookup("#RestartButton").query();
     myPlayButton = lookup("#PlayButton").query();
@@ -98,12 +102,48 @@ public class VisualizationTest extends DukeApplicationTest {
     clickOn(myRestartButton);
     Rectangle cellRectangle = lookup("#cell14").query();
     assertEquals(Simulation.ALIVE_COLOR, cellRectangle.getFill());
+    assertEquals(myAnimation.statusProperty().getValue(), Status.STOPPED);
+  }
+
+  @Test
+  public void testPlayButton() {
+    select(mySimulations, "Beacon");
+    clickOn(myPlayButton);
+    assertEquals(myAnimation.statusProperty().getValue(), Status.RUNNING);
+  }
+
+  @Test
+  public void testPauseButton() {
+    select(mySimulations, "Beacon");
+    clickOn(myPlayButton);
+    assertEquals(myAnimation.statusProperty().getValue(), Status.RUNNING);
+    clickOn(myPauseButton);
+    assertEquals(myAnimation.statusProperty().getValue(), Status.PAUSED);
   }
 
   @Test
   public void testSpeedUpButton() {
-    select(mySimulations, "Beacon");
     clickOn(mySpeedUpButton);
+    assertEquals(2, myAnimation.getRate());
+  }
+
+  @Test
+  public void testSlowDownButton() {
+    clickOn(mySlowDownButton);
+    assertEquals(0.5, myAnimation.getRate());
+  }
+
+  @Test
+  public void testSaveSimulation() {
+    select(mySimulations, "Beacon");
+    clickOn(mySaveSimulationButton);
+    press(KeyCode.J);
+    press(KeyCode.ENTER);
+    press(KeyCode.J);
+    press(KeyCode.ENTER);
+    press(KeyCode.J);
+    press(KeyCode.ENTER);
+    assertTrue(mySimulations.getItems().contains("j"));
   }
 
 }
