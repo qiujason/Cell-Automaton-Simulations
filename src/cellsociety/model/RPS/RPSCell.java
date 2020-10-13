@@ -16,7 +16,7 @@ public class RPSCell extends Cell {
     RPSWinDynamics.put(RPSStates.ROCK, RPSStates.PAPER);
   }
 
-  private double winThreshold;
+  private final double winThreshold;
 
   public RPSCell(Enum<?> state) {
     super(state);

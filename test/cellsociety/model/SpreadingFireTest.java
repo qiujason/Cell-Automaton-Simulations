@@ -1,39 +1,123 @@
-//package cellsociety.model;
-//
-//import static org.junit.jupiter.api.Assertions.*;
-//
-//import cellsociety.configuration.Grid;
-//import cellsociety.configuration.PropertyReader;
-//import cellsociety.model.SpreadingFire.SpreadingFireCell;
-//import cellsociety.model.SpreadingFire.SpreadingFireStates;
-//import org.junit.jupiter.api.BeforeAll;
-//import org.junit.jupiter.api.Test;
-//
-//class SpreadingFireTest {
-//
-//  @BeforeAll
-//  void setOptionalKey() {
-//
-//  }
-//
-//  @Test
-//  void getNewStateAdjacentFilled() {
-//    PropertyReader reader = new PropertyReader("property_lists/SpreadingFire/diagonal.properties");
-//    Grid grid = reader.gridFromPropertyFile();
-//    assertEquals(SpreadingFireStates.UNFILLED, grid.getMyCells().get(1).get(0).getMyState());
-//    grid.updateNewStates();
-//    assertEquals(SpreadingFireStates.FILLED, grid.getMyCells().get(1).get(0).getMyState());
-//  }
-//
-//  @Test
-//  void getNewStateOfBlockedWithAdjacentFilled() {
-//    PropertyReader reader = new PropertyReader("property_lists/SpreadingFire/diagonal.properties");
-//    Grid grid = reader.gridFromPropertyFile();
-//    assertEquals(SpreadingFireStates.BLOCKED, grid.getMyCells().get(0).get(1).getMyState());
-//    grid.updateNewStates();
-//    assertEquals(SpreadingFireStates.BLOCKED, grid.getMyCells().get(0).get(1).getMyState());
-//  }
-//
+package cellsociety.model;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import cellsociety.configuration.Grid;
+import cellsociety.configuration.PropertyReader;
+import cellsociety.model.SpreadingFire.SpreadingFireCell;
+import cellsociety.model.SpreadingFire.SpreadingFireStates;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+class SpreadingFireTest {
+
+  @BeforeEach
+  void setRandomSeed() {
+    SpreadingFireCell.setRandomSeed(10);
+  }
+
+  @Test
+  void getNewStateAdjacentFilledRandom() {
+    PropertyReader reader = new PropertyReader("property_lists/SpreadingFire/centerOnFire.properties");
+    Grid grid = reader.gridFromPropertyFile();
+
+    assertEquals(SpreadingFireStates.TREE, grid.getMyCells().get(1).get(2).getMyState());
+    assertEquals(SpreadingFireStates.TREE, grid.getMyCells().get(2).get(1).getMyState());
+    assertEquals(SpreadingFireStates.TREE, grid.getMyCells().get(2).get(3).getMyState());
+    assertEquals(SpreadingFireStates.TREE, grid.getMyCells().get(3).get(2).getMyState());
+    grid.updateNewStates();
+
+    assertEquals(SpreadingFireStates.TREE, grid.getMyCells().get(1).get(2).getMyState());
+    assertEquals(SpreadingFireStates.TREE, grid.getMyCells().get(2).get(1).getMyState());
+    assertEquals(SpreadingFireStates.BURNING, grid.getMyCells().get(2).get(3).getMyState());
+    assertEquals(SpreadingFireStates.TREE, grid.getMyCells().get(3).get(2).getMyState());
+  }
+
+  @Test
+  void testEmptyIsUnaffected() {
+    PropertyReader reader = new PropertyReader("property_lists/SpreadingFire/centerOnFireWithSpace.properties");
+    Grid grid = reader.gridFromPropertyFile();
+    List<List<Cell>> initialState = grid.getMyCells();
+    for (int i = 0; i < 100; i++) {
+      grid.updateNewStates();
+    }
+    assertEquals(initialState, grid.getMyCells());
+  }
+
+  @Test
+  void testBurningBecomesEmpty() {
+    PropertyReader reader = new PropertyReader("property_lists/SpreadingFire/centerOnFire.properties");
+    Grid grid = reader.gridFromPropertyFile();
+
+    assertEquals(SpreadingFireStates.TREE, grid.getMyCells().get(2).get(3).getMyState());
+    grid.updateNewStates();
+
+    assertEquals(SpreadingFireStates.BURNING, grid.getMyCells().get(2).get(3).getMyState());
+    grid.updateNewStates();
+
+    assertEquals(SpreadingFireStates.EMPTY, grid.getMyCells().get(2).get(3).getMyState());
+  }
+
+  @Test
+  void updateCenterOnFire() {
+    SpreadingFireCell[][] expected = {
+        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE)},
+        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE)},
+        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.BURNING), new SpreadingFireCell(SpreadingFireStates.TREE)},
+        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE)},
+        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE)}
+    };
+    PropertyReader reader = new PropertyReader("property_lists/SpreadingFire/centerOnFire.properties");
+    Grid grid = reader.gridFromPropertyFile();
+    grid.updateNewStates();
+
+    for (int i = 0; i < expected.length; i++) {
+      for (int j = 0; j < expected[i].length; j++) {
+        assertEquals(expected[i][j].getMyState(), grid.getMyCells().get(i).get(j).getMyState());
+      }
+    }
+  }
+
+  @Test
+  void updateCenterOnFireWithSpace() {
+    SpreadingFireCell[][] expected = {
+        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE)},
+        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.TREE)},
+        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.TREE)},
+        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.TREE)},
+        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE)}
+    };
+    PropertyReader reader = new PropertyReader("property_lists/SpreadingFire/centerOnFireWithSpace.properties");
+    Grid grid = reader.gridFromPropertyFile();
+    grid.updateNewStates();
+
+    for (int i = 0; i < expected.length; i++) {
+      for (int j = 0; j < expected[i].length; j++) {
+        assertEquals(expected[i][j].getMyState(), grid.getMyCells().get(i).get(j).getMyState());
+      }
+    }
+  }
+
+  @Test
+  void updateOneOnFire() {
+    SpreadingFireCell[][] expected = {
+        {new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE)},
+        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.EMPTY)},
+        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE)},
+        {new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.EMPTY)},
+        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.TREE)}
+    };
+    PropertyReader reader = new PropertyReader("property_lists/SpreadingFire/oneOnFire.properties");
+    Grid grid = reader.gridFromPropertyFile();
+    grid.updateNewStates();
+
+    for (int i = 0; i < expected.length; i++) {
+      for (int j = 0; j < expected[i].length; j++) {
+        assertEquals(expected[i][j].getMyState(), grid.getMyCells().get(i).get(j).getMyState());
+      }
+    }
+  }
 //  @Test
 //  void getNewStateWithAdjacentFilledDiagonal() {
 //    PropertyReader reader = new PropertyReader("property_lists/SpreadingFire/diagonal.properties");
@@ -51,15 +135,15 @@
 //    grid.updateNewStates();
 //    assertEquals(SpreadingFireStates.UNFILLED, grid.getMyCells().get(2).get(1).getMyState());
 //  }
-//
+////
 //  @Test
 //  void updateAllBlocked() {
 //    SpreadingFireCell[][] expected = {
-//        {new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED)},
-//        {new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED)},
-//        {new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED)},
-//        {new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED)},
-//        {new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED)}
+//        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE)},
+//        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE)},
+//        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE)},
+//        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE)},
+//        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE)}
 //    };
 //    PropertyReader reader = new PropertyReader("property_lists/SpreadingFire/allBlocked.properties");
 //    Grid grid = reader.gridFromPropertyFile();
@@ -75,11 +159,11 @@
 //  @Test
 //  void updateDiagonal() {
 //    SpreadingFireCell[][] expected = {
-//        {new SpreadingFireCell(SpreadingFireStates.FILLED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED)},
-//        {new SpreadingFireCell(SpreadingFireStates.FILLED), new SpreadingFireCell(SpreadingFireStates.FILLED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED)},
-//        {new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.UNFILLED), new SpreadingFireCell(SpreadingFireStates.UNFILLED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED)},
-//        {new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.UNFILLED), new SpreadingFireCell(SpreadingFireStates.UNFILLED), new SpreadingFireCell(SpreadingFireStates.BLOCKED)},
-//        {new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.UNFILLED), new SpreadingFireCell(SpreadingFireStates.UNFILLED)}
+//        {new SpreadingFireCell(SpreadingFireStates.FILLED), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE)},
+//        {new SpreadingFireCell(SpreadingFireStates.FILLED), new SpreadingFireCell(SpreadingFireStates.FILLED), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE)},
+//        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.UNFILLED), new SpreadingFireCell(SpreadingFireStates.UNFILLED), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE)},
+//        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.UNFILLED), new SpreadingFireCell(SpreadingFireStates.UNFILLED), new SpreadingFireCell(SpreadingFireStates.TREE)},
+//        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.UNFILLED), new SpreadingFireCell(SpreadingFireStates.UNFILLED)}
 //    };
 //    PropertyReader reader = new PropertyReader("property_lists/SpreadingFire/diagonal.properties");
 //    Grid grid = reader.gridFromPropertyFile();
@@ -95,11 +179,11 @@
 //  @Test
 //  void updateStraightLine() {
 //    SpreadingFireCell[][] expected = {
-//        {new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.FILLED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED)},
-//        {new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.FILLED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED)},
-//        {new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.UNFILLED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED)},
-//        {new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.UNFILLED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED)},
-//        {new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.UNFILLED), new SpreadingFireCell(SpreadingFireStates.BLOCKED), new SpreadingFireCell(SpreadingFireStates.BLOCKED)}
+//        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.FILLED), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE)},
+//        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.FILLED), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE)},
+//        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.UNFILLED), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE)},
+//        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.UNFILLED), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE)},
+//        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.UNFILLED), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE)}
 //    };
 //    PropertyReader reader = new PropertyReader("property_lists/SpreadingFire/straightLine.properties");
 //    Grid grid = reader.gridFromPropertyFile();
@@ -111,5 +195,5 @@
 //      }
 //    }
 //  }
-//
-//}
+
+}
