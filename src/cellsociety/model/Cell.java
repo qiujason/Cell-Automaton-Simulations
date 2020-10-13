@@ -12,6 +12,7 @@ public abstract class Cell {
     myState = state;
     nextState = null;
   }
+
   public void updateCell() {
     if (nextState != null) {
       myState = nextState;

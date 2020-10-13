@@ -10,7 +10,6 @@ import cellsociety.configuration.PropertyReader;
 import cellsociety.model.Cell;
 import cellsociety.model.GameOfLife.GameOfLifeCell;
 import cellsociety.model.GameOfLife.GameOfLifeStates;
-import java.io.InputStream;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 
@@ -184,7 +183,6 @@ class ConfigurationTest {
 
     grid.saveCurrentGrid("test_data/BoatTest.csv");
 
-    reader = new PropertyReader("property_lists/GameOfLife/boat.properties");
     reader = new PropertyReader("property_lists/GameOfLife/boat.properties");
     Grid gridTest = reader.gridFromPropertyFile();
 
