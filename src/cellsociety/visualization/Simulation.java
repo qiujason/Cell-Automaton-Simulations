@@ -26,9 +26,11 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -186,14 +188,58 @@ public class Simulation extends Application {
   }
 
   private void setColors() {
+    // TODO: Refactor duplication
+    String simType = myPropertyReader.getProperty("simulationType");
 
+    Class<?> clazz = null;
+
+    try {
+      clazz = Class.forName("cellsociety.model." + simType + "." + simType + "States");
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    }
+
+    Object[] myStates = new Object[0];
+    if (clazz != null) {
+      myStates = clazz.getEnumConstants();
+    }
+
+    JFrame saver = new JFrame();
+    for(Object state : myStates){
+      Enum<?> currentState = (Enum<?>) state;
+      String newColor = JOptionPane.showInputDialog(saver, "Input Color for State " + currentState.toString());
+      myPropertyReader.setProperty(state.toString(), newColor);
+    }
+
+    visualizeGrid();
   }
 
   private void setPhotos() {
+    String simType = myPropertyReader.getProperty("simulationType");
 
+    Class<?> clazz = null;
+
+    try {
+      clazz = Class.forName("cellsociety.model." + simType + "." + simType + "States");
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    }
+
+    Object[] myStates = new Object[0];
+    if (clazz != null) {
+      myStates = clazz.getEnumConstants();
+    }
+
+    JFrame saver = new JFrame();
+    for(Object state : myStates){
+      Enum<?> currentState = (Enum<?>) state;
+      String newPhoto = JOptionPane.showInputDialog(saver, "Choose photo for State " + currentState.toString());
+      myPropertyReader.setProperty(state.toString(), newPhoto);
+    }
+
+    visualizeGrid();
   }
 
-  // TODO: Edit property reader input when merging
   private void chooseSimulation() {
     String pathName =
         PROPERTY_LISTS + "/" + mySimulations.getValue().split(" ")[2] + "/" + mySimulations
@@ -227,6 +273,11 @@ public class Simulation extends Application {
     cellRectangle.setOnMouseClicked(e -> setCellState(cellLabel));
     Enum<?> currentState = cell.getMyState();
     String myFillAsString = myPropertyReader.getProperty(currentState.toString());
+    if(myFillAsString.split("\\.").length > 0){
+      Image stateImage = new Image("visualizationResources/images/" + myFillAsString);
+      ImagePattern stateImagePattern = new ImagePattern(stateImage);
+      cellRectangle.setFill(stateImagePattern);
+    }
     Color myColor = Color.valueOf(myFillAsString);
     cellRectangle.setFill(myColor);
     cellRectangle.setStroke(Color.WHITE);
