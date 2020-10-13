@@ -11,7 +11,7 @@ public class PercolationCell extends Cell {
 
   @Override
   public void setNewState() {
-    if (myState != PercolationStates.BLOCKED) {
+    if (myState == PercolationStates.UNFILLED) {
       if (myNeighbors.getNumberOfNeighborsWithState(PercolationStates.FILLED, false) > 0) {
         nextState = PercolationStates.FILLED;
       } else {
