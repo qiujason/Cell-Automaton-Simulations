@@ -23,6 +23,8 @@ public abstract class Cell {
     return myState;
   }
 
+  public void setMyState(Enum<?> newState) { myState = newState; }
+
   public void setMyNeighbors(Grid grid) {
     myNeighbors = new Neighborhood(this, grid);
   }

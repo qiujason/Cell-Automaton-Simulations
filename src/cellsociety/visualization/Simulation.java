@@ -3,6 +3,7 @@ package cellsociety.visualization;
 import cellsociety.configuration.Grid;
 import cellsociety.configuration.PropertyReader;
 import cellsociety.model.Cell;
+import cellsociety.model.GameOfLife.GameOfLifeStates;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
@@ -222,7 +224,7 @@ public class Simulation extends Application {
   private void visualizeCell(double x, double y, int cellLabel, double cellSize, Cell cell) {
     Rectangle cellRectangle = new Rectangle(x, y, cellSize, cellSize);
     cellRectangle.setId("cell" + cellLabel);
-    cellRectangle.setOnMouseClicked(e -> setCellState(cellRectangle));
+    cellRectangle.setOnMouseClicked(e -> setCellState(cellLabel));
     Enum<?> currentState = cell.getMyState();
     String myFillAsString = myPropertyReader.getProperty(currentState.toString());
     Color myColor = Color.valueOf(myFillAsString);
@@ -231,9 +233,34 @@ public class Simulation extends Application {
     myGridGroup.getChildren().add(cellRectangle);
   }
 
-  private void setCellState(Rectangle cellRectangle) {
-    // TODO: Figure out how to access specific cell state
+  private void setCellState(int cellLabel) {
+    int row = cellLabel / myGrid.getMyCells().get(0).size();
+    int column = cellLabel % myGrid.getMyCells().get(0).size();
+    Cell myCell = myGrid.getMyCells().get(row).get(column);
+    String simType = myPropertyReader.getProperty("simulationType");
 
+    Class<?> clazz = null;
+
+    try {
+      clazz = Class.forName("cellsociety.model." + simType + "." + simType + "States");
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    }
+
+    Object[] myStates = new Object[0];
+    if (clazz != null) {
+      myStates = clazz.getEnumConstants();
+    }
+
+    for(int i = 0; i < myStates.length - 1; i++){
+      if(myCell.getMyState().equals((Enum<?>) myStates[i])){
+        myCell.setMyState((Enum<?>) myStates[i+1]);
+        visualizeGrid();
+        return;
+      }
+    }
+    myCell.setMyState((Enum<?>) myStates[0]);
+    visualizeGrid();
   }
 
   private void saveSimulation() {
