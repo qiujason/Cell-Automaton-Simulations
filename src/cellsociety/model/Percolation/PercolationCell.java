@@ -1,10 +1,11 @@
 package cellsociety.model.Percolation;
 
 import cellsociety.model.Cell;
+import java.util.Map;
 
 public class PercolationCell extends Cell {
 
-  public PercolationCell(Enum<?> state) {
+  public PercolationCell(Enum<?> state, Map... optional) {
     super(state);
   }
 

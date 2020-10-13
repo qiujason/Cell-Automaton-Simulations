@@ -2,6 +2,7 @@ package cellsociety.model.Segregation;
 
 import cellsociety.model.Cell;
 import cellsociety.model.Neighborhood;
+import java.util.Map;
 
 public class SegregationCell extends Cell {
 
@@ -12,9 +13,9 @@ public class SegregationCell extends Cell {
   private final double satisfiedThreshold;
   private SegregationStates satisfiedState;
 
-  public SegregationCell(Enum<?> state, double satisfiedThreshold) {
+  public SegregationCell(Enum<?> state, Map... optional) {
     super(state);
-    this.satisfiedThreshold = satisfiedThreshold;
+    this.satisfiedThreshold = (double) optional[0].get("satisfiedThreshold");
     satisfiedState = SegregationStates.UNSATISFIED;
   }
 

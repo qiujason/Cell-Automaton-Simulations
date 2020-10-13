@@ -1,8 +1,6 @@
 package cellsociety.configuration;
 
 import cellsociety.model.Cell;
-import cellsociety.model.Percolation.PercolationCell;
-import cellsociety.model.Percolation.PercolationStates;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
@@ -16,6 +14,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class Grid {
@@ -26,16 +25,16 @@ public class Grid {
   private final ResourceBundle resourceBundle;
   private final String simulationName;
 
-  public Grid(Path cellFile, String simulationName) throws ConfigurationException {
+  public Grid(Path cellFile, String simulationName, Map<String, Double> optional) throws ConfigurationException {
     this.simulationName = simulationName;
     resourceBundle = ResourceBundle.getBundle(getClass().getPackageName()+".resources.ConfigurationErrors");
-    myCells = build2DArray(cellFile);
+    myCells = build2DArray(cellFile, optional);
     if(myCells!=null){
       establishNeighbors();
     }
   }
 
-  private List<List<Cell>> build2DArray(Path cellFile) throws ConfigurationException {
+  private List<List<Cell>> build2DArray(Path cellFile, Map<String, Double> optional) throws ConfigurationException {
     List<String[]> csvData = null;
     List<List<Cell>> ret = new ArrayList<>();
     int rows = 0;
@@ -65,13 +64,13 @@ public class Grid {
       }
       ret.add(i, new ArrayList<>());
       for (int j = 0; j < cols; j++) {
-        ret.get(i).add(convertStringToCell(nextRow[j]));
+        ret.get(i).add(convertStringToCell(nextRow[j], optional));
       }
     }
     return ret;
   }
 
-  private Cell convertStringToCell(String stringValueForCell) {
+  private Cell convertStringToCell(String stringValueForCell, Map<String, Double>... optional) {
     int cellValue = removeHiddenChars(stringValueForCell);
     Cell ret;
     try {
@@ -84,11 +83,12 @@ public class Grid {
 
       // create a new cell from simulation name with defined state
       Class<?> simulation = Class.forName(modelPackagePath + simulationName + "Cell");
-      Constructor<?> simConstructor = simulation.getConstructor(Enum.class);
-      ret = (Cell) simConstructor.newInstance(state);
+      Constructor<?> simConstructor = simulation.getConstructor(Enum.class, Map[].class);
+      ret = (Cell) simConstructor.newInstance(state, optional);
     } catch (ClassNotFoundException e) {
       throw new ConfigurationException(String.format(resourceBundle.getString("simulationNotSupported"), simulationName));
     } catch (Exception e) {
+      e.printStackTrace();
       throw new ConfigurationException(String.format(resourceBundle.getString("otherSimulationCreationErrors"), e.getMessage()));
     }
     return ret;

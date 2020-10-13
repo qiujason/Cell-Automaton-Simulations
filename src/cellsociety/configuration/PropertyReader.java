@@ -7,22 +7,27 @@ import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
-import javafx.util.Pair;
 
 public class PropertyReader {
 
-  private final ResourceBundle resourceBundle;
-  private static final String[] REQUIRED_KEYS = new String[]{
+  public static Map<String, Double> defaultOptionalKeys = new HashMap<>();
+
+  static {
+    defaultOptionalKeys.put("probCatch", 0.3);
+    defaultOptionalKeys.put("winThreshold", 3.0);
+    defaultOptionalKeys.put("satisfiedThreshold", 0.3);
+    defaultOptionalKeys.put("thresholdForBirth", 3.0);
+  }
+
+  private static final String[] REQUIRED_KEYS = new String[] {
       "simulationType", "simulationTitle", "configAuthor", "description", "csvFile"
   };
-  private static final Pair[] DEFAULT_OPTIONAL_KEYS = new Pair[]{
-      new Pair<>("probCatch", 0.3),
-      new Pair<>("winThreshold", 3),
-      new Pair<>("satisfiedThreshold", 0.3)
-  };
 
+  private final ResourceBundle resourceBundle;
   private final Properties properties;
   private final String file;
 
@@ -40,10 +45,9 @@ public class PropertyReader {
               String.format(resourceBundle.getString("missingRequiredProperty"), requiredKey));
         }
       }
-      for (Pair optionalKey : DEFAULT_OPTIONAL_KEYS) {
-        if (properties.getProperty((String) optionalKey.getKey()) == null) {
-          properties
-              .setProperty((String) optionalKey.getKey(), String.valueOf(optionalKey.getValue()));
+      for (String optionalKey : defaultOptionalKeys.keySet()) {
+        if (properties.getProperty(optionalKey) != null) {
+          defaultOptionalKeys.put(optionalKey, Double.parseDouble(properties.getProperty(optionalKey)));
         }
       }
     } catch (IOException e) {
@@ -86,6 +90,6 @@ public class PropertyReader {
     }
 
     String simulationName = properties.getProperty("simulationType");
-    return new Grid(path, simulationName);
+    return new Grid(path, simulationName, defaultOptionalKeys);
   }
 }

@@ -15,11 +15,11 @@ public class RPSCell extends Cell {
     RPSWinDynamics.put(RPSStates.ROCK, RPSStates.PAPER);
   }
 
-  private int winThreshold;
+  private double winThreshold;
 
-  public RPSCell(Enum<?> state, int winThreshold) {
+  public RPSCell(Enum<?> state, Map... optional) {
     super(state);
-    this.winThreshold = winThreshold;
+    this.winThreshold = (double) optional[0].get("winThreshold");
   }
 
   @Override

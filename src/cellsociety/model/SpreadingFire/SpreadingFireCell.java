@@ -1,14 +1,15 @@
 package cellsociety.model.SpreadingFire;
 
 import cellsociety.model.Cell;
+import java.util.Map;
 
 public class SpreadingFireCell extends Cell {
 
   private final double catchFireProbability;
 
-  public SpreadingFireCell(Enum<?> state, double probability) {
+  public SpreadingFireCell(Enum<?> state, Map... optional) {
     super(state);
-    catchFireProbability = probability;
+    catchFireProbability = (double) optional[0].get("probCatch");
   }
 
   @Override
