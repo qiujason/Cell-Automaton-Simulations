@@ -70,7 +70,7 @@ public class Grid {
     return ret;
   }
 
-  private Cell convertStringToCell(String stringValueForCell, Map<String, Double>... optional) {
+  private Cell convertStringToCell(String stringValueForCell, Map... optional) {
     int cellValue = removeHiddenChars(stringValueForCell);
     Cell ret;
     try {

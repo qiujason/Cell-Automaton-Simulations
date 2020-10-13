@@ -11,10 +11,12 @@ public class PercolationCell extends Cell {
 
   @Override
   public void setNewState() {
-    if (myNeighbors.getNumberOfNeighborsWithState(PercolationStates.FILLED, false) > 0) {
-      nextState = PercolationStates.FILLED;
-    } else {
-      nextState =  PercolationStates.UNFILLED;
+    if (myState != PercolationStates.BLOCKED) {
+      if (myNeighbors.getNumberOfNeighborsWithState(PercolationStates.FILLED, false) > 0) {
+        nextState = PercolationStates.FILLED;
+      } else {
+        nextState = PercolationStates.UNFILLED;
+      }
     }
   }
 
