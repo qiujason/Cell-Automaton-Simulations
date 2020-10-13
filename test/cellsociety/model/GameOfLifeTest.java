@@ -1,4 +1,4 @@
-package cellsociety;
+package cellsociety.model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -8,7 +8,7 @@ import cellsociety.model.GameOfLife.GameOfLifeCell;
 import cellsociety.model.GameOfLife.GameOfLifeStates;
 import org.junit.jupiter.api.Test;
 
-class SimulationTest {
+class GameOfLifeTest {
 
   @Test
   void getNumberOfLiveNeighborsCorner() {
