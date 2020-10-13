@@ -10,7 +10,6 @@ import cellsociety.configuration.PropertyReader;
 import cellsociety.model.Cell;
 import cellsociety.model.GameOfLife.GameOfLifeCell;
 import cellsociety.model.GameOfLife.GameOfLifeStates;
-import java.io.InputStream;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 
@@ -212,6 +211,7 @@ class ConfigurationTest {
 
   @Test
   void badPropertyFile(){
-    assertThrows(ConfigurationException.class, () -> new PropertyReader("property_lists/bad_property_file.properties"));
+    assertThrows(ConfigurationException.class, () -> new PropertyReader(
+        "property_lists/TestProperties/bad_property_file.properties"));
   }
 }

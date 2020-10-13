@@ -4,6 +4,7 @@ import cellsociety.configuration.Grid;
 import cellsociety.configuration.PropertyReader;
 import cellsociety.model.Cell;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -11,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -126,8 +128,15 @@ public class Simulation extends Application {
     } catch (URISyntaxException e) {
       e.printStackTrace();
     }
-    for (File file : Objects.requireNonNull(simulations.toFile().listFiles())) {
-      mySimulations.getItems().add(file.getName().split("_")[0]);
+    for (File path : Objects.requireNonNull(simulations.toFile().listFiles())) {
+      for (File file : path.listFiles()) {
+        if (file.getName().split("\\.").length > 0 && !path.getName().equals("TestProperties")) {
+          myPropertyReader = new PropertyReader(
+              PROPERTY_LISTS + "/" + path.getName() + "/" + file.getName());
+          mySimulations.getItems().add(file.getName().split("\\.")[0] + " - " + myPropertyReader
+              .getProperty("simulationType"));
+        }
+      }
     }
   }
 
@@ -161,15 +170,15 @@ public class Simulation extends Application {
   private void speedUp() {
     myAnimation.setRate(myAnimation.getRate() * 2);
     myRoot.setLeft(new Text("x" + myAnimation.getRate()));
-    if(myAnimation.getRate() == 1){
+    if (myAnimation.getRate() == 1) {
       myRoot.setLeft(null);
     }
   }
 
-  private void slowDown(){
+  private void slowDown() {
     myAnimation.setRate(myAnimation.getRate() / 2);
     myRoot.setLeft(new Text("x" + myAnimation.getRate()));
-    if(myAnimation.getRate() == 1){
+    if (myAnimation.getRate() == 1) {
       myRoot.setLeft(null);
     }
   }
@@ -184,16 +193,10 @@ public class Simulation extends Application {
 
   // TODO: Edit property reader input when merging
   private void chooseSimulation() {
-    String pathName = PROPERTY_LISTS + "/" + mySimulations.getValue() + "_property.properties";
-    Path pathToSimulation;
-
-    try {
-      pathToSimulation = Paths.get(
-          Objects.requireNonNull(Simulation.class.getClassLoader().getResource(pathName)).toURI());
-      myPropertyReader = new PropertyReader(Files.newInputStream(pathToSimulation));
-    } catch (URISyntaxException | IOException e) {
-      e.printStackTrace();
-    }
+    String pathName =
+        PROPERTY_LISTS + "/" + mySimulations.getValue().split(" ")[2] + "/" + mySimulations
+            .getValue().split(" ")[0] + ".properties";
+    myPropertyReader = new PropertyReader(pathName);
 
     myGrid = myPropertyReader.gridFromPropertyFile();
     visualizeGrid();
@@ -230,7 +233,7 @@ public class Simulation extends Application {
     }
     myGridGroup.getChildren().add(cellRectangle);
   }
-  
+
   private void setCellState(Rectangle cellRectangle) {
     // TODO: Figure out how to access specific cell state
 
@@ -242,15 +245,25 @@ public class Simulation extends Application {
     String author = JOptionPane.showInputDialog(saver, "Author");
     String description = JOptionPane.showInputDialog(saver, "Description");
 
+    String simType = myPropertyReader.getProperty("simulationType");
+
+    String[] keySet = new String[]{"simulationType", "simulationTitle", "configAuthor", "description", "csvFile"};
+
+    myGrid.saveCurrentGrid("data/" + INITIAL_STATES + "/" + simType + "/" + filename + ".csv");
+    File file = new File("data/" + PROPERTY_LISTS + "/" + simType + "/" + filename + ".properties");
     try {
-      myGrid.saveCurrentGrid("data/" + INITIAL_STATES + "/" + filename + ".csv");
+      FileWriter outputFile = new FileWriter(file,false);
+      Properties savedProperty = new Properties();
+      savedProperty.put("simulationType", simType);
+      savedProperty.put("simulationTitle", filename);
+      savedProperty.put("configAuthor", author);
+      savedProperty.put("description", description);
+      savedProperty.put("csvFile", filename + ".csv");
+      savedProperty.store(outputFile, null);
     } catch (IOException e) {
       e.printStackTrace();
     }
-
-    // TODO: Edit property reader and use new methods
-
-    mySimulations.getItems().add(filename);
+    mySimulations.getItems().add(filename + " - " + simType);
   }
 
   // Necessary for testing
