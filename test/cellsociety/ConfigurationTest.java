@@ -202,9 +202,9 @@ class ConfigurationTest {
 
   @Test
   void saveEmptyCSVFile() {
-    Grid grid = new Grid(Path.of("test_data/EmptyTest.csv"), "GameOfLife", PropertyReader.defaultOptionalKeys);
+    Grid grid = new Grid(Path.of("test_data/EmptyTest.csv"), "GameOfLife");
     grid.saveCurrentGrid("test_data/EmptyData.csv");
-    Grid gridTest = new Grid(Path.of("test_data/EmptyData.csv"), "GameOfLife", PropertyReader.defaultOptionalKeys);
+    Grid gridTest = new Grid(Path.of("test_data/EmptyData.csv"), "GameOfLife");
     assertTrue(gridTest.getMyCells().isEmpty());
   }
 

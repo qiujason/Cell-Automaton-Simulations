@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class PercolationCell extends Cell {
 
-  public PercolationCell(Enum<?> state, Map... optional) {
+  public PercolationCell(Enum<?> state) {
     super(state);
   }
 

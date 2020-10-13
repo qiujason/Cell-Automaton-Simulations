@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class GameOfLifeCell extends Cell {
 
-  public GameOfLifeCell(Enum<?> state, Map... optional) {
+  public GameOfLifeCell(Enum<?> state) {
     super(state);
   }
 

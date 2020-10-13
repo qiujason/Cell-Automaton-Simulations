@@ -25,16 +25,16 @@ public class Grid {
   private final ResourceBundle resourceBundle;
   private final String simulationName;
 
-  public Grid(Path cellFile, String simulationName, Map<String, Double> optional) throws ConfigurationException {
+  public Grid(Path cellFile, String simulationName) throws ConfigurationException {
     this.simulationName = simulationName;
     resourceBundle = ResourceBundle.getBundle(getClass().getPackageName()+".resources.ConfigurationErrors");
-    myCells = build2DArray(cellFile, optional);
+    myCells = build2DArray(cellFile);
     if(myCells!=null){
       establishNeighbors();
     }
   }
 
-  private List<List<Cell>> build2DArray(Path cellFile, Map<String, Double> optional) throws ConfigurationException {
+  private List<List<Cell>> build2DArray(Path cellFile) throws ConfigurationException {
     List<String[]> csvData = null;
     List<List<Cell>> ret = new ArrayList<>();
     int rows = 0;
@@ -64,13 +64,13 @@ public class Grid {
       }
       ret.add(i, new ArrayList<>());
       for (int j = 0; j < cols; j++) {
-        ret.get(i).add(convertStringToCell(nextRow[j], optional));
+        ret.get(i).add(convertStringToCell(nextRow[j]));
       }
     }
     return ret;
   }
 
-  private Cell convertStringToCell(String stringValueForCell, Map... optional) {
+  private Cell convertStringToCell(String stringValueForCell) {
     int cellValue = removeHiddenChars(stringValueForCell);
     Cell ret;
     try {
@@ -83,8 +83,8 @@ public class Grid {
 
       // create a new cell from simulation name with defined state
       Class<?> simulation = Class.forName(modelPackagePath + simulationName + "Cell");
-      Constructor<?> simConstructor = simulation.getConstructor(Enum.class, Map[].class);
-      ret = (Cell) simConstructor.newInstance(state, optional);
+      Constructor<?> simConstructor = simulation.getConstructor(Enum.class);
+      ret = (Cell) simConstructor.newInstance(state);
     } catch (ClassNotFoundException e) {
       throw new ConfigurationException(String.format(resourceBundle.getString("simulationNotSupported"), simulationName));
     } catch (Exception e) {
