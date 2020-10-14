@@ -25,9 +25,8 @@ class SegregationTest {
     assertEquals(SegregationStates.A, grid.getMyCells().get(0).get(0).getMyState());
     grid.updateNewStates();
 
-    assertEquals(SegregationStates.UNSATISFIED, ((SegregationCell) grid.getMyCells().get(0).get(0)).getSatisfiedState());
-    assertEquals(SegregationStates.EMPTY, grid.getMyCells().get(0).get(0).getMyState());
-    grid.updateNewStates();
+    assertEquals(SegregationStates.SATISFIED, ((SegregationCell) grid.getMyCells().get(0).get(0)).getSatisfiedState());
+    assertEquals(SegregationStates.A, grid.getMyCells().get(0).get(0).getMyState());
   }
 
   @Test

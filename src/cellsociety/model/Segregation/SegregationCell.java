@@ -25,8 +25,8 @@ public class SegregationCell extends Cell {
   @Override
   public void setNewState() {
     if (myState != SegregationStates.EMPTY) {
-      int percentSimilar = myNeighbors.getNumberOfNeighborsWithState(myState, false) /
-          Neighborhood.NEIGHBORHOOD_SIZE;
+      double totalNeighbors = Neighborhood.NEIGHBORHOOD_SIZE - myNeighbors.getNumberOfNullCells() - 1;
+      double percentSimilar = myNeighbors.getNumberOfNeighborsWithState(myState, false) / totalNeighbors;
       if (percentSimilar < satisfiedThreshold) {
         satisfiedState = SegregationStates.UNSATISFIED;
         if (myState == SegregationStates.A) {

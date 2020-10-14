@@ -1,7 +1,6 @@
 package cellsociety.model.GameOfLife;
 
 import cellsociety.model.Cell;
-import java.util.Map;
 
 public class GameOfLifeCell extends Cell {
 
