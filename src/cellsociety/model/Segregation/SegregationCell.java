@@ -3,12 +3,15 @@ package cellsociety.model.Segregation;
 import cellsociety.model.Cell;
 import cellsociety.model.Neighborhood;
 import java.util.Map;
+import java.util.Random;
 
 public class SegregationCell extends Cell {
 
-  public static int unsatisfiedA;
-  public static int unsatisfiedB;
-  public static int numEmptyCanBeMoved;
+  private static final Random random = new Random();
+
+  private static int unsatisfiedA;
+  private static int unsatisfiedB;
+  private static int numEmptyCanBeMoved;
 
   private final double satisfiedThreshold;
   private SegregationStates satisfiedState;
