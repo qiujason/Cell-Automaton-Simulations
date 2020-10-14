@@ -3,12 +3,15 @@ package cellsociety.model.Segregation;
 import cellsociety.configuration.PropertyReader;
 import cellsociety.model.Cell;
 import cellsociety.model.Neighborhood;
+import java.util.Random;
 
 public class SegregationCell extends Cell {
 
   public static int unsatisfiedA;
   public static int unsatisfiedB;
   public static int numEmptyCanBeMoved;
+
+  private static final Random random = new Random();
 
   private final double satisfiedThreshold;
   private SegregationStates satisfiedState;
@@ -52,10 +55,18 @@ public class SegregationCell extends Cell {
     }
   }
 
+  public SegregationStates getSatisfiedState() {
+    return satisfiedState;
+  }
+
+  public static void setRandomSeed(long seed) {
+    random.setSeed(seed);
+  }
+
   private void changeStateFromA() {
     int totalOtherState = unsatisfiedB + numEmptyCanBeMoved;
     double probForB = (double)unsatisfiedB/totalOtherState;
-    if (Math.random() < probForB) {
+    if (random.nextDouble() < probForB) {
       myState = SegregationStates.B;
       unsatisfiedB--;
     } else {
@@ -67,7 +78,7 @@ public class SegregationCell extends Cell {
   private void changeStateFromB() {
     int totalOtherState = unsatisfiedA + numEmptyCanBeMoved;
     double probForA = (double)unsatisfiedA/totalOtherState;
-    if (Math.random() < probForA) {
+    if (random.nextDouble() < probForA) {
       myState = SegregationStates.A;
       unsatisfiedA--;
     } else {
@@ -81,7 +92,7 @@ public class SegregationCell extends Cell {
     int totalStatesToMove = unsatisfiedA + unsatisfiedB + numEmptyCanBeMoved;
     double probForA = (double)unsatisfiedA/totalStatesToMove;
     double probForB = (double)unsatisfiedB/totalStatesToMove;
-    double probability = Math.random();
+    double probability = random.nextDouble();
     if (probability < probForA) {
       myState = SegregationStates.A;
       unsatisfiedA--;
