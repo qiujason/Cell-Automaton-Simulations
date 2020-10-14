@@ -24,6 +24,8 @@ public abstract class Cell {
     this.nextState = nextState;
   }
 
+  public void setMyState(Enum<?> newState) { myState = newState; }
+
   public void setMyNeighbors(Grid grid) {
     myNeighbors = new Neighborhood(this, grid);
   }

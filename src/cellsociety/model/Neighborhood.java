@@ -68,6 +68,19 @@ public class Neighborhood {
     return cells;
   }
 
+  // for edge cells
+  public int getNumberOfNullCells() {
+    int numberNull = 0;
+    for (Cell[] myCell : myCells) {
+      for (Cell cell : myCell) {
+        if (cell == null) {
+          numberNull++;
+        }
+      }
+    }
+    return numberNull;
+  }
+
   public Cell[][] getMyCells() {
     return myCells;
   }

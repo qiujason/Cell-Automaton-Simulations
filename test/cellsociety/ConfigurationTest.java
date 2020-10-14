@@ -202,14 +202,27 @@ class ConfigurationTest {
 
   @Test
   void saveEmptyCSVFile() {
-    Grid grid = new Grid(Path.of("test_data/EmptyTest.csv"), "GameOfLife", PropertyReader.defaultOptionalKeys);
+    Grid grid = new Grid(Path.of("test_data/EmptyTest.csv"), "GameOfLife");
     grid.saveCurrentGrid("test_data/EmptyData.csv");
-    Grid gridTest = new Grid(Path.of("test_data/EmptyData.csv"), "GameOfLife", PropertyReader.defaultOptionalKeys);
+    Grid gridTest = new Grid(Path.of("test_data/EmptyData.csv"), "GameOfLife");
     assertTrue(gridTest.getMyCells().isEmpty());
   }
 
   @Test
-  void badPropertyFile(){
-    assertThrows(ConfigurationException.class, () -> new PropertyReader("property_lists/bad_property_file.properties"));
+  void badPropertyFile() {
+    assertThrows(ConfigurationException.class, () -> new PropertyReader(
+        "property_lists/TestProperties/bad_property_file.properties"));
+  }
+
+  @Test
+  void testDefaultOptionalProperty() {
+    PropertyReader reader = new PropertyReader("property_lists/Segregation/preSegregated.properties");
+    assertEquals(0.3, PropertyReader.getOptionalProperty("satisfiedThreshold"));
+  }
+
+  @Test
+  void testChangedOptionalProperty() {
+    PropertyReader reader = new PropertyReader("property_lists/Segregation/checkerboard.properties");
+    assertEquals(0.75, PropertyReader.getOptionalProperty("satisfiedThreshold"));
   }
 }

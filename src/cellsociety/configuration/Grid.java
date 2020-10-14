@@ -1,6 +1,7 @@
 package cellsociety.configuration;
 
 import cellsociety.model.Cell;
+import cellsociety.model.GameOfLife.GameOfLifeStates;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
@@ -14,7 +15,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 public class Grid {
@@ -25,20 +25,20 @@ public class Grid {
   private final ResourceBundle resourceBundle;
   private final String simulationName;
 
-  public Grid(Path cellFile, String simulationName, Map<String, Double> optional) throws ConfigurationException {
+  public Grid(Path cellFile, String simulationName) throws ConfigurationException {
     this.simulationName = simulationName;
     resourceBundle = ResourceBundle.getBundle(getClass().getPackageName()+".resources.ConfigurationErrors");
-    myCells = build2DArray(cellFile, optional);
+    myCells = build2DArray(cellFile);
     if(myCells!=null){
       establishNeighbors();
     }
   }
 
-  private List<List<Cell>> build2DArray(Path cellFile, Map<String, Double> optional) throws ConfigurationException {
-    List<String[]> csvData = null;
+  private List<List<Cell>> build2DArray(Path cellFile) throws ConfigurationException {
+    List<String[]> csvData;
     List<List<Cell>> ret = new ArrayList<>();
-    int rows = 0;
-    int cols = 0;
+    int rows;
+    int cols;
     try {
       FileReader inputFile = new FileReader(String.valueOf(cellFile));
       CSVReader csvReader = new CSVReader(inputFile);
@@ -56,21 +56,21 @@ public class Grid {
     }
     for (int i = 0; i < rows; i++) {
       if(!iterator.hasNext()){
-        throw new ConfigurationException(String.format(resourceBundle.getString("mismatchedCSVData")));
+        throw new ConfigurationException(resourceBundle.getString("mismatchedCSVData"));
       }
       String[] nextRow = iterator.next();
       if(nextRow.length!=cols){
-        throw new ConfigurationException(String.format(resourceBundle.getString("mismatchedCSVData")));
+        throw new ConfigurationException(resourceBundle.getString("mismatchedCSVData"));
       }
       ret.add(i, new ArrayList<>());
       for (int j = 0; j < cols; j++) {
-        ret.get(i).add(convertStringToCell(nextRow[j], optional));
+        ret.get(i).add(convertStringToCell(nextRow[j]));
       }
     }
     return ret;
   }
 
-  private Cell convertStringToCell(String stringValueForCell, Map<String, Double>... optional) {
+  private Cell convertStringToCell(String stringValueForCell) {
     int cellValue = removeHiddenChars(stringValueForCell);
     Cell ret;
     try {
@@ -78,13 +78,13 @@ public class Grid {
 
       // get state from cell value and simulation name
       Class<?> modelStates = Class.forName(modelPackagePath + simulationName + "States");
-      Method method = modelStates.getMethod("getStateFromValue", int.class);
-      Enum<?> state = (Enum<?>) method.invoke(null, cellValue);
+      Method method = modelStates.getMethod("values");
+      Enum<?> state = ((Enum<?>[]) method.invoke(null))[cellValue];
 
       // create a new cell from simulation name with defined state
       Class<?> simulation = Class.forName(modelPackagePath + simulationName + "Cell");
-      Constructor<?> simConstructor = simulation.getConstructor(Enum.class, Map[].class);
-      ret = (Cell) simConstructor.newInstance(state, optional);
+      Constructor<?> simConstructor = simulation.getConstructor(Enum.class);
+      ret = (Cell) simConstructor.newInstance(state);
     } catch (ClassNotFoundException e) {
       throw new ConfigurationException(String.format(resourceBundle.getString("simulationNotSupported"), simulationName));
     } catch (Exception e) {

@@ -14,7 +14,7 @@ import java.util.ResourceBundle;
 
 public class PropertyReader {
 
-  public static Map<String, Double> defaultOptionalKeys = new HashMap<>();
+  private static final Map<String, Double> defaultOptionalKeys = new HashMap<>();
 
   static {
     defaultOptionalKeys.put("probCatch", 0.3);
@@ -26,15 +26,14 @@ public class PropertyReader {
   private static final String[] REQUIRED_KEYS = new String[] {
       "simulationType", "simulationTitle", "configAuthor", "description", "csvFile"
   };
+  private static final ResourceBundle resourceBundle = ResourceBundle
+      .getBundle(PropertyReader.class.getPackageName() + ".resources.ConfigurationErrors");
 
-  private final ResourceBundle resourceBundle;
   private final Properties properties;
   private final String file;
 
   public PropertyReader(String propertyFile) throws ConfigurationException {
     file = propertyFile;
-    resourceBundle = ResourceBundle
-        .getBundle(getClass().getPackageName() + ".resources.ConfigurationErrors");
     try {
       properties = new Properties();
       InputStream inputStream = getClass().getClassLoader().getResourceAsStream(file);
@@ -90,6 +89,14 @@ public class PropertyReader {
     }
 
     String simulationName = properties.getProperty("simulationType");
-    return new Grid(path, simulationName, defaultOptionalKeys);
+    return new Grid(path, simulationName);
+  }
+
+  public static double getOptionalProperty(String key) {
+    if (!defaultOptionalKeys.containsKey(key)) {
+      throw new ConfigurationException(
+        String.format(resourceBundle.getString("errorGettingProperty"), key));
+    }
+    return defaultOptionalKeys.get(key);
   }
 }

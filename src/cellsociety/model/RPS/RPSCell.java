@@ -1,5 +1,6 @@
 package cellsociety.model.RPS;
 
+import cellsociety.configuration.PropertyReader;
 import cellsociety.model.Cell;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,11 +16,11 @@ public class RPSCell extends Cell {
     RPSWinDynamics.put(RPSStates.ROCK, RPSStates.PAPER);
   }
 
-  private double winThreshold;
+  private final double winThreshold;
 
-  public RPSCell(Enum<?> state, Map... optional) {
+  public RPSCell(Enum<?> state) {
     super(state);
-    this.winThreshold = (double) optional[0].get("winThreshold");
+    this.winThreshold = PropertyReader.getOptionalProperty("winThreshold");
   }
 
   @Override

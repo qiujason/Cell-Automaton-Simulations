@@ -13,11 +13,11 @@ class WatorTest {
   @Test
   void updateAllFish() {
     WatorCell[][] expected = {
-        {new WatorCell(WatorStates.FISH, PropertyReader.defaultOptionalKeys), new WatorCell(WatorStates.FISH, PropertyReader.defaultOptionalKeys), new WatorCell(WatorStates.FISH, PropertyReader.defaultOptionalKeys), new WatorCell(WatorStates.FISH, PropertyReader.defaultOptionalKeys), new WatorCell(WatorStates.FISH, PropertyReader.defaultOptionalKeys)},
-        {new WatorCell(WatorStates.FISH, PropertyReader.defaultOptionalKeys), new WatorCell(WatorStates.FISH, PropertyReader.defaultOptionalKeys), new WatorCell(WatorStates.FISH, PropertyReader.defaultOptionalKeys), new WatorCell(WatorStates.FISH, PropertyReader.defaultOptionalKeys), new WatorCell(WatorStates.FISH, PropertyReader.defaultOptionalKeys)},
-        {new WatorCell(WatorStates.FISH, PropertyReader.defaultOptionalKeys), new WatorCell(WatorStates.FISH, PropertyReader.defaultOptionalKeys), new WatorCell(WatorStates.FISH, PropertyReader.defaultOptionalKeys), new WatorCell(WatorStates.FISH, PropertyReader.defaultOptionalKeys), new WatorCell(WatorStates.FISH, PropertyReader.defaultOptionalKeys)},
-        {new WatorCell(WatorStates.FISH, PropertyReader.defaultOptionalKeys), new WatorCell(WatorStates.FISH, PropertyReader.defaultOptionalKeys), new WatorCell(WatorStates.FISH, PropertyReader.defaultOptionalKeys), new WatorCell(WatorStates.FISH, PropertyReader.defaultOptionalKeys), new WatorCell(WatorStates.FISH, PropertyReader.defaultOptionalKeys)},
-        {new WatorCell(WatorStates.FISH, PropertyReader.defaultOptionalKeys), new WatorCell(WatorStates.FISH, PropertyReader.defaultOptionalKeys), new WatorCell(WatorStates.FISH, PropertyReader.defaultOptionalKeys), new WatorCell(WatorStates.FISH, PropertyReader.defaultOptionalKeys), new WatorCell(WatorStates.FISH, PropertyReader.defaultOptionalKeys)}
+        {new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH)},
+        {new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH)},
+        {new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH)},
+        {new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH)},
+        {new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH)}
     };
     PropertyReader reader = new PropertyReader("property_lists/Wator/AllFish.properties");
     Grid grid = reader.gridFromPropertyFile();
