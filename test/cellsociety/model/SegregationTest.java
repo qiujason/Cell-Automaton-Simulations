@@ -17,6 +17,13 @@ class SegregationTest {
     SegregationCell.setRandomSeed(10);
   }
 
+  @BeforeEach
+  void resetStaticVariables() {
+    SegregationCell.resetUnsatisfiedA();
+    SegregationCell.resetUnsatisfiedB();
+    SegregationCell.resetNumEmptyCanBeMoved();
+  }
+
   @Test
   void getNewStateSatisfied() {
     PropertyReader reader = new PropertyReader("property_lists/Segregation/minimal.properties");
@@ -62,11 +69,25 @@ class SegregationTest {
   void testConsistentNumberOfTypes() {
     PropertyReader reader = new PropertyReader("property_lists/Segregation/minimal.properties");
     Grid grid = reader.gridFromPropertyFile();
+    int[] initial = getNumOfTypes(grid.getMyCells());
 
+    for (int i = 0; i < 100; i++) {
+      grid.updateNewStates();
+      getNumOfTypes(grid.getMyCells());
+    }
+
+    int[] finalNum = getNumOfTypes(grid.getMyCells());
+
+    assertEquals(initial[0], finalNum[0]);
+    assertEquals(initial[1], finalNum[1]);
+    assertEquals(initial[2], finalNum[2]);
+  }
+
+  private int[] getNumOfTypes(List<List<Cell>> grid) {
     int numA = 0;
     int numB = 0;
     int numEmpty = 0;
-    for (List<Cell> cells: grid.getMyCells()) {
+    for (List<Cell> cells: grid) {
       for (Cell cell : cells) {
         Enum<?> state = cell.getMyState();
         if (state == SegregationStates.A) {
@@ -78,115 +99,7 @@ class SegregationTest {
         }
       }
     }
-
-//    for (int i = 0; i < 100; i++) {
-      grid.updateNewStates();
-//    }
-
-    int newNumA = 0;
-    int newNumB = 0;
-    int newNumEmpty = 0;
-    for (List<Cell> cells: grid.getMyCells()) {
-      for (Cell cell : cells) {
-        Enum<?> state = cell.getMyState();
-        if (state == SegregationStates.A) {
-          newNumA++;
-        } else if (state == SegregationStates.B) {
-          newNumB++;
-        } else if (state == SegregationStates.EMPTY) {
-          newNumEmpty++;
-        }
-      }
-    }
-
-    assertEquals(numA, newNumA);
-    assertEquals(numB, newNumB);
-    assertEquals(numEmpty, newNumEmpty);
+    return new int[]{numA, numB, numEmpty};
   }
-
-//  @Test
-//  void testEmptyIsUnaffected() {
-//    PropertyReader reader = new PropertyReader("property_lists/Segregation/centerOnFireWithSpace.properties");
-//    Grid grid = reader.gridFromPropertyFile();
-//    List<List<Cell>> initialState = grid.getMyCells();
-//    for (int i = 0; i < 100; i++) {
-//      grid.updateNewStates();
-//    }
-//    assertEquals(initialState, grid.getMyCells());
-//  }
-
-//  @Test
-//  void testBurningBecomesEmpty() {
-//    PropertyReader reader = new PropertyReader("property_lists/Segregation/centerOnFire.properties");
-//    Grid grid = reader.gridFromPropertyFile();
-//
-//    assertEquals(SegregationStates., grid.getMyCells().get(2).get(3).getMyState());
-//    grid.updateNewStates();
-//
-//    assertEquals(SegregationStates.ING, grid.getMyCells().get(2).get(3).getMyState());
-//    grid.updateNewStates();
-//
-//    assertEquals(SegregationStates.Y, grid.getMyCells().get(2).get(3).getMyState());
-//  }
-//
-//  @Test
-//  void updateCenterOnFire() {
-//    SegregationCell[][] expected = {
-//        {new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.)},
-//        {new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.)},
-//        {new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.Y), new SegregationCell(SegregationStates.ING), new SegregationCell(SegregationStates.)},
-//        {new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.)},
-//        {new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.)}
-//    };
-//    PropertyReader reader = new PropertyReader("property_lists/Segregation/centerOnFire.properties");
-//    Grid grid = reader.gridFromPropertyFile();
-//    grid.updateNewStates();
-//
-//    for (int i = 0; i < expected.length; i++) {
-//      for (int j = 0; j < expected[i].length; j++) {
-//        assertEquals(expected[i][j].getMyState(), grid.getMyCells().get(i).get(j).getMyState());
-//      }
-//    }
-//  }
-//
-//  @Test
-//  void updateCenterOnFireWithSpace() {
-//    SegregationCell[][] expected = {
-//        {new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.)},
-//        {new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.Y), new SegregationCell(SegregationStates.Y), new SegregationCell(SegregationStates.Y), new SegregationCell(SegregationStates.)},
-//        {new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.Y), new SegregationCell(SegregationStates.Y), new SegregationCell(SegregationStates.Y), new SegregationCell(SegregationStates.)},
-//        {new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.Y), new SegregationCell(SegregationStates.Y), new SegregationCell(SegregationStates.Y), new SegregationCell(SegregationStates.)},
-//        {new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.)}
-//    };
-//    PropertyReader reader = new PropertyReader("property_lists/Segregation/centerOnFireWithSpace.properties");
-//    Grid grid = reader.gridFromPropertyFile();
-//    grid.updateNewStates();
-//
-//    for (int i = 0; i < expected.length; i++) {
-//      for (int j = 0; j < expected[i].length; j++) {
-//        assertEquals(expected[i][j].getMyState(), grid.getMyCells().get(i).get(j).getMyState());
-//      }
-//    }
-//  }
-//
-//  @Test
-//  void updateOneOnFire() {
-//    SegregationCell[][] expected = {
-//        {new SegregationCell(SegregationStates.Y), new SegregationCell(SegregationStates.Y), new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.)},
-//        {new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.Y), new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.Y)},
-//        {new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.)},
-//        {new SegregationCell(SegregationStates.Y), new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.Y), new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.Y)},
-//        {new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.Y), new SegregationCell(SegregationStates.), new SegregationCell(SegregationStates.Y), new SegregationCell(SegregationStates.)}
-//    };
-//    PropertyReader reader = new PropertyReader("property_lists/Segregation/oneOnFire.properties");
-//    Grid grid = reader.gridFromPropertyFile();
-//    grid.updateNewStates();
-//
-//    for (int i = 0; i < expected.length; i++) {
-//      for (int j = 0; j < expected[i].length; j++) {
-//        assertEquals(expected[i][j].getMyState(), grid.getMyCells().get(i).get(j).getMyState());
-//      }
-//    }
-//  }
 
 }
