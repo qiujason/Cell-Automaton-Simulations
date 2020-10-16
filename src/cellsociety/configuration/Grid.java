@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public abstract class Grid {
@@ -25,9 +26,11 @@ public abstract class Grid {
   protected final List<List<Cell>> myCells;
   protected final ResourceBundle resourceBundle;
   protected final String simulationName;
+  protected final Map optional;
 
-  public Grid(Path cellFile, String simulationName) throws ConfigurationException {
+  public Grid(Path cellFile, String simulationName, Map optional) throws ConfigurationException {
     this.simulationName = simulationName;
+    this.optional = optional;
     resourceBundle = ResourceBundle.getBundle(getClass().getPackageName()+".resources.ConfigurationErrors");
     myCells = build2DArray(cellFile);
     if(myCells!=null){

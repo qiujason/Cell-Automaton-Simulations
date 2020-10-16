@@ -3,22 +3,23 @@ package cellsociety.model.Segregation;
 import cellsociety.configuration.PropertyReader;
 import cellsociety.model.Cell;
 import cellsociety.model.Neighborhood;
+import java.util.Map;
 import java.util.Random;
 
 public class SegregationCell extends Cell {
 
-  public static int unsatisfiedA;
-  public static int unsatisfiedB;
-  public static int numEmptyCanBeMoved;
+  public static final Random random = new Random();
 
-  private static final Random random = new Random();
+  private static int unsatisfiedA;
+  private static int unsatisfiedB;
+  private static int numEmptyCanBeMoved;
 
   private final double satisfiedThreshold;
   private SegregationStates satisfiedState;
 
-  public SegregationCell(Enum<?> state) {
+  public SegregationCell(Enum<?> state, Map optional) {
     super(state);
-    this.satisfiedThreshold = (double) PropertyReader.getProperty("satisfiedThreshold");
+    this.satisfiedThreshold = (double) optional.get("satisfiedThreshold");
     satisfiedState = SegregationStates.UNSATISFIED;
   }
 
@@ -63,6 +64,18 @@ public class SegregationCell extends Cell {
     random.setSeed(seed);
   }
 
+  public static void resetUnsatisfiedA() {
+    unsatisfiedA = 0;
+  }
+
+  public static void resetUnsatisfiedB() {
+    unsatisfiedB = 0;
+  }
+
+  public static void resetNumEmptyCanBeMoved() {
+    numEmptyCanBeMoved = 0;
+  }
+
   private void changeStateFromA() {
     int totalOtherState = unsatisfiedB + numEmptyCanBeMoved;
     double probForB = (double)unsatisfiedB/totalOtherState;
@@ -70,8 +83,12 @@ public class SegregationCell extends Cell {
       myState = SegregationStates.B;
       unsatisfiedB--;
     } else {
-      myState = SegregationStates.EMPTY;
-      numEmptyCanBeMoved--;
+      if (numEmptyCanBeMoved > 0) {
+        myState = SegregationStates.EMPTY;
+        numEmptyCanBeMoved--;
+      } else {
+        unsatisfiedA--;
+      }
     }
   }
 
@@ -82,8 +99,12 @@ public class SegregationCell extends Cell {
       myState = SegregationStates.A;
       unsatisfiedA--;
     } else {
-      myState = SegregationStates.EMPTY;
-      numEmptyCanBeMoved--;
+      if (numEmptyCanBeMoved > 0) {
+        myState = SegregationStates.EMPTY;
+        numEmptyCanBeMoved--;
+      } else {
+        unsatisfiedB--;
+      }
     }
   }
 

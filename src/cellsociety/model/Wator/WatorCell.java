@@ -3,6 +3,7 @@ package cellsociety.model.Wator;
 import cellsociety.configuration.PropertyReader;
 import cellsociety.model.Cell;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class WatorCell extends Cell {
@@ -10,9 +11,9 @@ public class WatorCell extends Cell {
   private final double thresholdForBirth;
   private int turnsWithoutBirth;
 
-  public WatorCell(Enum<?> state) {
+  public WatorCell(Enum<?> state, Map optional) {
     super(state);
-    this.thresholdForBirth = (double) PropertyReader.getProperty("thresholdForBirth");
+    this.thresholdForBirth = (double) optional.get("thresholdForBirth");
     turnsWithoutBirth = 0;
   }
 
