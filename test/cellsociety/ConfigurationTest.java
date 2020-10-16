@@ -5,9 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import cellsociety.configuration.ConfigurationException;
-import cellsociety.configuration.CsvGrid;
 import cellsociety.configuration.Grid;
-import cellsociety.configuration.ProbabilityGrid;
 import cellsociety.configuration.PropertyReader;
 import cellsociety.model.Cell;
 import cellsociety.model.GameOfLife.GameOfLifeCell;
@@ -27,12 +25,6 @@ class ConfigurationTest {
         assertEquals(expected[i][j].getMyState(), grid.getMyCells().get(i).get(j).getMyState());
       }
     }
-  }
-
-  @Test
-  void differentGridTypesTest(){
-    PropertyReader reader = new PropertyReader("property_lists/GameOfLife/randomProbability.properties");
-    assertEquals(ProbabilityGrid.class, reader.gridFromPropertyFile().getClass());
   }
 
   @Test
@@ -210,9 +202,9 @@ class ConfigurationTest {
 
   @Test
   void saveEmptyCSVFile() {
-    Grid grid = new CsvGrid(Path.of("test_data/EmptyTest.csv"), "GameOfLife");
+    Grid grid = new Grid(Path.of("test_data/EmptyTest.csv"), "GameOfLife");
     grid.saveCurrentGrid("test_data/EmptyData.csv");
-    Grid gridTest = new CsvGrid(Path.of("test_data/EmptyData.csv"), "GameOfLife");
+    Grid gridTest = new Grid(Path.of("test_data/EmptyData.csv"), "GameOfLife");
     assertTrue(gridTest.getMyCells().isEmpty());
   }
 
@@ -222,4 +214,15 @@ class ConfigurationTest {
         "property_lists/TestProperties/bad_property_file.properties"));
   }
 
+  @Test
+  void testDefaultOptionalProperty() {
+    PropertyReader reader = new PropertyReader("property_lists/Segregation/preSegregated.properties");
+    assertEquals(0.3, PropertyReader.getOptionalProperty("satisfiedThreshold"));
+  }
+
+  @Test
+  void testChangedOptionalProperty() {
+    PropertyReader reader = new PropertyReader("property_lists/Segregation/checkerboard.properties");
+    assertEquals(0.75, PropertyReader.getOptionalProperty("satisfiedThreshold"));
+  }
 }

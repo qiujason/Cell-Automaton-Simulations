@@ -18,7 +18,7 @@ public class SegregationCell extends Cell {
 
   public SegregationCell(Enum<?> state) {
     super(state);
-    this.satisfiedThreshold = (double) PropertyReader.getProperty("satisfiedThreshold");
+    this.satisfiedThreshold = PropertyReader.getOptionalProperty("satisfiedThreshold");
     satisfiedState = SegregationStates.UNSATISFIED;
   }
 

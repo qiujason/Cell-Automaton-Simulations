@@ -20,7 +20,7 @@ public class RPSCell extends Cell {
 
   public RPSCell(Enum<?> state) {
     super(state);
-    this.winThreshold = (double) PropertyReader.getProperty("winThreshold");
+    this.winThreshold = PropertyReader.getOptionalProperty("winThreshold");
   }
 
   @Override

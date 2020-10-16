@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectInputFilter.Config;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
@@ -18,13 +17,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public abstract class Grid {
+public class Grid {
 
-  protected static final String MODEL_PATH = "cellsociety.model.";
+  private static final String MODEL_PATH = "cellsociety.model.";
 
-  protected final List<List<Cell>> myCells;
-  protected final ResourceBundle resourceBundle;
-  protected final String simulationName;
+  private final List<List<Cell>> myCells;
+  private final ResourceBundle resourceBundle;
+  private final String simulationName;
 
   public Grid(Path cellFile, String simulationName) throws ConfigurationException {
     this.simulationName = simulationName;
@@ -35,7 +34,65 @@ public abstract class Grid {
     }
   }
 
-  abstract List<List<Cell>> build2DArray(Path cellFile) throws ConfigurationException;
+  private List<List<Cell>> build2DArray(Path cellFile) throws ConfigurationException {
+    List<String[]> csvData;
+    List<List<Cell>> ret = new ArrayList<>();
+    int rows;
+    int cols;
+    try {
+      FileReader inputFile = new FileReader(String.valueOf(cellFile));
+      CSVReader csvReader = new CSVReader(inputFile);
+      csvData = csvReader.readAll();
+    } catch (CsvException | IOException e) {
+      throw new ConfigurationException(String.format(resourceBundle.getString("otherSimulationCreationErrors"), e.getMessage()));
+    }
+    Iterator<String[]> iterator = csvData.iterator();
+    if(iterator.hasNext()){
+      String[] headerRow = iterator.next();
+      rows = removeHiddenChars(headerRow[0]);
+      cols = removeHiddenChars(headerRow[1]);
+    } else {
+      throw new ConfigurationException(String.format(resourceBundle.getString("otherSimulationCreationErrors"), "no header row"));
+    }
+    for (int i = 0; i < rows; i++) {
+      if(!iterator.hasNext()){
+        throw new ConfigurationException(resourceBundle.getString("mismatchedCSVData"));
+      }
+      String[] nextRow = iterator.next();
+      if(nextRow.length!=cols){
+        throw new ConfigurationException(resourceBundle.getString("mismatchedCSVData"));
+      }
+      ret.add(i, new ArrayList<>());
+      for (int j = 0; j < cols; j++) {
+        ret.get(i).add(convertStringToCell(nextRow[j]));
+      }
+    }
+    return ret;
+  }
+
+  private Cell convertStringToCell(String stringValueForCell) {
+    int cellValue = removeHiddenChars(stringValueForCell);
+    Cell ret;
+    try {
+      String modelPackagePath = MODEL_PATH + simulationName + ".";
+
+      // get state from cell value and simulation name
+      Class<?> modelStates = Class.forName(modelPackagePath + simulationName + "States");
+      Method method = modelStates.getMethod("values");
+      Enum<?> state = ((Enum<?>[]) method.invoke(null))[cellValue];
+
+      // create a new cell from simulation name with defined state
+      Class<?> simulation = Class.forName(modelPackagePath + simulationName + "Cell");
+      Constructor<?> simConstructor = simulation.getConstructor(Enum.class);
+      ret = (Cell) simConstructor.newInstance(state);
+    } catch (ClassNotFoundException e) {
+      throw new ConfigurationException(String.format(resourceBundle.getString("simulationNotSupported"), simulationName));
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new ConfigurationException(String.format(resourceBundle.getString("otherSimulationCreationErrors"), e.getMessage()));
+    }
+    return ret;
+  }
 
   public void saveCurrentGrid(String filePath) throws ConfigurationException {
     File file = new File(filePath);
@@ -75,20 +132,13 @@ public abstract class Grid {
     }
   }
 
-  protected double removeHiddenChars(String fileString) throws ConfigurationException{
+  private int removeHiddenChars(String fileString) {
     final String UTF8_BOM = "\uFEFF";
     final String CARRIAGE_RETURN = "\r";
     fileString = fileString.replace(UTF8_BOM, ""); // accounts for the BOM Character
     fileString = fileString.replace(CARRIAGE_RETURN, ""); // accounts for the carriage return character
     fileString = fileString.replace("\"","");
-    try{
-      double ret = Double.parseDouble(fileString);
-    }
-    catch(NumberFormatException e){
-      throw new ConfigurationException(String.format(resourceBundle.getString("otherSimulationCreationErrors"), e.getMessage()));
-    }
-
-    return 0;
+    return Integer.parseInt(fileString);
   }
 
   public List<List<Cell>> getMyCells() {
