@@ -3,6 +3,7 @@ package cellsociety.model.Segregation;
 import cellsociety.configuration.PropertyReader;
 import cellsociety.model.Cell;
 import cellsociety.model.Neighborhood;
+import java.util.Map;
 import java.util.Random;
 
 public class SegregationCell extends Cell {
@@ -16,9 +17,9 @@ public class SegregationCell extends Cell {
   private final double satisfiedThreshold;
   private SegregationStates satisfiedState;
 
-  public SegregationCell(Enum<?> state) {
+  public SegregationCell(Enum<?> state, Map optional) {
     super(state);
-    this.satisfiedThreshold = (double) PropertyReader.getProperty("satisfiedThreshold");
+    this.satisfiedThreshold = (double) optional.get("satisfiedThreshold");
     satisfiedState = SegregationStates.UNSATISFIED;
   }
 

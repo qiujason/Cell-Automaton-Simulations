@@ -11,13 +11,14 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class ProbabilityGrid extends Grid{
   private Random random;
   private double probability;
-  public ProbabilityGrid(Path cellFile, String simulationName) throws ConfigurationException {
-    super(cellFile, simulationName);
+  public ProbabilityGrid(Path cellFile, String simulationName, Map optional) throws ConfigurationException {
+    super(cellFile, simulationName, optional);
     probability = .5;
     random = new Random(1);
   }
@@ -74,8 +75,8 @@ public class ProbabilityGrid extends Grid{
 
       // create a new cell from simulation name with defined state
       Class<?> simulation = Class.forName(modelPackagePath + simulationName + "Cell");
-      Constructor<?> simConstructor = simulation.getConstructor(Enum.class);
-      ret = (Cell) simConstructor.newInstance(state);
+      Constructor<?> simConstructor = simulation.getConstructor(Enum.class, Map.class);
+      ret = (Cell) simConstructor.newInstance(state, optional);
     } catch (ClassNotFoundException e) {
       throw new ConfigurationException(String.format(resourceBundle.getString("simulationNotSupported"), simulationName));
     } catch (Exception e) {

@@ -11,14 +11,15 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class TotalLocationGrid extends Grid{
   private Random random;
   private int total;
-  public TotalLocationGrid(Path cellFile, String simulationName) throws ConfigurationException {
-    super(cellFile, simulationName);
+  public TotalLocationGrid(Path cellFile, String simulationName, Map optional) throws ConfigurationException {
+    super(cellFile, simulationName, optional);
     total = 0;
     random = new Random(1);
   }
@@ -72,7 +73,7 @@ public class TotalLocationGrid extends Grid{
       // create a new cell from simulation name with defined state
       Class<?> simulation = Class.forName(modelPackagePath + simulationName + "Cell");
       Constructor<?> simConstructor = simulation.getConstructor(Enum.class);
-      ret = (Cell) simConstructor.newInstance(state);
+      ret = (Cell) simConstructor.newInstance(state, optional);
     } catch (ClassNotFoundException e) {
       throw new ConfigurationException(String.format(resourceBundle.getString("simulationNotSupported"), simulationName));
     } catch (Exception e) {
