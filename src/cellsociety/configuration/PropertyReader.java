@@ -8,6 +8,8 @@ import java.lang.reflect.Constructor;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import javafx.util.Pair;
@@ -28,8 +30,10 @@ public class PropertyReader {
   };
   private final String CONFIGURATION_PATH = "cellsociety.configuration.";
 
-  private final ResourceBundle resourceBundle = ResourceBundle
+  private final ResourceBundle configurationErrorsResourceBundle = ResourceBundle
       .getBundle(PropertyReader.class.getPackageName() + ".resources.ConfigurationErrors");
+  private final ResourceBundle optionalKeyResourceBundle = ResourceBundle
+      .getBundle(PropertyReader.class.getPackageName() + ".resources.OptionalKey");
 
   private final Properties properties;
   private final String file;
@@ -43,11 +47,11 @@ public class PropertyReader {
       for (String requiredKey : REQUIRED_KEYS) {
         if (properties.getProperty(requiredKey) == null) {
           throw new ConfigurationException(
-              String.format(resourceBundle.getString("missingRequiredProperty"), requiredKey));
+              String.format(configurationErrorsResourceBundle.getString("missingRequiredProperty"), requiredKey));
         }
       }
       if(properties.getProperty("simulationType").contains(" ")){
-        throw new ConfigurationException(String.format(resourceBundle.getString("faultySimulationType"), "remove spaces"));
+        throw new ConfigurationException(String.format(configurationErrorsResourceBundle.getString("faultySimulationType"), "remove spaces"));
       }
       for (Pair optionalKey : defaultOptionalKeys) {
         if (properties.getProperty((String) optionalKey.getKey()) == null) {
@@ -55,7 +59,7 @@ public class PropertyReader {
         }
       }
     } catch (IOException e) {
-      throw new ConfigurationException(resourceBundle.getString("errorReadingPropertiesFile"));
+      throw new ConfigurationException(configurationErrorsResourceBundle.getString("errorReadingPropertiesFile"));
     }
   }
 
@@ -63,7 +67,7 @@ public class PropertyReader {
     String ret = properties.getProperty(key);
     if (ret == null) {
       throw new ConfigurationException(
-          String.format(resourceBundle.getString("errorGettingProperty"), key));
+          String.format(configurationErrorsResourceBundle.getString("errorGettingProperty"), key));
     }
     return ret;
   }
@@ -77,8 +81,22 @@ public class PropertyReader {
       properties.store(writer, null);
     } catch (IOException e) {
       throw new ConfigurationException(
-          String.format(resourceBundle.getString("errorWritingToPropertiesFile"), key, file));
+          String.format(configurationErrorsResourceBundle.getString("errorWritingToPropertiesFile"), key, file));
     }
+  }
+
+  private HashMap<String, Object> optionalKeyMap(String simulationType) throws ConfigurationException{
+    HashMap<String, Object> ret = new HashMap<>();
+    String optionalKeysForSimulation = configurationErrorsResourceBundle.getString(simulationType);
+    String[] neededOptionals = optionalKeysForSimulation.split(",");
+    for(String neededOptional: neededOptionals){
+      String value = properties.getProperty(neededOptional);
+      if(value==null){
+        throw new ConfigurationException(String.format(configurationErrorsResourceBundle.getString("missingRequiredProperty"), neededOptional));
+      }
+      ret.put(neededOptional, value);
+    }
+    return ret;
   }
 
   public Grid gridFromPropertyFile() throws ConfigurationException {
@@ -91,7 +109,7 @@ public class PropertyReader {
                   properties.getProperty("csvFile"))).toURI());
     } catch (URISyntaxException | NullPointerException e) {
       throw new ConfigurationException(
-          String.format(resourceBundle.getString("otherSimulationCreationErrors"), e.getMessage()));
+          String.format(configurationErrorsResourceBundle.getString("otherSimulationCreationErrors"), e.getMessage()));
     }
 
     String simulationName = properties.getProperty("simulationType");
@@ -99,13 +117,13 @@ public class PropertyReader {
 
     try {
       Class<?> configurationGrid = Class.forName(CONFIGURATION_PATH + "." + initialConfiguration + "Grid");
-      Constructor<?> gridConstructor = configurationGrid.getConstructor(Path.class, String.class);
-      ret = (Grid) gridConstructor.newInstance(path, simulationName);
+      Constructor<?> gridConstructor = configurationGrid.getConstructor(Path.class, String.class, Map.class);
+      ret = (Grid) gridConstructor.newInstance(path, simulationName, optionalKeyMap(simulationName));
     } catch (ClassNotFoundException e) {
-      throw new ConfigurationException(String.format(resourceBundle.getString("simulationNotSupported"), initialConfiguration));
+      throw new ConfigurationException(String.format(configurationErrorsResourceBundle.getString("simulationNotSupported"), initialConfiguration));
     } catch (Exception e) {
       e.printStackTrace();
-      throw new ConfigurationException(String.format(resourceBundle.getString("otherSimulationCreationErrors"), e.getMessage()));
+      throw new ConfigurationException(String.format(configurationErrorsResourceBundle.getString("otherSimulationCreationErrors"), e.getMessage()));
     }
 
     return ret;
