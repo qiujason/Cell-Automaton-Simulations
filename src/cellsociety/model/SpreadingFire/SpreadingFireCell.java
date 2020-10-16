@@ -2,6 +2,7 @@ package cellsociety.model.SpreadingFire;
 
 import cellsociety.configuration.PropertyReader;
 import cellsociety.model.Cell;
+import java.util.Map;
 import java.util.Random;
 
 public class SpreadingFireCell extends Cell {
@@ -9,9 +10,9 @@ public class SpreadingFireCell extends Cell {
   private final double catchFireProbability;
   private static final Random random = new Random();
 
-  public SpreadingFireCell(Enum<?> state) {
+  public SpreadingFireCell(Enum<?> state, Map optional) {
     super(state);
-    catchFireProbability = (double) PropertyReader.getProperty("probCatch");
+    catchFireProbability = (double) optional.get("probCatch");
   }
 
   @Override
