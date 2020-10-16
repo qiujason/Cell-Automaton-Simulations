@@ -11,7 +11,7 @@ public class SpreadingFireCell extends Cell {
 
   public SpreadingFireCell(Enum<?> state) {
     super(state);
-    catchFireProbability = PropertyReader.getOptionalProperty("probCatch");
+    catchFireProbability = (double) PropertyReader.getProperty("probCatch");
   }
 
   @Override
