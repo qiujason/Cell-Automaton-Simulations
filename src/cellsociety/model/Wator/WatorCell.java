@@ -12,7 +12,7 @@ public class WatorCell extends Cell {
 
   public WatorCell(Enum<?> state) {
     super(state);
-    this.thresholdForBirth = PropertyReader.getOptionalProperty("thresholdForBirth");
+    this.thresholdForBirth = (double) PropertyReader.getProperty("thresholdForBirth");
     turnsWithoutBirth = 0;
   }
 
