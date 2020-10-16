@@ -39,12 +39,18 @@ public class CsvGrid extends Grid {
     } else {
       throw new ConfigurationException(String.format(resourceBundle.getString("otherSimulationCreationErrors"), "no header row"));
     }
+    buildArrayFromCSV(ret, rows, cols, iterator);
+    return ret;
+  }
+
+  private void buildArrayFromCSV(List<List<Cell>> ret, int rows, int cols,
+      Iterator<String[]> iterator) {
     for (int i = 0; i < rows; i++) {
       if(!iterator.hasNext()){
         throw new ConfigurationException(resourceBundle.getString("mismatchedCSVData"));
       }
       String[] nextRow = iterator.next();
-      if(nextRow.length!=cols){
+      if(nextRow.length!= cols){
         throw new ConfigurationException(resourceBundle.getString("mismatchedCSVData"));
       }
       ret.add(i, new ArrayList<>());
@@ -52,7 +58,6 @@ public class CsvGrid extends Grid {
         ret.get(i).add(convertStringToCell(nextRow[j]));
       }
     }
-    return ret;
   }
 
   private Cell convertStringToCell(String stringValueForCell) throws ConfigurationException{
