@@ -11,11 +11,12 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class CsvGrid extends Grid {
 
-  public CsvGrid(Path cellFile, String simulationName) throws ConfigurationException {
-    super(cellFile, simulationName);
+  public CsvGrid(Path cellFile, String simulationName, Map<String, Object> optional) throws ConfigurationException {
+    super(cellFile, simulationName, optional);
   }
 
   @Override
@@ -39,12 +40,18 @@ public class CsvGrid extends Grid {
     } else {
       throw new ConfigurationException(String.format(resourceBundle.getString("otherSimulationCreationErrors"), "no header row"));
     }
+    buildArrayFromCSV(ret, rows, cols, iterator);
+    return ret;
+  }
+
+  private void buildArrayFromCSV(List<List<Cell>> ret, int rows, int cols,
+      Iterator<String[]> iterator) {
     for (int i = 0; i < rows; i++) {
       if(!iterator.hasNext()){
         throw new ConfigurationException(resourceBundle.getString("mismatchedCSVData"));
       }
       String[] nextRow = iterator.next();
-      if(nextRow.length!=cols){
+      if(nextRow.length!= cols){
         throw new ConfigurationException(resourceBundle.getString("mismatchedCSVData"));
       }
       ret.add(i, new ArrayList<>());
@@ -52,7 +59,6 @@ public class CsvGrid extends Grid {
         ret.get(i).add(convertStringToCell(nextRow[j]));
       }
     }
-    return ret;
   }
 
   private Cell convertStringToCell(String stringValueForCell) throws ConfigurationException{
@@ -68,8 +74,8 @@ public class CsvGrid extends Grid {
 
       // create a new cell from simulation name with defined state
       Class<?> simulation = Class.forName(modelPackagePath + simulationName + "Cell");
-      Constructor<?> simConstructor = simulation.getConstructor(Enum.class);
-      ret = (Cell) simConstructor.newInstance(state);
+      Constructor<?> simConstructor = simulation.getConstructor(Enum.class, Map.class);
+      ret = (Cell) simConstructor.newInstance(state, optional);
     } catch (ClassNotFoundException e) {
       throw new ConfigurationException(String.format(resourceBundle.getString("simulationNotSupported"), simulationName));
     } catch (Exception e) {

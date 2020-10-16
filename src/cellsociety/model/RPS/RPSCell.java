@@ -18,9 +18,9 @@ public class RPSCell extends Cell {
 
   private final double winThreshold;
 
-  public RPSCell(Enum<?> state) {
+  public RPSCell(Enum<?> state, Map optional) {
     super(state);
-    this.winThreshold = (double) PropertyReader.getProperty("winThreshold");
+    this.winThreshold = (double) optional.get("winThreshold");
   }
 
   @Override
