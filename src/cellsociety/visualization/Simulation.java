@@ -273,7 +273,7 @@ public class Simulation extends Application {
     cellRectangle.setOnMouseClicked(e -> setCellState(cellLabel));
     Enum<?> currentState = cell.getMyState();
     String myFillAsString = myPropertyReader.getProperty(currentState.toString());
-    if(myFillAsString.split("\\.").length > 0){
+    if(myFillAsString.split("\\.").length > 1){
       Image stateImage = new Image("visualizationResources/images/" + myFillAsString);
       ImagePattern stateImagePattern = new ImagePattern(stateImage);
       cellRectangle.setFill(stateImagePattern);
