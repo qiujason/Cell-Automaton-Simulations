@@ -1,7 +1,6 @@
 package cellsociety.configuration;
 
 import cellsociety.model.Cell;
-import cellsociety.model.GameOfLife.GameOfLifeStates;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;

@@ -16,6 +16,7 @@ public abstract class Cell {
   public void updateCell() {
     if (nextState != null) {
       myState = nextState;
+//      System.out.println(nextState);
       nextState = null;
     }
   }

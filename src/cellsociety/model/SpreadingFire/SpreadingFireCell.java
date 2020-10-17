@@ -7,10 +7,15 @@ import java.util.Random;
 
 public class SpreadingFireCell extends Cell {
 
-  private final double catchFireProbability;
   private static final Random random = new Random();
 
+<<<<<<< Updated upstream
   public SpreadingFireCell(Enum<?> state, Map optional) {
+=======
+  private final double catchFireProbability;
+
+  public SpreadingFireCell(Enum<?> state) {
+>>>>>>> Stashed changes
     super(state);
     catchFireProbability = (double) optional.get("probCatch");
   }
