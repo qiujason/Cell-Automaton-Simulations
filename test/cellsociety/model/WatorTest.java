@@ -12,14 +12,14 @@ class WatorTest {
 
   @Test
   void updateAllFish() {
-    WatorCell[][] expected = {
-        {new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH)},
-        {new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH)},
-        {new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH)},
-        {new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH)},
-        {new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH), new WatorCell(WatorStates.FISH)}
-    };
     PropertyReader reader = new PropertyReader("property_lists/Wator/AllFish.properties");
+    WatorCell[][] expected = {
+        {new WatorCell(WatorStates.FISH, reader.optionalKeyMap("Wator")), new WatorCell(WatorStates.FISH, reader.optionalKeyMap("Wator")), new WatorCell(WatorStates.FISH, reader.optionalKeyMap("Wator")), new WatorCell(WatorStates.FISH, reader.optionalKeyMap("Wator")), new WatorCell(WatorStates.FISH, reader.optionalKeyMap("Wator"))},
+        {new WatorCell(WatorStates.FISH, reader.optionalKeyMap("Wator")), new WatorCell(WatorStates.FISH, reader.optionalKeyMap("Wator")), new WatorCell(WatorStates.FISH, reader.optionalKeyMap("Wator")), new WatorCell(WatorStates.FISH, reader.optionalKeyMap("Wator")), new WatorCell(WatorStates.FISH, reader.optionalKeyMap("Wator"))},
+        {new WatorCell(WatorStates.FISH, reader.optionalKeyMap("Wator")), new WatorCell(WatorStates.FISH, reader.optionalKeyMap("Wator")), new WatorCell(WatorStates.FISH, reader.optionalKeyMap("Wator")), new WatorCell(WatorStates.FISH, reader.optionalKeyMap("Wator")), new WatorCell(WatorStates.FISH, reader.optionalKeyMap("Wator"))},
+        {new WatorCell(WatorStates.FISH, reader.optionalKeyMap("Wator")), new WatorCell(WatorStates.FISH, reader.optionalKeyMap("Wator")), new WatorCell(WatorStates.FISH, reader.optionalKeyMap("Wator")), new WatorCell(WatorStates.FISH, reader.optionalKeyMap("Wator")), new WatorCell(WatorStates.FISH, reader.optionalKeyMap("Wator"))},
+        {new WatorCell(WatorStates.FISH, reader.optionalKeyMap("Wator")), new WatorCell(WatorStates.FISH, reader.optionalKeyMap("Wator")), new WatorCell(WatorStates.FISH, reader.optionalKeyMap("Wator")), new WatorCell(WatorStates.FISH, reader.optionalKeyMap("Wator")), new WatorCell(WatorStates.FISH, reader.optionalKeyMap("Wator"))}
+    };
     Grid grid = reader.gridFromPropertyFile();
     grid.updateNewStates();
 
