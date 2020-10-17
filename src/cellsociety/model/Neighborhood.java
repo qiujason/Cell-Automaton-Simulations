@@ -15,22 +15,15 @@ public class Neighborhood {
 
   public Neighborhood(Cell cell, Grid grid) { // Builds a neighborhood for a given cell
     mainCell = cell;
-    myCells = determineNeighbors(cell, grid);
+    myCells = determineNeighbors(grid);
   }
 
-  private Cell[][] determineNeighbors(Cell cell, Grid grid) {
+  private Cell[][] determineNeighbors(Grid grid) {
     Cell[][] ret = new Cell[NEIGHBORHOOD_LENGTH][NEIGHBORHOOD_LENGTH];
     List<List<Cell>> gridCells = grid.getMyCells();
-    int cellRow = -1;
-    int cellCol = -1;
-    for (int i = 0; i < gridCells.size(); i++) {
-      for (int j = 0; j < gridCells.get(i).size(); j++) {
-        if (gridCells.get(i).get(j).equals(cell)) {
-          cellRow = i;
-          cellCol = j;
-        }
-      }
-    }
+    int[] rowCol = getCellLocation(gridCells);
+    int cellRow = rowCol[0];
+    int cellCol = rowCol[1];
     if (cellRow == -1 || cellCol == -1) {
       return null;
     }
@@ -83,6 +76,17 @@ public class Neighborhood {
 
   public Cell[][] getMyCells() {
     return myCells;
+  }
+
+  private int[] getCellLocation(List<List<Cell>> gridCells) {
+    for (int i = 0; i < gridCells.size(); i++) {
+      for (int j = 0; j < gridCells.get(i).size(); j++) {
+        if (gridCells.get(i).get(j).equals(mainCell)) {
+          return new int[]{i, j};
+        }
+      }
+    }
+    return new int[]{-1, -1};
   }
 
 }

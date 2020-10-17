@@ -116,13 +116,12 @@ public class PropertyReader {
     String initialConfiguration = properties.getProperty("initialStatePolicy");
 
     try {
-      Class<?> configurationGrid = Class.forName(CONFIGURATION_PATH + "." + initialConfiguration + "Grid");
+      Class<?> configurationGrid = Class.forName(CONFIGURATION_PATH + initialConfiguration + "Grid");
       Constructor<?> gridConstructor = configurationGrid.getConstructor(Path.class, String.class, Map.class);
       ret = (Grid) gridConstructor.newInstance(path, simulationName, optionalKeyMap(simulationName));
     } catch (ClassNotFoundException e) {
       throw new ConfigurationException(String.format(configurationErrorsResourceBundle.getString("simulationNotSupported"), initialConfiguration));
     } catch (Exception e) {
-      e.printStackTrace();
       throw new ConfigurationException(String.format(configurationErrorsResourceBundle.getString("otherSimulationCreationErrors"), e.getMessage()));
     }
 
