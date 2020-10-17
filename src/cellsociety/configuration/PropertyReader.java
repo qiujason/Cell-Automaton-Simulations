@@ -85,7 +85,7 @@ public class PropertyReader {
     }
   }
 
-  private HashMap<String, Object> optionalKeyMap(String simulationType) throws ConfigurationException{
+  public HashMap<String, Object> optionalKeyMap(String simulationType) throws ConfigurationException{
     HashMap<String, Object> ret = new HashMap<>();
     String optionalKeysForSimulation = configurationErrorsResourceBundle.getString(simulationType);
     String[] neededOptionals = optionalKeysForSimulation.split(",");

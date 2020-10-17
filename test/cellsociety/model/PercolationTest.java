@@ -48,14 +48,14 @@ class PercolationTest {
 
   @Test
   void updateAllBlocked() {
-    PercolationCell[][] expected = {
-        {new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED)},
-        {new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED)},
-        {new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED)},
-        {new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED)},
-        {new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED)}
-    };
     PropertyReader reader = new PropertyReader("property_lists/Percolation/allBlocked.properties");
+    PercolationCell[][] expected = {
+        {new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation"))},
+        {new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation"))},
+        {new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation"))},
+        {new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation"))},
+        {new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation"))}
+    };
     Grid grid = reader.gridFromPropertyFile();
     grid.updateNewStates();
 
@@ -68,14 +68,14 @@ class PercolationTest {
 
   @Test
   void updateDiagonal() {
-    PercolationCell[][] expected = {
-        {new PercolationCell(PercolationStates.FILLED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED)},
-        {new PercolationCell(PercolationStates.FILLED), new PercolationCell(PercolationStates.FILLED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED)},
-        {new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.UNFILLED), new PercolationCell(PercolationStates.UNFILLED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED)},
-        {new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.UNFILLED), new PercolationCell(PercolationStates.UNFILLED), new PercolationCell(PercolationStates.BLOCKED)},
-        {new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.UNFILLED), new PercolationCell(PercolationStates.UNFILLED)}
-    };
     PropertyReader reader = new PropertyReader("property_lists/Percolation/diagonal.properties");
+    PercolationCell[][] expected = {
+        {new PercolationCell(PercolationStates.FILLED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation"))},
+        {new PercolationCell(PercolationStates.FILLED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.FILLED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation"))},
+        {new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.UNFILLED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.UNFILLED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation"))},
+        {new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.UNFILLED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.UNFILLED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation"))},
+        {new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.UNFILLED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.UNFILLED, reader.optionalKeyMap("Percolation"))}
+    };
     Grid grid = reader.gridFromPropertyFile();
     grid.updateNewStates();
 
@@ -88,14 +88,14 @@ class PercolationTest {
 
   @Test
   void updateStraightLine() {
-    PercolationCell[][] expected = {
-        {new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.FILLED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED)},
-        {new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.FILLED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED)},
-        {new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.UNFILLED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED)},
-        {new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.UNFILLED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED)},
-        {new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.UNFILLED), new PercolationCell(PercolationStates.BLOCKED), new PercolationCell(PercolationStates.BLOCKED)}
-    };
     PropertyReader reader = new PropertyReader("property_lists/Percolation/straightLine.properties");
+    PercolationCell[][] expected = {
+        {new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.FILLED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation"))},
+        {new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.FILLED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation"))},
+        {new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.UNFILLED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation"))},
+        {new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.UNFILLED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation"))},
+        {new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.UNFILLED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation")), new PercolationCell(PercolationStates.BLOCKED, reader.optionalKeyMap("Percolation"))}
+    };
     Grid grid = reader.gridFromPropertyFile();
     grid.updateNewStates();
 

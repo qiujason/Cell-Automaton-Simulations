@@ -94,11 +94,11 @@ class GameOfLifeTest {
 
   @Test
   void updateCellsSquareTest() {
-    GameOfLifeCell[][] expected = {
-        {new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE)},
-        {new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE)}
-    };
     PropertyReader reader = new PropertyReader("property_lists/GameOfLife/square.properties");
+    GameOfLifeCell[][] expected = {
+        {new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife"))},
+        {new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife"))}
+    };
     Grid grid = reader.gridFromPropertyFile();
     grid.updateNewStates();
 
@@ -111,15 +111,17 @@ class GameOfLifeTest {
 
   @Test
   void updateCellsBeaconTest() {
-    GameOfLifeCell[][] expectedUpdate = {
-        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
-        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
-        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
-        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD)},
-        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD)},
-        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)}
-    };
     PropertyReader reader = new PropertyReader("property_lists/GameOfLife/beacon.properties");
+
+    GameOfLifeCell[][] expectedUpdate = {
+        {new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife"))},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife"))},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife"))},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife"))},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife"))},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife"))}
+    };
+
     Grid grid = reader.gridFromPropertyFile();
     grid.updateNewStates();
 
@@ -133,15 +135,16 @@ class GameOfLifeTest {
 
   @Test
   void updateCellsToadTest() {
-    GameOfLifeCell[][] expected = {
-        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
-        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
-        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD)},
-        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD)},
-        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
-        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)}
-    };
     PropertyReader reader = new PropertyReader("property_lists/GameOfLife/toad.properties");
+
+    GameOfLifeCell[][] expected = {
+        {new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife"))},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife"))},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife"))},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife"))},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife"))},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife"))}
+    };
     Grid grid = reader.gridFromPropertyFile();
     grid.updateNewStates();
 
@@ -154,14 +157,15 @@ class GameOfLifeTest {
 
   @Test
   void updateCellsBlinkerTest() {
-    GameOfLifeCell[][] expected = {
-        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
-        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
-        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD)},
-        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
-        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)}
-    };
     PropertyReader reader = new PropertyReader("property_lists/GameOfLife/blinker.properties");
+
+    GameOfLifeCell[][] expected = {
+        {new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife"))},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife"))},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife"))},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife"))},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife"))}
+    };
     Grid grid = reader.gridFromPropertyFile();
     grid.updateNewStates();
 
@@ -174,14 +178,15 @@ class GameOfLifeTest {
 
   @Test
   void updateCellsTubTest() {
-    GameOfLifeCell[][] expected = {
-        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
-        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
-        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD)},
-        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
-        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
-    };
     PropertyReader reader = new PropertyReader("property_lists/GameOfLife/tub.properties");
+
+    GameOfLifeCell[][] expected = {
+        {new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife"))},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife"))},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife"))},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife"))},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife"))},
+    };
     Grid grid = reader.gridFromPropertyFile();
     grid.updateNewStates();
 
@@ -194,14 +199,15 @@ class GameOfLifeTest {
 
   @Test
   void updateCellsBoatTest() {
-    GameOfLifeCell[][] expected = {
-        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
-        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
-        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD)},
-        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
-        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
-    };
     PropertyReader reader = new PropertyReader("property_lists/GameOfLife/boat.properties");
+
+    GameOfLifeCell[][] expected = {
+        {new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife"))},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife"))},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife"))},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife"))},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife"))},
+    };
     Grid grid = reader.gridFromPropertyFile();
     grid.updateNewStates();
 
@@ -214,14 +220,15 @@ class GameOfLifeTest {
 
   @Test
   void updateCellsCornerTest() {
-    GameOfLifeCell[][] expected = {
-        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
-        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
-        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
-        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
-        {new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.DEAD)},
-    };
     PropertyReader reader = new PropertyReader("property_lists/GameOfLife/corner.properties");
+
+    GameOfLifeCell[][] expected = {
+        {new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife"))},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife"))},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife"))},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife"))},
+        {new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife"))},
+    };
     Grid grid = reader.gridFromPropertyFile();
     grid.updateNewStates();
 
@@ -234,14 +241,15 @@ class GameOfLifeTest {
 
   @Test
   void updateCellsEdgesTest() {
-    GameOfLifeCell[][] expected = {
-        {new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE)},
-        {new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE)},
-        {new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE)},
-        {new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.DEAD), new GameOfLifeCell(GameOfLifeStates.ALIVE)},
-        {new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE), new GameOfLifeCell(GameOfLifeStates.ALIVE)},
-    };
     PropertyReader reader = new PropertyReader("property_lists/GameOfLife/edges.properties");
+
+    GameOfLifeCell[][] expected = {
+      {new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife"))},
+      {new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife"))},
+      {new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife"))},
+      {new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.DEAD, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife"))},
+      {new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife")), new GameOfLifeCell(GameOfLifeStates.ALIVE, reader.optionalKeyMap("GameOfLife"))},
+    };
     Grid grid = reader.gridFromPropertyFile();
     grid.updateNewStates();
 
