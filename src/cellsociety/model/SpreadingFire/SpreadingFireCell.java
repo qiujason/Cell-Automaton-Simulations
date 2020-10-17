@@ -9,13 +9,9 @@ public class SpreadingFireCell extends Cell {
 
   private static final Random random = new Random();
 
-<<<<<<< Updated upstream
-  public SpreadingFireCell(Enum<?> state, Map optional) {
-=======
   private final double catchFireProbability;
 
-  public SpreadingFireCell(Enum<?> state) {
->>>>>>> Stashed changes
+  public SpreadingFireCell(Enum<?> state, Map optional) {
     super(state);
     catchFireProbability = (double) optional.get("probCatch");
   }
