@@ -290,7 +290,7 @@ public class Simulation extends Application {
     myGrid.saveCurrentGrid("data/" + INITIAL_STATES + "/" + simType + "/" + filename + ".csv");
     File file = new File("data/" + PROPERTY_LISTS + "/" + simType + "/" + filename + ".properties");
     try {
-      FileWriter outputFile = new FileWriter(file,false);
+      FileWriter outputFile = new FileWriter(file, false);
       Properties savedProperty = new Properties();
       savedProperty.put("simulationType", simType);
       savedProperty.put("simulationTitle", filename);
