@@ -8,6 +8,8 @@ import java.util.Random;
 
 public class WatorCell extends Cell {
 
+  private static final Random random = new Random();
+
   private final double thresholdForBirth;
   private int turnsWithoutBirth;
 
@@ -97,6 +99,10 @@ public class WatorCell extends Cell {
     } else {
       nextState = myState;
     }
+  }
+
+  public static void setRandomSeed(long seed) {
+    random.setSeed(seed);
   }
 
 }

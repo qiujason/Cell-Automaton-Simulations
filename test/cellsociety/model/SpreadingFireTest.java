@@ -61,14 +61,14 @@ class SpreadingFireTest {
 
   @Test
   void updateCenterOnFire() {
-    SpreadingFireCell[][] expected = {
-        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE)},
-        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE)},
-        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.BURNING), new SpreadingFireCell(SpreadingFireStates.TREE)},
-        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE)},
-        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE)}
-    };
     PropertyReader reader = new PropertyReader("property_lists/SpreadingFire/centerOnFire.properties");
+    SpreadingFireCell[][] expected = {
+        {new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire"))},
+        {new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire"))},
+        {new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.EMPTY, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.BURNING, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire"))},
+        {new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire"))},
+        {new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire"))}
+    };
     Grid grid = reader.gridFromPropertyFile();
     grid.updateNewStates();
 
@@ -81,14 +81,14 @@ class SpreadingFireTest {
 
   @Test
   void updateCenterOnFireWithSpace() {
-    SpreadingFireCell[][] expected = {
-        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE)},
-        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.TREE)},
-        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.TREE)},
-        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.TREE)},
-        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE)}
-    };
     PropertyReader reader = new PropertyReader("property_lists/SpreadingFire/centerOnFireWithSpace.properties");
+    SpreadingFireCell[][] expected = {
+        {new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire"))},
+        {new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.EMPTY, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.EMPTY, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.EMPTY, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire"))},
+        {new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.EMPTY, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.EMPTY, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.EMPTY, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire"))},
+        {new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.EMPTY, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.EMPTY, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.EMPTY, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire"))},
+        {new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire"))}
+    };
     Grid grid = reader.gridFromPropertyFile();
     grid.updateNewStates();
 
@@ -101,14 +101,14 @@ class SpreadingFireTest {
 
   @Test
   void updateOneOnFire() {
-    SpreadingFireCell[][] expected = {
-        {new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE)},
-        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.EMPTY)},
-        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.TREE)},
-        {new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.EMPTY)},
-        {new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.TREE), new SpreadingFireCell(SpreadingFireStates.EMPTY), new SpreadingFireCell(SpreadingFireStates.TREE)}
-    };
     PropertyReader reader = new PropertyReader("property_lists/SpreadingFire/oneOnFire.properties");
+    SpreadingFireCell[][] expected = {
+        {new SpreadingFireCell(SpreadingFireStates.EMPTY, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.EMPTY, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire"))},
+        {new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.EMPTY, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.EMPTY, reader.optionalKeyMap("SpreadingFire"))},
+        {new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire"))},
+        {new SpreadingFireCell(SpreadingFireStates.EMPTY, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.EMPTY, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.EMPTY, reader.optionalKeyMap("SpreadingFire"))},
+        {new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.EMPTY, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.EMPTY, reader.optionalKeyMap("SpreadingFire")), new SpreadingFireCell(SpreadingFireStates.TREE, reader.optionalKeyMap("SpreadingFire"))}
+    };
     Grid grid = reader.gridFromPropertyFile();
     grid.updateNewStates();
 

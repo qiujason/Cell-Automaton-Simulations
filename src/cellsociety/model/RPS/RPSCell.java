@@ -26,7 +26,11 @@ public class RPSCell extends Cell {
   @Override
   public void setNewState() {
     if (myNeighbors.getNumberOfNeighborsWithState(RPSWinDynamics.get(myState), false) > winThreshold) {
+      System.out.println("hi");
       nextState = RPSWinDynamics.get(myState);
+      System.out.println("FJDKLSFJD" + myState);
+
+      System.out.println("AAAAAAAAA" + nextState);
     } else {
       nextState = myState;
     }

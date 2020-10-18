@@ -7,8 +7,9 @@ import java.util.Random;
 
 public class SpreadingFireCell extends Cell {
 
-  private final double catchFireProbability;
   private static final Random random = new Random();
+
+  private final double catchFireProbability;
 
   public SpreadingFireCell(Enum<?> state, Map optional) {
     super(state);

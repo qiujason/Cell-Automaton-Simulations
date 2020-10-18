@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class SegregationCell extends Cell {
 
-  public static final Random random = new Random();
+  private static final Random random = new Random();
 
   private static int unsatisfiedA;
   private static int unsatisfiedB;
