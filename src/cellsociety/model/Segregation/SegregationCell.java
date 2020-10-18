@@ -1,28 +1,33 @@
 package cellsociety.model.Segregation;
 
+import cellsociety.configuration.PropertyReader;
 import cellsociety.model.Cell;
 import cellsociety.model.Neighborhood;
+import java.util.Map;
+import java.util.Random;
 
 public class SegregationCell extends Cell {
 
-  public static int unsatisfiedA;
-  public static int unsatisfiedB;
-  public static int numEmptyCanBeMoved;
+  public static final Random random = new Random();
+
+  private static int unsatisfiedA;
+  private static int unsatisfiedB;
+  private static int numEmptyCanBeMoved;
 
   private final double satisfiedThreshold;
   private SegregationStates satisfiedState;
 
-  public SegregationCell(Enum<?> state, double satisfiedThreshold) {
+  public SegregationCell(Enum<?> state, Map optional) {
     super(state);
-    this.satisfiedThreshold = satisfiedThreshold;
+    this.satisfiedThreshold = (double) optional.get("satisfiedThreshold");
     satisfiedState = SegregationStates.UNSATISFIED;
   }
 
   @Override
   public void setNewState() {
     if (myState != SegregationStates.EMPTY) {
-      int percentSimilar = myNeighbors.getNumberOfNeighborsWithState(myState, false) /
-          Neighborhood.NEIGHBORHOOD_SIZE;
+      double totalNeighbors = Neighborhood.NEIGHBORHOOD_SIZE - myNeighbors.getNumberOfNullCells() - 1;
+      double percentSimilar = myNeighbors.getNumberOfNeighborsWithState(myState, false) / totalNeighbors;
       if (percentSimilar < satisfiedThreshold) {
         satisfiedState = SegregationStates.UNSATISFIED;
         if (myState == SegregationStates.A) {
@@ -51,27 +56,55 @@ public class SegregationCell extends Cell {
     }
   }
 
+  public SegregationStates getSatisfiedState() {
+    return satisfiedState;
+  }
+
+  public static void setRandomSeed(long seed) {
+    random.setSeed(seed);
+  }
+
+  public static void resetUnsatisfiedA() {
+    unsatisfiedA = 0;
+  }
+
+  public static void resetUnsatisfiedB() {
+    unsatisfiedB = 0;
+  }
+
+  public static void resetNumEmptyCanBeMoved() {
+    numEmptyCanBeMoved = 0;
+  }
+
   private void changeStateFromA() {
     int totalOtherState = unsatisfiedB + numEmptyCanBeMoved;
     double probForB = (double)unsatisfiedB/totalOtherState;
-    if (Math.random() < probForB) {
+    if (random.nextDouble() < probForB) {
       myState = SegregationStates.B;
       unsatisfiedB--;
     } else {
-      myState = SegregationStates.EMPTY;
-      numEmptyCanBeMoved--;
+      if (numEmptyCanBeMoved > 0) {
+        myState = SegregationStates.EMPTY;
+        numEmptyCanBeMoved--;
+      } else {
+        unsatisfiedA--;
+      }
     }
   }
 
   private void changeStateFromB() {
     int totalOtherState = unsatisfiedA + numEmptyCanBeMoved;
     double probForA = (double)unsatisfiedA/totalOtherState;
-    if (Math.random() < probForA) {
+    if (random.nextDouble() < probForA) {
       myState = SegregationStates.A;
       unsatisfiedA--;
     } else {
-      myState = SegregationStates.EMPTY;
-      numEmptyCanBeMoved--;
+      if (numEmptyCanBeMoved > 0) {
+        myState = SegregationStates.EMPTY;
+        numEmptyCanBeMoved--;
+      } else {
+        unsatisfiedB--;
+      }
     }
   }
 
@@ -80,7 +113,7 @@ public class SegregationCell extends Cell {
     int totalStatesToMove = unsatisfiedA + unsatisfiedB + numEmptyCanBeMoved;
     double probForA = (double)unsatisfiedA/totalStatesToMove;
     double probForB = (double)unsatisfiedB/totalStatesToMove;
-    double probability = Math.random();
+    double probability = random.nextDouble();
     if (probability < probForA) {
       myState = SegregationStates.A;
       unsatisfiedA--;
