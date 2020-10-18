@@ -6,9 +6,11 @@ import cellsociety.model.Cell;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
@@ -132,7 +134,7 @@ public class Simulation extends Application {
       for (File file : path.listFiles()) {
         if (file.getName().split("\\.").length > 0 && !path.getName().equals("TestProperties")) {
           myPropertyReader = new PropertyReader(
-              PROPERTY_LISTS + "/" + path.getName() + "/" + file.getName()); // TODO: Why
+              PROPERTY_LISTS + "/" + path.getName() + "/" + file.getName());
           mySimulations.getItems().add(file.getName().split("\\.")[0] + " - " + myPropertyReader
               .getProperty("simulationType"));
         }
@@ -208,8 +210,10 @@ public class Simulation extends Application {
         PROPERTY_LISTS + "/" + mySimulations.getValue().split(" ")[2] + "/" + mySimulations
             .getValue().split(" ")[0] + ".properties";
     myPropertyReader = new PropertyReader(pathName);
+    myStates = new ArrayList<>();
 
     myGrid = myPropertyReader.gridFromPropertyFile();
+    getSimulationStates();
     visualizeGrid();
   }
 
@@ -237,12 +241,20 @@ public class Simulation extends Application {
     Enum<?> currentState = cell.getMyState();
     String myFillAsString = myPropertyReader.getProperty(currentState.toString());
     if(myFillAsString.split("\\.").length > 1){
-      Image stateImage = new Image("visualizationResources/images/" + myFillAsString);
+      String imagePath = "/visualization_resources/images/" + myFillAsString;
+      Image stateImage = null;
+      try {
+        stateImage = new Image(String.valueOf(getClass().getResource(imagePath).toURI()));
+      } catch (URISyntaxException e) {
+        e.printStackTrace();
+      }
       ImagePattern stateImagePattern = new ImagePattern(stateImage);
       cellRectangle.setFill(stateImagePattern);
     }
-    Color myColor = Color.valueOf(myFillAsString);
-    cellRectangle.setFill(myColor);
+    else{
+      Color myColor = Color.valueOf(myFillAsString);
+      cellRectangle.setFill(myColor);
+    }
     cellRectangle.setStroke(Color.WHITE);
     myGridGroup.getChildren().add(cellRectangle);
   }
@@ -279,6 +291,7 @@ public class Simulation extends Application {
     }
   }
 
+  // TODO: Generalize this method further
   private void saveSimulation() {
     JFrame saver = new JFrame();
     String filename = JOptionPane.showInputDialog(saver, "SaveSimulationAs");
@@ -297,6 +310,9 @@ public class Simulation extends Application {
       savedProperty.put("configAuthor", author);
       savedProperty.put("description", description);
       savedProperty.put("csvFile", filename + ".csv");
+      for(Enum<?> state : myStates){
+        savedProperty.put(state.toString(), myPropertyReader.getProperty(state.toString()));
+      }
       savedProperty.store(outputFile, null);
     } catch (IOException e) {
       e.printStackTrace();
