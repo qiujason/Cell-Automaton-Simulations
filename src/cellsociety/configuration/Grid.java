@@ -85,12 +85,11 @@ public abstract class Grid {
     fileString = fileString.replace("\"","");
     try{
       double ret = Double.parseDouble(fileString);
+      return ret;
     }
-    catch(NumberFormatException e){
+    catch(Exception e){
       throw new ConfigurationException(String.format(resourceBundle.getString("otherSimulationCreationErrors"), e.getMessage()));
     }
-
-    return 0;
   }
 
   public List<List<Cell>> getMyCells() {

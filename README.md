@@ -3,18 +3,21 @@ simulation
 
 This project implements a cellular automata simulator.
 
-Names:
+Names: Hayden Lau, Jason Qiu, Jack Ellwood
 
 ### Timeline
 
-Start Date: 
+Start Date: October 2, 2020
 
-Finish Date: 
+Finish Date: October 19, 2020
 
 Hours Spent:
 
 ### Primary Roles
 
+Hayden Lau - Backend Development
+Jason Qiu - Backend Development
+Jack Ellwood - Frontend Development
 
 ### Resources Used
 
