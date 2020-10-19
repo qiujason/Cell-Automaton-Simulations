@@ -28,6 +28,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -46,8 +47,8 @@ public class Simulation extends Application {
   public static final String DEFAULT_LANGUAGE = "english";
   public static final String BUTTON_PROPERTIES = "visualization_resources.buttons";
   public static final String HEADER = "Jack, Hayden, and Jason's Simulation";
-  public static final double INITIAL_HEIGHT = 600;
-  public static final double INITIAL_WIDTH = 800;
+  public static final double INITIAL_HEIGHT = 800;
+  public static final double INITIAL_WIDTH = 900;
   public static final double FRAMES_PER_SECOND = 2;
   public static final double SIMULATION_DELAY = 1 / FRAMES_PER_SECOND;
 
@@ -89,48 +90,58 @@ public class Simulation extends Application {
     KeyFrame frame = new KeyFrame(Duration.seconds(SIMULATION_DELAY), e -> step());
     myAnimation.getKeyFrames().add(frame);
 
-    myRoot.setLeft(makeNavigationPane());
+    makeNavigationPane();
     Scene scene = new Scene(myRoot, width, height);
     scene.getStylesheets().add(getClass().getResource("/" + STYLESHEET_FOLDER + "LightMode.css").toExternalForm());
 
     return scene;
   }
 
-  private Node makeNavigationPane() {
-    VBox navigationPane = new VBox();
-    makeButton("RestartButton", event -> restart(), navigationPane);
-    makeButton("PlayButton", event -> play(), navigationPane);
-    makeButton("PauseButton", event -> pause(), navigationPane);
-    makeButton("StepButton", event -> step(), navigationPane);
-    makeButton("SavedSimulation", event -> saveSimulation(), navigationPane);
-    makeButton("SpeedUp", event -> speedUp(), navigationPane);
-    makeButton("SlowDown", event -> slowDown(), navigationPane);
-    makeButton("SetColors", event -> setColors(), navigationPane);
-    makeButton("SetPhotos", event -> setPhotos(), navigationPane);
+  private void makeNavigationPane() {
+    HBox buttonPane = new HBox();
+    makeButton("RestartButton", event -> restart(), buttonPane);
+    makeButton("PlayButton", event -> play(), buttonPane);
+    makeButton("PauseButton", event -> pause(), buttonPane);
+    makeButton("StepButton", event -> step(), buttonPane);
+    makeButton("SavedSimulation", event -> saveSimulation(), buttonPane);
+    makeButton("SpeedUp", event -> speedUp(), buttonPane);
+    makeButton("SlowDown", event -> slowDown(), buttonPane);
+    makeButton("SetColors", event -> setColors(), buttonPane);
+    makeButton("SetPhotos", event -> setPhotos(), buttonPane);
+    myRoot.setBottom(buttonPane);
 //    ResourceBundle buttons = ResourceBundle.getBundle(BUTTON_PROPERTIES);
 //    for(String button : buttons.keySet()){
-//      navigationPane.getChildren().add(
-//          makeButton(button, event -> {
-//            try {
-//              this.getClass().getMethod(buttons.getString(button));
-//            } catch (NoSuchMethodException e) {
-//              e.printStackTrace();
-//            }
-//          }));
+//      EventHandler<ActionEvent> me = event -> {
+//        try {
+//          this.getClass().getMethod(buttons.getString(button));
+//        } catch (NoSuchMethodException e) {
+//          e.printStackTrace();
+//        }
+//      };
+//      makeButton(button, event -> {
+//        try {
+//          this.getClass().getMethod(buttons.getString(button));
+//        } catch (NoSuchMethodException e) {
+//          e.printStackTrace();
+//        }
+//      }, buttonPane);
 //    }
+
+    HBox comboBoxPane = new HBox();
+
     initializeSimulationOptions();
     mySimulations.getStyleClass().add("button");
-    navigationPane.getChildren().add(mySimulations);
+    comboBoxPane.getChildren().add(mySimulations);
 
     initializeStyleOptions();
     myStyles.getStyleClass().add("button");
-    navigationPane.getChildren().add(myStyles);
+    comboBoxPane.getChildren().add(myStyles);
 
     initializeLanguages();
     myLanguages.getStyleClass().add("button");
-    navigationPane.getChildren().add(myLanguages);
+    comboBoxPane.getChildren().add(myLanguages);
 
-    return navigationPane;
+    myRoot.setTop(comboBoxPane);
   }
 
   private void initializeSimulationOptions() {
