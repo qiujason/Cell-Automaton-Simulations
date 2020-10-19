@@ -77,7 +77,7 @@ public class PropertyReader {
     try {
       PrintWriter writer =
           new PrintWriter(
-              new File(this.getClass().getResource(file).getPath()));
+              new File(this.getClass().getResource("/" + file).getPath()));
       properties.store(writer, null);
     } catch (IOException e) {
       throw new ConfigurationException(
