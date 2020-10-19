@@ -1,7 +1,6 @@
-package cellsociety.model.SpreadingFire;
+package cellsociety.model.Cells.SpreadingFire;
 
-import cellsociety.configuration.PropertyReader;
-import cellsociety.model.Cell;
+import cellsociety.model.Cells.Cell;
 import java.util.Map;
 import java.util.Random;
 

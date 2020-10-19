@@ -4,8 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import cellsociety.configuration.Grid;
 import cellsociety.configuration.PropertyReader;
-import cellsociety.model.RPS.RPSCell;
-import cellsociety.model.RPS.RPSStates;
+import cellsociety.model.Cells.RPS.RPSStates;
 import org.junit.jupiter.api.Test;
 
 class RPSTest {

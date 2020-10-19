@@ -1,4 +1,4 @@
-package cellsociety.model.Percolation;
+package cellsociety.model.Cells.Percolation;
 
 
 public enum PercolationStates {

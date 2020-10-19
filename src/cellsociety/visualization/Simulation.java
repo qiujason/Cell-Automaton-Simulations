@@ -2,16 +2,13 @@ package cellsociety.visualization;
 
 import cellsociety.configuration.Grid;
 import cellsociety.configuration.PropertyReader;
-import cellsociety.model.Cell;
-import cellsociety.model.GameOfLife.GameOfLifeStates;
+import cellsociety.model.Cells.Cell;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;

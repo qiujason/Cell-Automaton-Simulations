@@ -1,7 +1,6 @@
-package cellsociety.model.RPS;
+package cellsociety.model.Cells.RPS;
 
-import cellsociety.configuration.PropertyReader;
-import cellsociety.model.Cell;
+import cellsociety.model.Cells.Cell;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,12 +24,8 @@ public class RPSCell extends Cell {
 
   @Override
   public void setNewState() {
-    if (myNeighbors.getNumberOfNeighborsWithState(RPSWinDynamics.get(myState), false) > winThreshold) {
-      System.out.println("hi");
+    if (myNeighbors.getNeighborsWithState(RPSWinDynamics.get(myState)).size() > winThreshold) {
       nextState = RPSWinDynamics.get(myState);
-      System.out.println("FJDKLSFJD" + myState);
-
-      System.out.println("AAAAAAAAA" + nextState);
     } else {
       nextState = myState;
     }

@@ -1,4 +1,4 @@
-package cellsociety.model.RPS;
+package cellsociety.model.Cells.RPS;
 
 
 public enum RPSStates {
