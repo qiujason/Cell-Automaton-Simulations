@@ -47,8 +47,8 @@ public class Simulation extends Application {
   public static final String DEFAULT_LANGUAGE = "english";
   public static final String BUTTON_PROPERTIES = "visualization_resources.buttons";
   public static final String HEADER = "Jack, Hayden, and Jason's Simulation";
-  public static final double INITIAL_HEIGHT = 800;
-  public static final double INITIAL_WIDTH = 900;
+  public static final double INITIAL_HEIGHT = 600;
+  public static final double INITIAL_WIDTH = 800;
   public static final double FRAMES_PER_SECOND = 2;
   public static final double SIMULATION_DELAY = 1 / FRAMES_PER_SECOND;
 
