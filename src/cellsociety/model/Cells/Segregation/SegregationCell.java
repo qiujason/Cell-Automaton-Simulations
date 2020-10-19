@@ -17,7 +17,7 @@ public class SegregationCell extends Cell {
 
   public SegregationCell(Enum<?> state, Map optional) {
     super(state);
-    this.satisfiedThreshold = (double) optional.get("satisfiedThreshold");
+    this.satisfiedThreshold = Double.parseDouble((String) optional.get("satisfiedThreshold"));
     satisfiedState = SegregationStates.UNSATISFIED;
   }
 

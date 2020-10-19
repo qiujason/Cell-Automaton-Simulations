@@ -14,7 +14,7 @@ public class WatorCell extends Cell {
 
   public WatorCell(Enum<?> state, Map optional) {
     super(state);
-    this.thresholdForBirth = (double) optional.get("thresholdForBirth");
+    this.thresholdForBirth = Double.parseDouble((String) optional.get("thresholdForBirth"));
     turnsWithoutBirth = 0;
   }
 

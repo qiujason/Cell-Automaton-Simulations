@@ -12,7 +12,7 @@ public class SpreadingFireCell extends Cell {
 
   public SpreadingFireCell(Enum<?> state, Map optional) {
     super(state);
-    catchFireProbability = (double) optional.get("probCatch");
+    catchFireProbability = Double.parseDouble((String) optional.get("probCatch"));
   }
 
   @Override

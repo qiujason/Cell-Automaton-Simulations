@@ -118,7 +118,7 @@ public class PropertyReader {
     } catch (ClassNotFoundException e) {
       throw new ConfigurationException(String.format(configurationErrorsResourceBundle.getString("simulationNotSupported"), simulationName));
     } catch (Exception e) {
-      throw new ConfigurationException(String.format(configurationErrorsResourceBundle.getString("otherSimulationCreationErrors"), e.getMessage()));
+      throw new ConfigurationException(String.format(configurationErrorsResourceBundle.getString("otherSimulationCreationErrors"), e.getClass() + " " + e.getMessage()));
     }
 
     return grid;

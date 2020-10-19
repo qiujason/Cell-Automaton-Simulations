@@ -19,7 +19,7 @@ public class RPSCell extends Cell {
 
   public RPSCell(Enum<?> state, Map optional) {
     super(state);
-    this.winThreshold = (double) optional.get("winThreshold");
+    this.winThreshold = Double.parseDouble((String) optional.get("winThreshold"));
   }
 
   @Override
