@@ -18,7 +18,7 @@ public class SpreadingFireCell extends Cell {
   @Override
   public void setNewState() {
     if (myState == SpreadingFireStates.TREE) {
-      if (myNeighbors.getNumberOfNeighborsWithState(SpreadingFireStates.BURNING, true) > 0 &&
+      if (myNeighbors.getNeighborsWithState(SpreadingFireStates.BURNING).size() > 0 &&
           random.nextDouble() < catchFireProbability) {
         nextState = SpreadingFireStates.BURNING;
       } else {

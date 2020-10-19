@@ -22,7 +22,7 @@ public class PropertyReader {
       new Pair("satisfiedThreshold", 0.3),
       new Pair("thresholdForBirth", 3.0),
       new Pair("edgePolicy", "finite"),
-      new Pair("neighborPolicy", "complete"),
+      new Pair("neighborPolicy", "Complete"),
       new Pair("initialStatePolicy", "Csv")
   };
   private final String[] REQUIRED_KEYS = new String[] {

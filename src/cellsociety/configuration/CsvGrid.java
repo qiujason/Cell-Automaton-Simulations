@@ -79,7 +79,6 @@ public class CsvGrid extends Grid {
     } catch (ClassNotFoundException e) {
       throw new ConfigurationException(String.format(resourceBundle.getString("simulationNotSupported"), simulationName));
     } catch (Exception e) {
-      e.printStackTrace();
       throw new ConfigurationException(String.format(resourceBundle.getString("otherSimulationCreationErrors"), e.getMessage()));
     }
     return ret;

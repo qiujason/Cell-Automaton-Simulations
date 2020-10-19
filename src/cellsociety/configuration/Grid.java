@@ -13,7 +13,7 @@ import java.util.ResourceBundle;
 
 public abstract class Grid {
 
-  protected static final String MODEL_PATH = "cellsociety.model.";
+  protected static final String MODEL_PATH = "cellsociety.model.Cells.";
 
   protected final List<List<Cell>> myCells;
   protected final ResourceBundle resourceBundle;
