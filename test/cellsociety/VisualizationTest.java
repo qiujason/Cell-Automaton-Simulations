@@ -34,12 +34,13 @@ public class VisualizationTest extends DukeApplicationTest {
   private Button mySetColorsButton;
   private Button mySetPhotosButton;
   private ComboBox<String> mySimulations;
+  private ComboBox<String> myStyles;
   private Group myGridGroup;
 
   @Override
   public void start(Stage stage) throws Exception {
     mySimulation = new Simulation();
-    myResources = ResourceBundle.getBundle(Simulation.PROPERTIES);
+    myResources = ResourceBundle.getBundle(Simulation.LANGUAGE_PROPERTIES);
 
     myScene = mySimulation.setupScene(Simulation.INITIAL_WIDTH, Simulation.INITIAL_HEIGHT);
     stage.setScene(myScene);
@@ -57,6 +58,7 @@ public class VisualizationTest extends DukeApplicationTest {
     mySetColorsButton = lookup("#SetColors").query();
     mySetPhotosButton = lookup("#SetPhotos").query();
     mySimulations = lookup("#SimulationSelect").query();
+    myStyles = lookup("#SetStyle").query();
     myGridGroup = lookup("#GridGroup").query();
   }
 
@@ -72,31 +74,32 @@ public class VisualizationTest extends DukeApplicationTest {
     assertEquals(myResources.getString("SlowDown"), mySlowDownButton.getText());
     assertEquals(myResources.getString("SetColors"), mySetColorsButton.getText());
     assertEquals(myResources.getString("SetPhotos"), mySetPhotosButton.getText());
+    assertEquals(myResources.getString("SetStyle"), myStyles.getPromptText());
   }
 
   @Test
   public void testBlockConfiguration() {
-    select(mySimulations, "Beacon");
+    select(mySimulations, "Beacon - GameOfLife");
     assertEquals(36, myGridGroup.getChildren().size());
-    select(mySimulations, "Blinker");
+    select(mySimulations, "Blinker - GameOfLife");
     assertEquals(25, myGridGroup.getChildren().size());
-    select(mySimulations, "Boat");
+    select(mySimulations, "Boat - GameOfLife");
     assertEquals(25, myGridGroup.getChildren().size());
-    select(mySimulations, "Corner");
+    select(mySimulations, "Corner - GameOfLife");
     assertEquals(25, myGridGroup.getChildren().size());
-    select(mySimulations, "Edges");
+    select(mySimulations, "Edges - GameOfLife");
     assertEquals(25, myGridGroup.getChildren().size());
-    select(mySimulations, "Square");
+    select(mySimulations, "Square - GameOfLife");
     assertEquals(4, myGridGroup.getChildren().size());
-    select(mySimulations, "Toad");
+    select(mySimulations, "Toad - GameOfLife");
     assertEquals(36, myGridGroup.getChildren().size());
-    select(mySimulations, "Tub");
+    select(mySimulations, "Tub - GameOfLife");
     assertEquals(25, myGridGroup.getChildren().size());
   }
 
   @Test
   public void testStepButton() {
-    select(mySimulations, "Beacon");
+    select(mySimulations, "Beacon - GameOfLife");
     clickOn(myStepButton);
     Rectangle cellRectangle = lookup("#cell14").query();
     assertEquals(Color.WHITE, cellRectangle.getFill());
@@ -104,7 +107,7 @@ public class VisualizationTest extends DukeApplicationTest {
 
   @Test
   public void testRestartButton() {
-    select(mySimulations, "Beacon");
+    select(mySimulations, "Beacon - GameOfLife");
     clickOn(myStepButton);
     clickOn(myRestartButton);
     Rectangle cellRectangle = lookup("#cell14").query();
@@ -114,14 +117,14 @@ public class VisualizationTest extends DukeApplicationTest {
 
   @Test
   public void testPlayButton() {
-    select(mySimulations, "Beacon");
+    select(mySimulations, "Beacon - GameOfLife");
     clickOn(myPlayButton);
     assertEquals(myAnimation.statusProperty().getValue(), Status.RUNNING);
   }
 
   @Test
   public void testPauseButton() {
-    select(mySimulations, "Beacon");
+    select(mySimulations, "Beacon - GameOfLife");
     clickOn(myPlayButton);
     assertEquals(myAnimation.statusProperty().getValue(), Status.RUNNING);
     clickOn(myPauseButton);
@@ -142,15 +145,41 @@ public class VisualizationTest extends DukeApplicationTest {
 
   @Test
   public void testSaveSimulation() {
-    select(mySimulations, "Beacon");
+    select(mySimulations, "Beacon - GameOfLife");
     clickOn(mySaveSimulationButton);
-    press(KeyCode.J);
+    press(KeyCode.T);
+    press(KeyCode.E);
+    press(KeyCode.S);
     press(KeyCode.ENTER);
-    press(KeyCode.J);
     press(KeyCode.ENTER);
-    press(KeyCode.J);
     press(KeyCode.ENTER);
-    assertTrue(mySimulations.getItems().contains("j"));
+    assertTrue(mySimulations.getItems().contains("tes - GameOfLife"));
+  }
+
+  @Test
+  public void testSetCellState() {
+    select(mySimulations, "Beacon - GameOfLife");
+    Rectangle cellRectangle = lookup("#cell14").query();
+    clickOn(cellRectangle);
+    cellRectangle = lookup("#cell14").query();
+    assertEquals(Color.WHITE, cellRectangle.getFill());
+  }
+
+  @Test
+  public void testStyleChange() {
+    assertEquals(Color.BLACK, myRestartButton.getTextFill());
+    select(myStyles, "lightMode");
+    assertEquals(Color.WHITE, myRestartButton.getTextFill());
+  }
+
+  @Test
+  public void testSetColor() {
+
+  }
+
+  @Test
+  public void testSetPhoto() {
+
   }
 
 }

@@ -6,13 +6,13 @@ import cellsociety.model.Cell;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
@@ -25,24 +25,26 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 
 public class Simulation extends Application {
 
-  public static final String STYLESHEET = "/visualization_resources/myStyles.css";
+  public static final String STYLESHEET_FOLDER = "visualization_resources/stylesheets/";
   public static final String INITIAL_STATES = "initial_states";
   public static final String PROPERTY_LISTS = "property_lists";
-  public static final String PROPERTIES = "visualization_resources.visualization";
+  public static final String LANGUAGE_PROPERTIES = "visualization_resources.english";
+  public static final String BUTTON_PROPERTIES = "visualization_resources.buttons";
   public static final String HEADER = "Jack, Hayden, and Jason's Simulation";
   public static final double INITIAL_HEIGHT = 600;
   public static final double INITIAL_WIDTH = 800;
@@ -57,11 +59,12 @@ public class Simulation extends Application {
   private BorderPane myRoot;
   private Grid myGrid;
   private Group myGridGroup;
-  private ResourceBundle myResources;
+  private ResourceBundle myLanguageResources;
   private Timeline myAnimation;
   private PropertyReader myPropertyReader;
   private List<Enum<?>> myStates;
   private ComboBox<String> mySimulations;
+  private ComboBox<String> myStyles;
 
   @Override
   public void start(Stage stage) throws Exception {
@@ -72,7 +75,7 @@ public class Simulation extends Application {
   }
 
   public Scene setupScene(double width, double height) {
-    myResources = ResourceBundle.getBundle(PROPERTIES);
+    myLanguageResources = ResourceBundle.getBundle(LANGUAGE_PROPERTIES);
     myRoot = new BorderPane();
     myGridGroup = new Group();
     myGridGroup.setId("GridGroup");
@@ -83,35 +86,43 @@ public class Simulation extends Application {
     KeyFrame frame = new KeyFrame(Duration.seconds(SIMULATION_DELAY), e -> step());
     myAnimation.getKeyFrames().add(frame);
 
-    myRoot.setTop(makeNavigationPane());
+    myRoot.setLeft(makeNavigationPane());
     Scene scene = new Scene(myRoot, width, height);
-    scene.getStylesheets().add(getClass().getResource(STYLESHEET).toExternalForm());
+    scene.getStylesheets().add(getClass().getResource("/" + STYLESHEET_FOLDER + "lightMode.css").toExternalForm());
 
     return scene;
   }
 
   private Node makeNavigationPane() {
-    HBox navigationPane = new HBox();
-    Button myRestartButton = makeButton("RestartButton", event -> restart());
-    navigationPane.getChildren().add(myRestartButton);
-    Button myPlayButton = makeButton("PlayButton", event -> play());
-    navigationPane.getChildren().add(myPlayButton);
-    Button myPauseButton = makeButton("PauseButton", event -> pause());
-    navigationPane.getChildren().add(myPauseButton);
-    Button myStepButton = makeButton("StepButton", event -> step());
-    navigationPane.getChildren().add(myStepButton);
-    Button mySaveSimulationButton = makeButton("SavedSimulation", event -> saveSimulation());
-    navigationPane.getChildren().add(mySaveSimulationButton);
-    Button mySpeedUpButton = makeButton("SpeedUp", event -> speedUp());
-    navigationPane.getChildren().add(mySpeedUpButton);
-    Button mySlowDownButton = makeButton("SlowDown", event -> slowDown());
-    navigationPane.getChildren().add(mySlowDownButton);
-    Button mySetColorsButton = makeButton("SetColors", event -> setColors());
-    navigationPane.getChildren().add(mySetColorsButton);
-    Button mySetPhotosButton = makeButton("SetPhotos", event -> setPhotos());
-    navigationPane.getChildren().add(mySetPhotosButton);
+    VBox navigationPane = new VBox();
+    makeButton("RestartButton", event -> restart(), navigationPane);
+    makeButton("PlayButton", event -> play(), navigationPane);
+    makeButton("PauseButton", event -> pause(), navigationPane);
+    makeButton("StepButton", event -> step(), navigationPane);
+    makeButton("SavedSimulation", event -> saveSimulation(), navigationPane);
+    makeButton("SpeedUp", event -> speedUp(), navigationPane);
+    makeButton("SlowDown", event -> slowDown(), navigationPane);
+    makeButton("SetColors", event -> setColors(), navigationPane);
+    makeButton("SetPhotos", event -> setPhotos(), navigationPane);
+//    ResourceBundle buttons = ResourceBundle.getBundle(BUTTON_PROPERTIES);
+//    for(String button : buttons.keySet()){
+//      navigationPane.getChildren().add(
+//          makeButton(button, event -> {
+//            try {
+//              this.getClass().getMethod(buttons.getString(button));
+//            } catch (NoSuchMethodException e) {
+//              e.printStackTrace();
+//            }
+//          }));
+//    }
     initializeSimulationOptions();
+    mySimulations.getStyleClass().add("button");
     navigationPane.getChildren().add(mySimulations);
+
+    initializeStyleOptions();
+    myStyles.getStyleClass().add("button");
+    navigationPane.getChildren().add(myStyles);
+
     return navigationPane;
   }
 
@@ -121,7 +132,7 @@ public class Simulation extends Application {
     mySimulations.setOnAction(event -> {
       chooseSimulation();
     });
-    mySimulations.setPromptText(myResources.getString("SimulationSelect"));
+    mySimulations.setPromptText(myLanguageResources.getString("SimulationSelect"));
     Path simulations = null;
     try {
       simulations = Paths.get(
@@ -142,67 +153,104 @@ public class Simulation extends Application {
     }
   }
 
-  private Button makeButton(String buttonName, EventHandler<ActionEvent> buttonAction) {
+  private void initializeStyleOptions() {
+    myStyles = new ComboBox<>();
+    myStyles.setId("SetStyle");
+    myStyles.setOnAction(event -> setStyle());
+    myStyles.setPromptText(myLanguageResources.getString("SetStyle"));
+    Path styles = null;
+    try {
+      styles = Paths.get(
+          Objects.requireNonNull(Simulation.class.getClassLoader().getResource(STYLESHEET_FOLDER)).toURI());
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
+    }
+    for(File style : styles.toFile().listFiles()){
+      myStyles.getItems().add(style.getName().split("\\.")[0]);
+    }
+  }
+
+  private void makeButton(String buttonName, EventHandler<ActionEvent> buttonAction, Pane navigationPane) {
     Button newButton = new Button();
-    String buttonLabel = myResources.getString(buttonName);
+    String buttonLabel = myLanguageResources.getString(buttonName);
     newButton.setText(buttonLabel);
     newButton.setId(buttonName);
     newButton.setOnAction(buttonAction);
-    return newButton;
+    newButton.getStyleClass().add("button");
+    navigationPane.getChildren().add(newButton);
   }
 
-  private void restart() {
+  public void restart() {
     myAnimation.stop();
     chooseSimulation();
   }
 
-  private void play() {
+  public void play() {
     myAnimation.play();
   }
 
-  private void pause() {
+  public void pause() {
     myAnimation.pause();
   }
 
-  private void step() {
+  public void step() {
     myGrid.updateNewStates();
     visualizeGrid();
   }
 
-  private void speedUp() {
+  public void speedUp() {
     myAnimation.setRate(myAnimation.getRate() * 2);
-    myRoot.setLeft(new Text("x" + myAnimation.getRate()));
+    myRoot.setRight(new Text("x" + myAnimation.getRate()));
     if (myAnimation.getRate() == 1) {
-      myRoot.setLeft(null);
+      myRoot.setRight(null);
     }
   }
 
-  private void slowDown() {
+  public void slowDown() {
     myAnimation.setRate(myAnimation.getRate() / 2);
-    myRoot.setLeft(new Text("x" + myAnimation.getRate()));
+    myRoot.setRight(new Text("x" + myAnimation.getRate()));
     if (myAnimation.getRate() == 1) {
-      myRoot.setLeft(null);
+      myRoot.setRight(null);
     }
   }
 
-  private void setColors() {
+  // FIXME: Enable saving colors
+  public void setColors() {
     getSimulationStates();
-    JFrame saver = new JFrame();
+    TextInputDialog dialog = new TextInputDialog();
+    dialog.setTitle("Set Colors");
+    String newColor = null;
     for(Enum<?> state : myStates){
-      String newColor = JOptionPane.showInputDialog(saver, "Input Color for State " + state.toString());
+      dialog.setContentText("Input Color for State: " + state.toString());
+      Optional<String> enteredColor = dialog.showAndWait();
+      if (enteredColor.isPresent()) {
+        newColor = enteredColor.get();
+      }
       myPropertyReader.setProperty(state.toString(), newColor);
     }
     visualizeGrid();
   }
 
-  private void setPhotos() {
+  // FIXME: Enable saving photos
+  public void setPhotos() {
     getSimulationStates();
-    JFrame saver = new JFrame();
+    TextInputDialog dialog = new TextInputDialog();
+    dialog.setTitle("Set Photos");
+    String newColor = null;
     for(Enum<?> state : myStates){
-      String newPhoto = JOptionPane.showInputDialog(saver, "Choose photo for State " + state.toString());
-      myPropertyReader.setProperty(state.toString(), newPhoto);
+      dialog.setContentText("Choose photo for State: " + state.toString());
+      Optional<String> enteredPhoto = dialog.showAndWait();
+      if (enteredPhoto.isPresent()) {
+        newColor = enteredPhoto.get();
+      }
+      myPropertyReader.setProperty(state.toString(), newColor);
     }
     visualizeGrid();
+  }
+
+  public void setStyle() {
+    myScene.getStylesheets().clear();
+    myScene.getStylesheets().add(getClass().getResource("/" + STYLESHEET_FOLDER + myStyles.getValue() + ".css").toExternalForm());
   }
 
   private void chooseSimulation() {
@@ -292,11 +340,29 @@ public class Simulation extends Application {
   }
 
   // TODO: Generalize this method further
-  private void saveSimulation() {
-    JFrame saver = new JFrame();
-    String filename = JOptionPane.showInputDialog(saver, "SaveSimulationAs");
-    String author = JOptionPane.showInputDialog(saver, "Author");
-    String description = JOptionPane.showInputDialog(saver, "Description");
+  public void saveSimulation() {
+    TextInputDialog dialog = new TextInputDialog();
+    dialog.setTitle("Save Simulation");
+
+    String filename = null;
+    String author = null;
+    String description = null;
+
+    dialog.setContentText("SaveSimulationAs");
+    Optional<String> enteredFilename = dialog.showAndWait();
+    if (enteredFilename.isPresent()) {
+      filename = enteredFilename.get();
+    }
+    dialog.setContentText("Author");
+    Optional<String> enteredAuthor = dialog.showAndWait();
+    if (enteredAuthor.isPresent()) {
+      author = enteredAuthor.get();
+    }
+    dialog.setContentText("Description");
+    Optional<String> enteredDescription = dialog.showAndWait();
+    if (enteredDescription.isPresent()) {
+      description = enteredDescription.get();
+    }
 
     String simType = myPropertyReader.getProperty("simulationType");
 
