@@ -28,7 +28,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -43,7 +42,8 @@ public class Simulation extends Application {
   public static final String STYLESHEET_FOLDER = "visualization_resources/stylesheets/";
   public static final String INITIAL_STATES = "initial_states";
   public static final String PROPERTY_LISTS = "property_lists";
-  public static final String LANGUAGE_PROPERTIES = "visualization_resources.english";
+  public static final String LANGUAGE_FOLDER = "visualization_resources/languages";
+  public static final String DEFAULT_LANGUAGE = "english";
   public static final String BUTTON_PROPERTIES = "visualization_resources.buttons";
   public static final String HEADER = "Jack, Hayden, and Jason's Simulation";
   public static final double INITIAL_HEIGHT = 600;
@@ -55,6 +55,7 @@ public class Simulation extends Application {
   private double GRID_SIZE = 3 * INITIAL_WIDTH / 4;
   private double GRID_UPPER_LEFT_CORNER = INITIAL_WIDTH / 8;
 
+  private Stage myStage;
   private Scene myScene;
   private BorderPane myRoot;
   private Grid myGrid;
@@ -65,17 +66,19 @@ public class Simulation extends Application {
   private List<Enum<?>> myStates;
   private ComboBox<String> mySimulations;
   private ComboBox<String> myStyles;
+  private ComboBox<String> myLanguages;
 
   @Override
   public void start(Stage stage) throws Exception {
     stage.setTitle(HEADER);
-    myScene = setupScene(INITIAL_WIDTH, INITIAL_HEIGHT);
+    myScene = setupScene(INITIAL_WIDTH, INITIAL_HEIGHT, DEFAULT_LANGUAGE);
     stage.setScene(myScene);
     stage.show();
+    myStage = stage;
   }
 
-  public Scene setupScene(double width, double height) {
-    myLanguageResources = ResourceBundle.getBundle(LANGUAGE_PROPERTIES);
+  public Scene setupScene(double width, double height, String language) {
+    myLanguageResources = ResourceBundle.getBundle(LANGUAGE_FOLDER + "\\." + language);
     myRoot = new BorderPane();
     myGridGroup = new Group();
     myGridGroup.setId("GridGroup");
@@ -88,7 +91,7 @@ public class Simulation extends Application {
 
     myRoot.setLeft(makeNavigationPane());
     Scene scene = new Scene(myRoot, width, height);
-    scene.getStylesheets().add(getClass().getResource("/" + STYLESHEET_FOLDER + "lightMode.css").toExternalForm());
+    scene.getStylesheets().add(getClass().getResource("/" + STYLESHEET_FOLDER + "LightMode.css").toExternalForm());
 
     return scene;
   }
@@ -122,6 +125,10 @@ public class Simulation extends Application {
     initializeStyleOptions();
     myStyles.getStyleClass().add("button");
     navigationPane.getChildren().add(myStyles);
+
+    initializeLanguages();
+    myLanguages.getStyleClass().add("button");
+    navigationPane.getChildren().add(myLanguages);
 
     return navigationPane;
   }
@@ -167,6 +174,23 @@ public class Simulation extends Application {
     }
     for(File style : styles.toFile().listFiles()){
       myStyles.getItems().add(style.getName().split("\\.")[0]);
+    }
+  }
+
+  private void initializeLanguages() {
+    myLanguages = new ComboBox<>();
+    myLanguages.setId("SetLanguage");
+    myLanguages.setOnAction(event -> setLanguage());
+    myLanguages.setPromptText(myLanguageResources.getString("SetLanguage"));
+    Path languages = null;
+    try {
+      languages = Paths.get(
+          Objects.requireNonNull(Simulation.class.getClassLoader().getResource(LANGUAGE_FOLDER)).toURI());
+    } catch (URISyntaxException e) {
+      e.printStackTrace();
+    }
+    for(File style : languages.toFile().listFiles()){
+      myLanguages.getItems().add(style.getName().split("\\.")[0]);
     }
   }
 
@@ -218,10 +242,11 @@ public class Simulation extends Application {
   public void setColors() {
     getSimulationStates();
     TextInputDialog dialog = new TextInputDialog();
-    dialog.setTitle("Set Colors");
+    dialog.setTitle(myLanguageResources.getString("SetColors"));
+    dialog.setHeaderText(myLanguageResources.getString("SetColors"));
     String newColor = null;
     for(Enum<?> state : myStates){
-      dialog.setContentText("Input Color for State: " + state.toString());
+      dialog.setContentText(myLanguageResources.getString("SetColorsDialogue") + state.toString());
       Optional<String> enteredColor = dialog.showAndWait();
       if (enteredColor.isPresent()) {
         newColor = enteredColor.get();
@@ -235,10 +260,11 @@ public class Simulation extends Application {
   public void setPhotos() {
     getSimulationStates();
     TextInputDialog dialog = new TextInputDialog();
-    dialog.setTitle("Set Photos");
+    dialog.setTitle(myLanguageResources.getString("SetPhotos"));
+    dialog.setHeaderText(myLanguageResources.getString("SetPhotos"));
     String newColor = null;
     for(Enum<?> state : myStates){
-      dialog.setContentText("Choose photo for State: " + state.toString());
+      dialog.setContentText(myLanguageResources.getString("SetPhotosDialogue") + state.toString());
       Optional<String> enteredPhoto = dialog.showAndWait();
       if (enteredPhoto.isPresent()) {
         newColor = enteredPhoto.get();
@@ -251,6 +277,11 @@ public class Simulation extends Application {
   public void setStyle() {
     myScene.getStylesheets().clear();
     myScene.getStylesheets().add(getClass().getResource("/" + STYLESHEET_FOLDER + myStyles.getValue() + ".css").toExternalForm());
+  }
+
+  private void setLanguage() {
+    myScene = setupScene(INITIAL_WIDTH, INITIAL_HEIGHT, myLanguages.getValue());
+    myStage.setScene(myScene);
   }
 
   private void chooseSimulation() {

@@ -35,14 +35,15 @@ public class VisualizationTest extends DukeApplicationTest {
   private Button mySetPhotosButton;
   private ComboBox<String> mySimulations;
   private ComboBox<String> myStyles;
+  private ComboBox<String> myLanguages;
   private Group myGridGroup;
 
   @Override
   public void start(Stage stage) throws Exception {
     mySimulation = new Simulation();
-    myResources = ResourceBundle.getBundle(Simulation.LANGUAGE_PROPERTIES);
+    myResources = ResourceBundle.getBundle(Simulation.LANGUAGE_FOLDER + "\\." + Simulation.DEFAULT_LANGUAGE);
 
-    myScene = mySimulation.setupScene(Simulation.INITIAL_WIDTH, Simulation.INITIAL_HEIGHT);
+    myScene = mySimulation.setupScene(Simulation.INITIAL_WIDTH, Simulation.INITIAL_HEIGHT, Simulation.DEFAULT_LANGUAGE);
     stage.setScene(myScene);
     stage.show();
 
@@ -59,6 +60,7 @@ public class VisualizationTest extends DukeApplicationTest {
     mySetPhotosButton = lookup("#SetPhotos").query();
     mySimulations = lookup("#SimulationSelect").query();
     myStyles = lookup("#SetStyle").query();
+    myLanguages = lookup("#SetLanguage").query();
     myGridGroup = lookup("#GridGroup").query();
   }
 
@@ -75,6 +77,7 @@ public class VisualizationTest extends DukeApplicationTest {
     assertEquals(myResources.getString("SetColors"), mySetColorsButton.getText());
     assertEquals(myResources.getString("SetPhotos"), mySetPhotosButton.getText());
     assertEquals(myResources.getString("SetStyle"), myStyles.getPromptText());
+    assertEquals(myResources.getString("SetLanguage"), myLanguages.getPromptText());
   }
 
   @Test
@@ -166,13 +169,6 @@ public class VisualizationTest extends DukeApplicationTest {
   }
 
   @Test
-  public void testStyleChange() {
-    assertEquals(Color.BLACK, myRestartButton.getTextFill());
-    select(myStyles, "lightMode");
-    assertEquals(Color.WHITE, myRestartButton.getTextFill());
-  }
-
-  @Test
   public void testSetColor() {
 
   }
@@ -180,6 +176,19 @@ public class VisualizationTest extends DukeApplicationTest {
   @Test
   public void testSetPhoto() {
 
+  }
+
+  @Test
+  public void testStyleChange() {
+    assertEquals(Color.BLACK, myRestartButton.getTextFill());
+    select(myStyles, "lightMode");
+    assertEquals(Color.WHITE, myRestartButton.getTextFill());
+  }
+
+  @Test
+  public void testLanguageChange() {
+    select(myLanguages, "Español");
+    assertEquals("Reiniciar", myRestartButton.getText());
   }
 
 }
