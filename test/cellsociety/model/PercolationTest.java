@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import cellsociety.configuration.Grid;
 import cellsociety.configuration.PropertyReader;
-import cellsociety.model.Percolation.PercolationCell;
-import cellsociety.model.Percolation.PercolationStates;
+import cellsociety.model.Cells.Percolation.PercolationCell;
+import cellsociety.model.Cells.Percolation.PercolationStates;
 import org.junit.jupiter.api.Test;
 
 class PercolationTest {

@@ -1,7 +1,6 @@
-package cellsociety.model.Wator;
+package cellsociety.model.Cells.Wator;
 
-import cellsociety.configuration.PropertyReader;
-import cellsociety.model.Cell;
+import cellsociety.model.Cells.Cell;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -15,7 +14,7 @@ public class WatorCell extends Cell {
 
   public WatorCell(Enum<?> state, Map optional) {
     super(state);
-    this.thresholdForBirth = (double) optional.get("thresholdForBirth");
+    this.thresholdForBirth = Double.parseDouble((String) optional.get("thresholdForBirth"));
     turnsWithoutBirth = 0;
   }
 
@@ -45,8 +44,8 @@ public class WatorCell extends Cell {
   }
 
   protected WatorCell getRandomAdjacentEmptyCell() {
-    if (myNeighbors.getNumberOfNeighborsWithState(WatorStates.EMPTY, true) > 0) {
-      List<Cell> empty = myNeighbors.getNeighborsWithState(WatorStates.EMPTY, true);
+    List<Cell> empty = myNeighbors.getNeighborsWithState(WatorStates.EMPTY);
+    if (empty.size() > 0) {
       WatorCell emptyCell = null;
       while (empty.size() > 0) {
         emptyCell = (WatorCell) empty.get(new Random().nextInt(empty.size()));
@@ -62,8 +61,8 @@ public class WatorCell extends Cell {
   }
 
   private boolean killFish() {
-    if (myNeighbors.getNumberOfNeighborsWithState(WatorStates.FISH, true) > 0) {
-      List<Cell> fish = myNeighbors.getNeighborsWithState(WatorStates.FISH, true);
+    List<Cell> fish = myNeighbors.getNeighborsWithState(WatorStates.FISH);
+    if (myNeighbors.getNeighborsWithState(WatorStates.FISH).size() > 0) {
       WatorCell deadFish = null;
       while (fish.size() > 0) {
         deadFish = (WatorCell) fish.get(new Random().nextInt(fish.size()));

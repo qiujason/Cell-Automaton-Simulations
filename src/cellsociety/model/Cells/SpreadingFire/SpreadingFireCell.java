@@ -1,7 +1,6 @@
-package cellsociety.model.SpreadingFire;
+package cellsociety.model.Cells.SpreadingFire;
 
-import cellsociety.configuration.PropertyReader;
-import cellsociety.model.Cell;
+import cellsociety.model.Cells.Cell;
 import java.util.Map;
 import java.util.Random;
 
@@ -13,13 +12,13 @@ public class SpreadingFireCell extends Cell {
 
   public SpreadingFireCell(Enum<?> state, Map optional) {
     super(state);
-    catchFireProbability = (double) optional.get("probCatch");
+    catchFireProbability = Double.parseDouble((String) optional.get("probCatch"));
   }
 
   @Override
   public void setNewState() {
     if (myState == SpreadingFireStates.TREE) {
-      if (myNeighbors.getNumberOfNeighborsWithState(SpreadingFireStates.BURNING, true) > 0 &&
+      if (myNeighbors.getNeighborsWithState(SpreadingFireStates.BURNING).size() > 0 &&
           random.nextDouble() < catchFireProbability) {
         nextState = SpreadingFireStates.BURNING;
       } else {

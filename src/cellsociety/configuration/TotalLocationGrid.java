@@ -1,6 +1,6 @@
 package cellsociety.configuration;
 
-import cellsociety.model.Cell;
+import cellsociety.model.Cells.Cell;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import java.io.FileReader;

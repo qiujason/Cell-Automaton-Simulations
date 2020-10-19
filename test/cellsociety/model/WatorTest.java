@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import cellsociety.configuration.Grid;
 import cellsociety.configuration.PropertyReader;
-import cellsociety.model.Segregation.SegregationCell;
-import cellsociety.model.Wator.WatorCell;
-import cellsociety.model.Wator.WatorStates;
+import cellsociety.model.Cells.Segregation.SegregationCell;
+import cellsociety.model.Cells.Wator.WatorCell;
+import cellsociety.model.Cells.Wator.WatorStates;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

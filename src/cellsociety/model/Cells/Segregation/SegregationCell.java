@@ -1,8 +1,6 @@
-package cellsociety.model.Segregation;
+package cellsociety.model.Cells.Segregation;
 
-import cellsociety.configuration.PropertyReader;
-import cellsociety.model.Cell;
-import cellsociety.model.Neighborhood;
+import cellsociety.model.Cells.Cell;
 import java.util.Map;
 import java.util.Random;
 
@@ -19,15 +17,14 @@ public class SegregationCell extends Cell {
 
   public SegregationCell(Enum<?> state, Map optional) {
     super(state);
-    this.satisfiedThreshold = (double) optional.get("satisfiedThreshold");
+    this.satisfiedThreshold = Double.parseDouble((String) optional.get("satisfiedThreshold"));
     satisfiedState = SegregationStates.UNSATISFIED;
   }
 
   @Override
   public void setNewState() {
     if (myState != SegregationStates.EMPTY) {
-      double totalNeighbors = Neighborhood.NEIGHBORHOOD_SIZE - myNeighbors.getNumberOfNullCells() - 1;
-      double percentSimilar = myNeighbors.getNumberOfNeighborsWithState(myState, false) / totalNeighbors;
+      double percentSimilar = (double)myNeighbors.getNeighborsWithState(myState).size() / myNeighbors.getNumActiveNeighbors();
       if (percentSimilar < satisfiedThreshold) {
         satisfiedState = SegregationStates.UNSATISFIED;
         if (myState == SegregationStates.A) {

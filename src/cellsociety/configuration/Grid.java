@@ -1,26 +1,19 @@
 package cellsociety.configuration;
 
-import cellsociety.model.Cell;
-import com.opencsv.CSVReader;
+import cellsociety.model.Cells.Cell;
 import com.opencsv.CSVWriter;
-import com.opencsv.exceptions.CsvException;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectInputFilter.Config;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
 public abstract class Grid {
 
-  protected static final String MODEL_PATH = "cellsociety.model.";
+  protected static final String MODEL_PATH = "cellsociety.model.Cells.";
 
   protected final List<List<Cell>> myCells;
   protected final ResourceBundle resourceBundle;
@@ -72,7 +65,7 @@ public abstract class Grid {
   private void establishNeighbors() {
     for (List<Cell> cells : myCells) {
       for (Cell cell : cells) {
-        cell.setMyNeighbors(this);
+        cell.setMyNeighbors(this, (String)optional.get("neighborPolicy"));
       }
     }
   }

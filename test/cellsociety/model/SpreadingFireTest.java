@@ -4,8 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import cellsociety.configuration.Grid;
 import cellsociety.configuration.PropertyReader;
-import cellsociety.model.SpreadingFire.SpreadingFireCell;
-import cellsociety.model.SpreadingFire.SpreadingFireStates;
+import cellsociety.model.Cells.Cell;
+import cellsociety.model.Cells.SpreadingFire.SpreadingFireCell;
+import cellsociety.model.Cells.SpreadingFire.SpreadingFireStates;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

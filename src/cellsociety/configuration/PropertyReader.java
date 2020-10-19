@@ -1,9 +1,8 @@
 package cellsociety.configuration;
 
-import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.lang.reflect.Constructor;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
@@ -17,12 +16,12 @@ import javafx.util.Pair;
 public class PropertyReader {
 
   private final Pair[] defaultOptionalKeys = new Pair[] {
-      new Pair("probCatch", 0.3),
-      new Pair("winThreshold", 3.0),
-      new Pair("satisfiedThreshold", 0.3),
-      new Pair("thresholdForBirth", 3.0),
+      new Pair("probCatch", "0.3"),
+      new Pair("winThreshold", "3.0"),
+      new Pair("satisfiedThreshold", "0.3"),
+      new Pair("thresholdForBirth", "3.0"),
       new Pair("edgePolicy", "finite"),
-      new Pair("neighborPolicy", "complete"),
+      new Pair("neighborPolicy", "Complete"),
       new Pair("initialStatePolicy", "Csv")
   };
   private final String[] REQUIRED_KEYS = new String[] {
@@ -55,7 +54,7 @@ public class PropertyReader {
       }
       for (Pair optionalKey : defaultOptionalKeys) {
         if (properties.getProperty((String) optionalKey.getKey()) == null) {
-          properties.put(optionalKey.getKey(), optionalKey.getValue());
+          properties.setProperty((String) optionalKey.getKey(), (String) optionalKey.getValue());
         }
       }
     } catch (IOException e) {
@@ -64,21 +63,18 @@ public class PropertyReader {
   }
 
   public String getProperty(String key) {
-    String ret = properties.getProperty(key);
-    if (ret == null) {
+    String property = properties.getProperty(key);
+    if (property == null) {
       throw new ConfigurationException(
           String.format(configurationErrorsResourceBundle.getString("errorGettingProperty"), key));
     }
-    return ret;
+    return property;
   }
 
   public void setProperty(String key, String value) {
     properties.setProperty(key, value);
     try {
-      PrintWriter writer =
-          new PrintWriter(
-              new File(this.getClass().getResource("/" + file).getPath()));
-      properties.store(writer, null);
+      properties.store(new FileOutputStream(this.getClass().getResource("/" + file).getPath()),null);
     } catch (IOException e) {
       throw new ConfigurationException(
           String.format(configurationErrorsResourceBundle.getString("errorWritingToPropertiesFile"), key, file));
@@ -86,7 +82,7 @@ public class PropertyReader {
   }
 
   public HashMap<String, Object> optionalKeyMap(String simulationType) throws ConfigurationException{
-    HashMap<String, Object> ret = new HashMap<>();
+    HashMap<String, Object> optionalKeyMap = new HashMap<>();
     String optionalKeysForSimulation = optionalKeyResourceBundle.getString(simulationType);
     String[] neededOptionals = optionalKeysForSimulation.split(",");
     for(String neededOptional: neededOptionals){
@@ -94,14 +90,14 @@ public class PropertyReader {
       if(value==null){
         throw new ConfigurationException(String.format(configurationErrorsResourceBundle.getString("missingRequiredProperty"), neededOptional));
       }
-      ret.put(neededOptional, value);
+      optionalKeyMap.put(neededOptional, value);
     }
-    return ret;
+    return optionalKeyMap;
   }
 
   public Grid gridFromPropertyFile() throws ConfigurationException {
     Path path;
-    Grid ret;
+    Grid grid;
     try {
       path = Paths
           .get(getClass().getClassLoader().getResource(String
@@ -118,13 +114,13 @@ public class PropertyReader {
     try {
       Class<?> configurationGrid = Class.forName(CONFIGURATION_PATH + initialConfiguration + "Grid");
       Constructor<?> gridConstructor = configurationGrid.getConstructor(Path.class, String.class, Map.class);
-      ret = (Grid) gridConstructor.newInstance(path, simulationName, optionalKeyMap(simulationName));
+      grid = (Grid) gridConstructor.newInstance(path, simulationName, optionalKeyMap(simulationName));
     } catch (ClassNotFoundException e) {
-      throw new ConfigurationException(String.format(configurationErrorsResourceBundle.getString("simulationNotSupported"), initialConfiguration));
+      throw new ConfigurationException(String.format(configurationErrorsResourceBundle.getString("simulationNotSupported"), simulationName));
     } catch (Exception e) {
-      throw new ConfigurationException(String.format(configurationErrorsResourceBundle.getString("otherSimulationCreationErrors"), e.getMessage()));
+      throw new ConfigurationException(String.format(configurationErrorsResourceBundle.getString("otherSimulationCreationErrors"), e.getClass() + " " + e.getMessage()));
     }
 
-    return ret;
+    return grid;
   }
 }

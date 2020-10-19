@@ -1,4 +1,4 @@
-package cellsociety.model.GameOfLife;
+package cellsociety.model.Cells.GameOfLife;
 
 
 public enum GameOfLifeStates {

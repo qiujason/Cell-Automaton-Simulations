@@ -1,6 +1,6 @@
-package cellsociety.model.Percolation;
+package cellsociety.model.Cells.Percolation;
 
-import cellsociety.model.Cell;
+import cellsociety.model.Cells.Cell;
 import java.util.Map;
 
 public class PercolationCell extends Cell {
@@ -12,7 +12,7 @@ public class PercolationCell extends Cell {
   @Override
   public void setNewState() {
     if (myState == PercolationStates.UNFILLED) {
-      if (myNeighbors.getNumberOfNeighborsWithState(PercolationStates.FILLED, false) > 0) {
+      if (myNeighbors.getNeighborsWithState(PercolationStates.FILLED).size() > 0) {
         nextState = PercolationStates.FILLED;
       } else {
         nextState = PercolationStates.UNFILLED;

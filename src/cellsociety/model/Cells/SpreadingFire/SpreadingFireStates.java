@@ -1,4 +1,4 @@
-package cellsociety.model.SpreadingFire;
+package cellsociety.model.Cells.SpreadingFire;
 
 
 public enum SpreadingFireStates {

@@ -2,7 +2,7 @@ package cellsociety.visualization;
 
 import cellsociety.configuration.Grid;
 import cellsociety.configuration.PropertyReader;
-import cellsociety.model.Cell;
+import cellsociety.model.Cells.Cell;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;

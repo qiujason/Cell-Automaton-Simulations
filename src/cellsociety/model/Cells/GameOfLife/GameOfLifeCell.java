@@ -1,6 +1,6 @@
-package cellsociety.model.GameOfLife;
+package cellsociety.model.Cells.GameOfLife;
 
-import cellsociety.model.Cell;
+import cellsociety.model.Cells.Cell;
 import java.util.Map;
 
 public class GameOfLifeCell extends Cell {
@@ -11,7 +11,7 @@ public class GameOfLifeCell extends Cell {
 
   @Override
   public void setNewState() {
-    switch(myNeighbors.getNumberOfNeighborsWithState(GameOfLifeStates.ALIVE, false)) {
+    switch(myNeighbors.getNeighborsWithState(GameOfLifeStates.ALIVE).size()) {
       case 2 -> {
         if (myState == GameOfLifeStates.ALIVE) {
           nextState = GameOfLifeStates.ALIVE;

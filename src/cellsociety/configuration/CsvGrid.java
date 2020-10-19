@@ -1,6 +1,6 @@
 package cellsociety.configuration;
 
-import cellsociety.model.Cell;
+import cellsociety.model.Cells.Cell;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import java.io.FileReader;
@@ -79,7 +79,6 @@ public class CsvGrid extends Grid {
     } catch (ClassNotFoundException e) {
       throw new ConfigurationException(String.format(resourceBundle.getString("simulationNotSupported"), simulationName));
     } catch (Exception e) {
-      e.printStackTrace();
       throw new ConfigurationException(String.format(resourceBundle.getString("otherSimulationCreationErrors"), e.getMessage()));
     }
     return ret;
