@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import cellsociety.visualization.ButtonHandler;
 import cellsociety.visualization.Visualization;
 import java.util.ResourceBundle;
 import javafx.animation.Animation.Status;
@@ -22,6 +23,7 @@ public class VisualizationTest extends DukeApplicationTest {
   private Timeline myAnimation;
   private ResourceBundle myResources;
 
+  private Visualization myVisualization;
   private Button myRestartButton;
   private Button myPlayButton;
   private Button myPauseButton;
@@ -31,6 +33,7 @@ public class VisualizationTest extends DukeApplicationTest {
   private Button mySlowDownButton;
   private Button mySetColorsButton;
   private Button mySetPhotosButton;
+  private Button myNewViewButton;
   private ComboBox<String> mySimulations;
   private ComboBox<String> myStyles;
   private ComboBox<String> myLanguages;
@@ -38,7 +41,7 @@ public class VisualizationTest extends DukeApplicationTest {
 
   @Override
   public void start(Stage stage) {
-    Visualization myVisualization = new Visualization();
+    myVisualization = new Visualization();
     myResources = ResourceBundle.getBundle(Visualization.LANGUAGE_FOLDER + "\\." + Visualization.DEFAULT_LANGUAGE);
     try {
       myVisualization.start(stage);
@@ -60,6 +63,7 @@ public class VisualizationTest extends DukeApplicationTest {
     myStyles = lookup("#SetStyle").query();
     myLanguages = lookup("#SetLanguage").query();
     myGridGroup = lookup("#GridGroup").query();
+    myNewViewButton = lookup("#NewView").query();
   }
 
   @Test
@@ -76,6 +80,7 @@ public class VisualizationTest extends DukeApplicationTest {
     assertEquals(myResources.getString("SetPhotos"), mySetPhotosButton.getText());
     assertEquals(myResources.getString("SetStyle"), myStyles.getPromptText());
     assertEquals(myResources.getString("SetLanguage"), myLanguages.getPromptText());
+    assertEquals(myResources.getString("NewView"), myNewViewButton.getText());
   }
 
   @Test
@@ -207,7 +212,7 @@ public class VisualizationTest extends DukeApplicationTest {
   @Test
   public void testSetPhoto() {
     select(mySimulations, "Beacon - GameOfLife");
-    clickOn(mySetColorsButton);
+    clickOn(mySetPhotosButton);
     press(KeyCode.F);
     press(KeyCode.I);
     press(KeyCode.S);
@@ -222,7 +227,46 @@ public class VisualizationTest extends DukeApplicationTest {
     clickOn(cellRectangle);
     cellRectangle = lookup("#cell14").query();
     clickOn(cellRectangle);
-    assertEquals("javafx.scene.paint.ImagePattern@4206a205", cellRectangle.getFill().toString());
+    assertEquals("javafx.scene.paint.ImagePattern@77e9807f", cellRectangle.getFill().toString());
+  }
+
+  @Test
+  public void testGraphInitialization() {
+    select(mySimulations, "Beacon - GameOfLife");
+    clickOn(myNewViewButton);
+    assertNotEquals(null, myVisualization.getButtonHandler().getSimulationChart());
+  }
+
+  @Test
+  public void testGraphValuesGameOfLife() {
+    ButtonHandler handler = myVisualization.getButtonHandler();
+    select(mySimulations, "Beacon - GameOfLife");
+    clickOn(myNewViewButton);
+    clickOn(myStepButton);
+    assertEquals("Data[1,30,null]", handler.getSimulationChart().getData().get(0).getData().get(1).toString());
+    assertEquals("Data[1,6,null]", handler.getSimulationChart().getData().get(1).getData().get(1).toString());
+  }
+
+  @Test
+  public void testGraphValuesPercolation() {
+    ButtonHandler handler = myVisualization.getButtonHandler();
+    select(mySimulations, "StraightLine - Percolation");
+    clickOn(myNewViewButton);
+    clickOn(myStepButton);
+    assertEquals("Data[1,20,null]", handler.getSimulationChart().getData().get(0).getData().get(1).toString());
+    assertEquals("Data[1,3,null]", handler.getSimulationChart().getData().get(1).getData().get(1).toString());
+    assertEquals("Data[1,2,null]", handler.getSimulationChart().getData().get(2).getData().get(1).toString());
+  }
+
+  @Test
+  public void testGraphValuesSpreadingFire() {
+    ButtonHandler handler = myVisualization.getButtonHandler();
+    select(mySimulations, "CenterOnFireWithSpace - SpreadingFire");
+    clickOn(myNewViewButton);
+    clickOn(myStepButton);
+    assertEquals("Data[1,9,null]", handler.getSimulationChart().getData().get(0).getData().get(1).toString());
+    assertEquals("Data[1,16,null]", handler.getSimulationChart().getData().get(1).getData().get(1).toString());
+    assertEquals("Data[1,0,null]", handler.getSimulationChart().getData().get(2).getData().get(1).toString());
   }
 
 }

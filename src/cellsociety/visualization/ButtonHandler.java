@@ -12,11 +12,19 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import javafx.animation.Timeline;
+import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Data;
+import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class ButtonHandler {
 
@@ -26,6 +34,10 @@ public class ButtonHandler {
   private final ResourceBundle myVisualizationErrors;
   private List<Enum<?>> myStates;
   private Grid myGrid;
+  private Stage myGraphStage;
+  private Scene myGraphScene;
+  private LineChart<Number, Number> mySimulationChart;
+  private int myIterationCounter;
 
   public ButtonHandler(Timeline animation, Visualization visualization, ResourceBundle languageResources, ResourceBundle visualizationErrors) {
     myAnimation = animation;
@@ -50,6 +62,7 @@ public class ButtonHandler {
   protected void step(PropertyReader propertyReader) {
     myGrid.updateNewStates();
     myVisualization.visualizeGrid(myGrid, propertyReader);
+    updateGraph();
   }
 
   protected void speedUp(BorderPane root) {
@@ -96,6 +109,61 @@ public class ButtonHandler {
     myVisualization.setScene(scene);
   }
 
+  protected void initializeNewView(){
+    myGraphStage = new Stage();
+    myGraphStage.setTitle("State Graph");
+
+    NumberAxis iterations = new NumberAxis();
+    NumberAxis numberOfStates = new NumberAxis();
+    iterations.setLabel("Iterations");
+    numberOfStates.setLabel("Number of States");
+
+    mySimulationChart = new LineChart<Number, Number>(iterations, numberOfStates);
+
+    mySimulationChart.setTitle("Simulation Graph");
+
+    myGraphScene = new Scene(mySimulationChart,Visualization.INITIAL_WIDTH,Visualization.INITIAL_HEIGHT);
+    myGraphStage.setScene(myGraphScene);
+  }
+
+  protected void startNewView(){
+    myGraphStage.show();
+  }
+
+  private void initializeGraph(){
+    mySimulationChart.getData().clear();
+    myIterationCounter = 0;
+    for(Enum<?> state : myStates){
+      XYChart.Series<Number, Number> stateSeries = new XYChart.Series<>();
+      stateSeries.setName(state.toString());
+      stateSeries.getData().add(new XYChart.Data<>(myIterationCounter, calculateNumberOfCellsInState(state)));
+      mySimulationChart.getData().add(stateSeries);
+    }
+  }
+
+  private void updateGraph(){
+    myIterationCounter++;
+    for(XYChart.Series<Number, Number> series : mySimulationChart.getData()){
+      for(Enum<?> state : myStates){
+        if(("Series[" + state.toString() + "]").equals(series.toString())){
+          series.getData().add(new XYChart.Data<>(myIterationCounter, calculateNumberOfCellsInState(state)));
+        }
+      }
+    }
+  }
+
+  private int calculateNumberOfCellsInState(Enum<?> state){
+    int totalNumberInState = 0;
+    for(List<Cell> row : myGrid.getMyCells()) {
+      for(Cell cell : row){
+        if(state.equals(cell.getMyState())){
+          totalNumberInState++;
+        }
+      }
+    }
+    return totalNumberInState;
+  }
+
   protected void chooseSimulation(ComboBox<String> simulations) {
     String pathName =
         Visualization.PROPERTY_LISTS + "/" + simulations.getValue().split(" ")[2] + "/" + simulations
@@ -106,6 +174,7 @@ public class ButtonHandler {
     myGrid = propertyReader.gridFromPropertyFile();
     getSimulationStates(propertyReader);
     myVisualization.visualizeGrid(myGrid, propertyReader);
+    initializeGraph();
   }
 
   private void getSimulationStates(PropertyReader propertyReader) {
@@ -143,28 +212,29 @@ public class ButtonHandler {
     dialog.setTitle(myLanguageResources.getString("SavedSimulation"));
     dialog.setHeaderText(myLanguageResources.getString("SavedSimulation"));
 
-    String filename = null;
-    String author = null;
-    String description = null;
+    String[] propertyValues = promptUser(dialog);
+    String simType = createNewSimulation(propertyReader, propertyValues[0], propertyValues[1], propertyValues[2]);
+    simulations.getItems().add(propertyValues[0] + " - " + simType);
+  }
 
-    dialog.setContentText(myLanguageResources.getString("SaveSimulationAs"));
-    Optional<String> enteredFilename = dialog.showAndWait();
-    if (enteredFilename.isPresent()) {
-      filename = enteredFilename.get();
+  private String[] promptUser(TextInputDialog dialog) {
+    String[] propertyKeys = {"SaveSimulationAs", "Author", "Description"};
+    String[] propertyValues = new String[3];
+
+    for(int i = 0; i < 3; i++){
+      dialog.setContentText(myLanguageResources.getString(propertyKeys[i]));
+      Optional<String> enteredText = dialog.showAndWait();
+      if (enteredText.isPresent()) {
+        propertyValues[i] = enteredText.get();
+      }
     }
-    dialog.setContentText(myLanguageResources.getString("Author"));
-    Optional<String> enteredAuthor = dialog.showAndWait();
-    if (enteredAuthor.isPresent()) {
-      author = enteredAuthor.get();
-    }
-    dialog.setContentText(myLanguageResources.getString("Description"));
-    Optional<String> enteredDescription = dialog.showAndWait();
-    if (enteredDescription.isPresent()) {
-      description = enteredDescription.get();
-    }
+    return propertyValues;
+  }
+
+  private String createNewSimulation(PropertyReader propertyReader, String filename, String author,
+      String description) {
 
     String simType = propertyReader.getProperty("simulationType");
-
     myGrid.saveCurrentGrid("data/" + Visualization.INITIAL_STATES + "/" + simType + "/" + filename + ".csv");
     File file = new File("data/" + Visualization.PROPERTY_LISTS + "/" + simType + "/" + filename + ".properties");
     try {
@@ -180,13 +250,22 @@ public class ButtonHandler {
       }
       savedProperty.store(outputFile, null);
     } catch (IOException e) {
-      throw new VisualizationException(String.format(myVisualizationErrors.getString("simulationSaveError"), filename));
+      throw new VisualizationException(String.format(myVisualizationErrors.getString("simulationSaveError"),
+          filename));
     }
-    simulations.getItems().add(filename + " - " + simType);
+    return simType;
   }
 
   protected Grid getGrid() {
     return myGrid;
+  }
+
+  public LineChart<Number, Number> getSimulationChart() {
+    return mySimulationChart;
+  }
+
+  public List<Enum<?>> getMyStates() {
+    return myStates;
   }
 
 }
