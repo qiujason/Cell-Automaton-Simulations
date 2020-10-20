@@ -22,6 +22,12 @@ Jack Ellwood - Frontend Development
 ### Resources Used
 * [OpenCSV for CSVReader Documentation](http://opencsv.sourceforge.net/apidocs/com/opencsv/CSVReader.html)
 * [OpenCSV for CSVWriter Documentation](http://opencsv.sourceforge.net/apidocs/com/opencsv/CSVWriter.html)
+* [JavaFX CSS Reference Guide](https://docs.oracle.com/javase/8/javafx/api/javafx/scene/doc-files/cssref.html)
+* [Using JavaFX Charts](https://docs.oracle.com/javafx/2/charts/line-chart.htm#CIHGBCFI)
+* [JavaFX Dialogs](https://code.makery.ch/blog/javafx-dialogs-official/)
+* [how to control CSS file from the Java controller in JavaFX](https://stackoverflow.com/questions/53539198/how-to-control-css-file-from-the-java-controller-in-javafx)
+* [How do I add an image inside a rectangle or a circle in JavaFX?](https://gamedev.stackexchange.com/questions/72924/how-do-i-add-an-image-inside-a-rectangle-or-a-circle-in-javafx)
+* [Google Translate](https://www.google.com/search?q=google+translate&rlz=1C1CHBF_enUS759US760&oq=google+trans&aqs=chrome.0.0i131i433i457j69i57j0j0i433l2j0l2j0i433.4037j0j7&sourceid=chrome&ie=UTF-8)
 
 ### Running the Program
 
@@ -46,6 +52,13 @@ Features implemented:
 * Simulation:
 
 * Visualization:
+    * Users can easily change between simulations, pause them, play them, step through them, speed them up, or slow them down.
+    * When the simulation window size changes, cells are dynamically scaled to the new window size.
+    * Cells can be directly clicked on to change state.
+    * Users can save the current simulation state and set colors or photos for any state in any simulation and have that information saved.
+    * The appearance of the GUI can be changed (e.g. light vs. dark mode)
+    * A grid or graph view of the simulation can be viewed, with the graph immediately showing the current state of the grid.
+    * Support for English, Spanish, and French.
 
 
 Errors Handled:
