@@ -5,8 +5,8 @@ import cellsociety.model.Cells.Cell;
 
 public class OrdinalNeighborhood extends Neighborhood {
 
-  public OrdinalNeighborhood(Cell cell, Grid grid) {
-    super(cell, grid, 4);
+  public OrdinalNeighborhood(Cell cell, Grid grid, String edgePolicy) {
+    super(cell, grid, edgePolicy, 4);
     setActiveNeighbors(new boolean[][] {
         {true, false, true},
         {false, false, false},

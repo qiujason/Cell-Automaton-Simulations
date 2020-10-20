@@ -1,5 +1,6 @@
 package cellsociety.configuration;
 
+import cellsociety.model.Neighborhoods.CompleteNeighborhood;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,7 +21,7 @@ public class PropertyReader {
       new Pair("winThreshold", "3.0"),
       new Pair("satisfiedThreshold", "0.3"),
       new Pair("thresholdForBirth", "3.0"),
-      new Pair("edgePolicy", "finite"),
+      new Pair("edgePolicy", "Finite"),
       new Pair("neighborPolicy", "Complete"),
       new Pair("initialStatePolicy", "Csv"),
       new Pair("probability", ".5"),
@@ -59,7 +60,7 @@ public class PropertyReader {
           properties.setProperty((String) optionalKey.getKey(), (String) optionalKey.getValue());
         }
       }
-    } catch (IOException e) {
+    } catch (NullPointerException | IOException e){
       throw new ConfigurationException(configurationErrorsResourceBundle.getString("errorReadingPropertiesFile"));
     }
   }
@@ -120,6 +121,7 @@ public class PropertyReader {
     } catch (ClassNotFoundException e) {
       throw new ConfigurationException(String.format(configurationErrorsResourceBundle.getString("simulationNotSupported"), simulationName));
     } catch (Exception e) {
+      e.printStackTrace();
       throw new ConfigurationException(String.format(configurationErrorsResourceBundle.getString("otherSimulationCreationErrors"), e.getClass() + " " + e.getMessage()));
     }
 
