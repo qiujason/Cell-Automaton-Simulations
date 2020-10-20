@@ -13,6 +13,7 @@ import cellsociety.model.Cells.Cell;
 import cellsociety.model.Cells.GameOfLife.GameOfLifeCell;
 import cellsociety.model.Cells.GameOfLife.GameOfLifeStates;
 import java.nio.file.Path;
+import java.util.HashMap;
 import org.junit.jupiter.api.Test;
 
 class ConfigurationTest {
@@ -210,12 +211,11 @@ class ConfigurationTest {
 
   @Test
   void saveEmptyCSVFile() {
-    PropertyReader reader = new PropertyReader("property_lists/GameOfLife/boat.properties");
-    Grid grid = new CsvGrid(Path.of("test_data/EmptyTest.csv"), "GameOfLife", reader.optionalKeyMap("GameOfLife"));
-
-    grid.saveCurrentGrid("test_data/EmptyData.csv");
-    Grid gridTest = new CsvGrid(Path.of("test_data/EmptyData.csv"), "GameOfLife", reader.optionalKeyMap("GameOfLife"));
-    assertTrue(gridTest.getMyCells().isEmpty());
+    HashMap<String, Object> optionalKeyMap = new HashMap<>();
+    optionalKeyMap.put("edgePolicy", "finite");
+    optionalKeyMap.put("neighborPolicy", "Complete");
+    optionalKeyMap.put("initialStatePolicy", "Csv");
+    Grid grid = new CsvGrid(Path.of("test/test_data/EmptyTest.csv"), "GameOfLife", optionalKeyMap);
   }
 
   @Test

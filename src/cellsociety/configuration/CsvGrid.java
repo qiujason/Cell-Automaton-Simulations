@@ -59,6 +59,9 @@ public class CsvGrid extends Grid {
         ret.get(i).add(convertStringToCell(nextRow[j]));
       }
     }
+    if(iterator.hasNext()){
+      throw new ConfigurationException(resourceBundle.getString("mismatchedCSVData"));
+    }
   }
 
   private Cell convertStringToCell(String stringValueForCell) throws ConfigurationException{

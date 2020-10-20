@@ -5,6 +5,7 @@ import com.opencsv.CSVWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,10 @@ public abstract class Grid {
   public void saveCurrentGrid(String filePath) throws ConfigurationException {
     File file = new File(filePath);
     try {
+      String modelPackagePath = MODEL_PATH + simulationName + ".";
+      Class<?> modelStates = Class.forName(modelPackagePath + simulationName + "States");
+      Method method = modelStates.getMethod("values");
+      Enum<?>[] states = ((Enum<?>[]) method.invoke(null));
       FileWriter outputFile = new FileWriter(file,false);
       int row = myCells.size();
       if(row == 0){
@@ -42,7 +47,6 @@ public abstract class Grid {
       }
       int col = myCells.get(row-1).size();
       CSVWriter csvWriter = new CSVWriter(outputFile);
-
       List<String[]> data = new ArrayList<>();
       String[] header = new String[col];
       header[0] = String.valueOf(row);
@@ -51,13 +55,19 @@ public abstract class Grid {
       for (List<Cell> myCell : myCells) {
         String[] newRow = new String[col];
         for (int j = 0; j < col; j++) {
-          newRow[j] = String.valueOf(myCell.get(j).getMyState());
+          int valueToStore=0;
+          for(int i = 0; i<states.length; i++){
+            if(states[i].equals(myCell.get(j).getMyState())){
+              valueToStore = i;
+            }
+          }
+          newRow[j] = String.valueOf(valueToStore);
         }
         data.add(newRow);
       }
       csvWriter.writeAll(data);
       csvWriter.close();
-    } catch (IOException e) {
+    } catch (Exception e) {
       throw new ConfigurationException(String.format(resourceBundle.getString("errorWritingToFile"), file));
     }
   }
