@@ -15,12 +15,9 @@ import java.util.Map;
 import java.util.Random;
 
 public class ProbabilityGrid extends Grid{
-  private Random random;
-  private double probability;
+  private static final Random random = new Random(1);
   public ProbabilityGrid(Path cellFile, String simulationName, Map optional) throws ConfigurationException {
     super(cellFile, simulationName, optional);
-    probability = .5;
-    random = new Random(1);
   }
 
   @Override
@@ -41,7 +38,6 @@ public class ProbabilityGrid extends Grid{
       String[] headerRow = iterator.next();
       rows = (int) removeHiddenChars(headerRow[0]);
       cols = (int) removeHiddenChars(headerRow[1]);
-      probability = removeHiddenChars(headerRow[2]);
     } else {
       throw new ConfigurationException(String.format(resourceBundle.getString("otherSimulationCreationErrors"), "no header row"));
     }
@@ -66,8 +62,8 @@ public class ProbabilityGrid extends Grid{
       Enum<?> state = states[0];
 
       // randomization of state and defaults to the 0th state
-      for(int i = states.length-1; i > 0; i++){
-        if(random.nextDouble()<=probability){
+      for(int i = states.length-1; i > 0; i--){
+        if(random.nextDouble()<=Double.parseDouble((String) optional.get("probability"))){
           state = states[i];
           break;
         }
@@ -80,7 +76,6 @@ public class ProbabilityGrid extends Grid{
     } catch (ClassNotFoundException e) {
       throw new ConfigurationException(String.format(resourceBundle.getString("simulationNotSupported"), simulationName));
     } catch (Exception e) {
-      e.printStackTrace();
       throw new ConfigurationException(String.format(resourceBundle.getString("otherSimulationCreationErrors"), e.getMessage()));
     }
     return ret;

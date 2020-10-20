@@ -22,7 +22,9 @@ public class PropertyReader {
       new Pair("thresholdForBirth", "3.0"),
       new Pair("edgePolicy", "finite"),
       new Pair("neighborPolicy", "Complete"),
-      new Pair("initialStatePolicy", "Csv")
+      new Pair("initialStatePolicy", "Csv"),
+      new Pair("probability", ".5"),
+      new Pair("totalNumber", "1")
   };
   private final String[] REQUIRED_KEYS = new String[] {
       "simulationType", "simulationTitle", "configAuthor", "description", "csvFile"
