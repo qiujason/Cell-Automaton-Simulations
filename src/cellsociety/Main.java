@@ -1,6 +1,6 @@
 package cellsociety;
 
-import cellsociety.visualization.Simulation;
+import cellsociety.visualization.Visualization;
 
 /**
  * Feel free to completely change this code or delete it entirely.
@@ -11,6 +11,6 @@ public class Main {
    * Start of the program.
    */
   public static void main(String[] args) {
-    Simulation.main(args);
+    Visualization.main(args);
   }
 }

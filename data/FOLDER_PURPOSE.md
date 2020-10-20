@@ -1,3 +1,3 @@
 # data
 
-Put your example and test simulation configuration files here.
+Put your example and test visualization configuration files here.
