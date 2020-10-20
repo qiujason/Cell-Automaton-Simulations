@@ -36,7 +36,7 @@ public class Visualization extends Application {
   public static final String PROPERTY_LISTS = "property_lists";
   public static final String LANGUAGE_FOLDER = "visualization_resources/languages";
   public static final String DEFAULT_LANGUAGE = "english";
-  public static final String BUTTON_PROPERTIES = "visualization_resources.buttons";
+  public static final String VISUALIZATION_ERRORS = "visualization_resources.VisualizationErrors";
   public static final String HEADER = "Jack, Hayden, and Jason's Simulation";
   public static final double INITIAL_HEIGHT = 800;
   public static final double INITIAL_WIDTH = 800;
@@ -47,13 +47,13 @@ public class Visualization extends Application {
   public static final String COLORS = "Colors";
   public static final String PHOTOS = "Photos";
 
-  private Stage myStage;
-  private Scene myScene;
+  private Stage myGridStage;
+  private Scene myGridScene;
   private BorderPane myRoot;
   private Group myGridGroup;
   private ResourceBundle myLanguageResources;
+  private ResourceBundle myVisualizationErrors;
   private Timeline myAnimation;
-  private Timeline myGridUpdater;
   private PropertyReader myPropertyReader;
   private ComboBox<String> mySimulations;
   private ComboBox<String> myStyles;
@@ -64,65 +64,88 @@ public class Visualization extends Application {
   private ButtonHandler myButtonHandler;
 
   @Override
-  public void start(Stage stage) throws Exception {
+  public void start(Stage stage) {
     stage.setTitle(HEADER);
-    myScene = setupScene(INITIAL_WIDTH, INITIAL_HEIGHT, DEFAULT_LANGUAGE);
-    stage.setScene(myScene);
+    myGridScene = setupScene(INITIAL_WIDTH, INITIAL_HEIGHT, DEFAULT_LANGUAGE);
+    stage.setScene(myGridScene);
     stage.show();
-    myStage = stage;
+    stage.show();
+    myGridStage = stage;
+    myButtonHandler.initializeNewView();
   }
 
   public Scene setupScene(double width, double height, String language) {
     myLanguageResources = ResourceBundle.getBundle(LANGUAGE_FOLDER + "\\." + language);
+    myVisualizationErrors = ResourceBundle.getBundle(VISUALIZATION_ERRORS);
+
     myRoot = new BorderPane();
     myGridGroup = new Group();
     myGridGroup.setId("GridGroup");
     myRoot.setCenter(myGridGroup);
-
     myAnimation = new Timeline();
+    myButtonHandler = new ButtonHandler(myAnimation, this, myLanguageResources,
+        myVisualizationErrors);
 
-    myButtonHandler = new ButtonHandler(myAnimation, this, myLanguageResources);
-
-    myAnimation.setCycleCount(Timeline.INDEFINITE);
-    KeyFrame frame = new KeyFrame(Duration.seconds(SIMULATION_DELAY), e -> myButtonHandler.step(myPropertyReader));
-    myAnimation.getKeyFrames().add(frame);
-
-    myGridUpdater = new Timeline();
-    myGridUpdater.setCycleCount(Timeline.INDEFINITE);
-    KeyFrame cellUpdater = new KeyFrame(Duration.seconds(UPDATE_RATE), e -> updateCells());
-    myGridUpdater.getKeyFrames().add(cellUpdater);
-    myGridUpdater.play();
-    myLastHeight = height;
-    myLastWidth = width;
-
+    setupAnimations(width, height);
     makeNavigationPane();
+
     Scene scene = new Scene(myRoot, width, height);
-    scene.getStylesheets().add(getClass().getResource("/" + STYLESHEET_FOLDER + "LightMode.css").toExternalForm());
+    scene.getStylesheets()
+        .add(getClass().getResource("/" + STYLESHEET_FOLDER + "LightMode.css").toExternalForm());
 
     return scene;
   }
 
-  private void updateCells() {
-    if(myLastHeight != myScene.getHeight() || myLastWidth != myScene.getWidth()){
-      myLastHeight = myScene.getHeight();
-      myLastWidth = myScene.getWidth();
-      visualizeGrid(myButtonHandler.getGrid(), myPropertyReader);
-    }
+  private void setupAnimations(double width, double height) {
+    myAnimation.setCycleCount(Timeline.INDEFINITE);
+    KeyFrame frame = new KeyFrame(Duration.seconds(SIMULATION_DELAY),
+        e -> myButtonHandler.step(myPropertyReader));
+    myAnimation.getKeyFrames().add(frame);
+
+    Timeline myGridUpdater = new Timeline();
+    myGridUpdater.setCycleCount(Timeline.INDEFINITE);
+    KeyFrame cellUpdater = new KeyFrame(Duration.seconds(UPDATE_RATE), e -> resizeCells());
+    myGridUpdater.getKeyFrames().add(cellUpdater);
+    myGridUpdater.play();
+    myLastHeight = height;
+    myLastWidth = width;
   }
 
   private void makeNavigationPane() {
+    initializeButtons();
+    initializeComboBoxes();
+  }
+
+  private void initializeButtons() {
     HBox buttonPane = new HBox();
-    makeButton("RestartButton", event -> myButtonHandler.restart(mySimulations ,myPropertyReader), buttonPane);
+    makeButton("RestartButton", event -> myButtonHandler.restart(mySimulations), buttonPane);
     makeButton("PlayButton", event -> myButtonHandler.play(), buttonPane);
     makeButton("PauseButton", event -> myButtonHandler.pause(), buttonPane);
     makeButton("StepButton", event -> myButtonHandler.step(myPropertyReader), buttonPane);
-    makeButton("SavedSimulation", event -> myButtonHandler.saveSimulation(myPropertyReader, mySimulations), buttonPane);
+    makeButton("SavedSimulation",
+        event -> myButtonHandler.saveSimulation(myPropertyReader, mySimulations), buttonPane);
     makeButton("SpeedUp", event -> myButtonHandler.speedUp(myRoot), buttonPane);
     makeButton("SlowDown", event -> myButtonHandler.slowDown(myRoot), buttonPane);
-    makeButton("SetColors", event -> myButtonHandler.setColorsOrPhotos(myPropertyReader, COLORS), buttonPane);
-    makeButton("SetPhotos", event -> myButtonHandler.setColorsOrPhotos(myPropertyReader, PHOTOS), buttonPane);
+    makeButton("SetColors", event -> myButtonHandler.setColorsOrPhotos(myPropertyReader, COLORS),
+        buttonPane);
+    makeButton("SetPhotos", event -> myButtonHandler.setColorsOrPhotos(myPropertyReader, PHOTOS),
+        buttonPane);
+    makeButton("NewView", event -> myButtonHandler.startNewView(), buttonPane);
     myRoot.setBottom(buttonPane);
+  }
 
+  private void makeButton(String buttonName, EventHandler<ActionEvent> buttonAction,
+      Pane navigationPane) {
+    Button newButton = new Button();
+    String buttonLabel = myLanguageResources.getString(buttonName);
+    newButton.setText(buttonLabel);
+    newButton.setId(buttonName);
+    newButton.setOnAction(buttonAction);
+    newButton.getStyleClass().add("button");
+    navigationPane.getChildren().add(newButton);
+  }
+
+  private void initializeComboBoxes() {
     HBox comboBoxPane = new HBox();
 
     initializeSimulationOptions();
@@ -143,20 +166,22 @@ public class Visualization extends Application {
   private void initializeSimulationOptions() {
     mySimulations = new ComboBox<>();
     mySimulations.setId("SimulationSelect");
-    mySimulations.setOnAction(event -> {
-      myButtonHandler.chooseSimulation(mySimulations);
-    });
+    mySimulations.setOnAction(event -> myButtonHandler.chooseSimulation(mySimulations));
     mySimulations.setPromptText(myLanguageResources.getString("SimulationSelect"));
-    Path simulations = null;
+    Path simulations;
     try {
       simulations = Paths.get(
           Objects.requireNonNull(Visualization.class.getClassLoader().getResource(PROPERTY_LISTS))
               .toURI());
     } catch (URISyntaxException e) {
-      e.printStackTrace();
+      throw new VisualizationException(myVisualizationErrors.getString("simulationNotFound"));
     }
+    addSimulationsToComboBox(simulations);
+  }
+
+  private void addSimulationsToComboBox(Path simulations) {
     for (File path : Objects.requireNonNull(simulations.toFile().listFiles())) {
-      for (File file : path.listFiles()) {
+      for (File file : Objects.requireNonNull(path.listFiles())) {
         if (file.getName().split("\\.").length > 0 && !path.getName().equals("TestProperties")) {
           myPropertyReader = new PropertyReader(
               PROPERTY_LISTS + "/" + path.getName() + "/" + file.getName());
@@ -172,16 +197,7 @@ public class Visualization extends Application {
     myStyles.setId("SetStyle");
     myStyles.setOnAction(event -> myButtonHandler.setStyle(myStyles));
     myStyles.setPromptText(myLanguageResources.getString("SetStyle"));
-    Path styles = null;
-    try {
-      styles = Paths.get(
-          Objects.requireNonNull(Visualization.class.getClassLoader().getResource(STYLESHEET_FOLDER)).toURI());
-    } catch (URISyntaxException e) {
-      e.printStackTrace();
-    }
-    for(File style : styles.toFile().listFiles()){
-      myStyles.getItems().add(style.getName().split("\\.")[0]);
-    }
+    getComboBoxValues(STYLESHEET_FOLDER, myStyles);
   }
 
   private void initializeLanguages() {
@@ -189,83 +205,97 @@ public class Visualization extends Application {
     myLanguages.setId("SetLanguage");
     myLanguages.setOnAction(event -> myButtonHandler.setLanguage(myLanguages));
     myLanguages.setPromptText(myLanguageResources.getString("SetLanguage"));
-    Path languages = null;
+    getComboBoxValues(LANGUAGE_FOLDER, myLanguages);
+  }
+
+  private void getComboBoxValues(String stylesheetFolder, ComboBox<String> myBox) {
+    Path values;
     try {
-      languages = Paths.get(
-          Objects.requireNonNull(Visualization.class.getClassLoader().getResource(LANGUAGE_FOLDER)).toURI());
+      values = Paths.get(
+          Objects.requireNonNull(Visualization.class.getClassLoader().getResource(stylesheetFolder))
+              .toURI());
     } catch (URISyntaxException e) {
-      e.printStackTrace();
+      throw new VisualizationException(myVisualizationErrors.getString("badComboBoxValue"));
     }
-    for(File language : languages.toFile().listFiles()){
-      myLanguages.getItems().add(language.getName().split("\\.")[0]);
+    for (File value : Objects.requireNonNull(values.toFile().listFiles())) {
+      myBox.getItems().add(value.getName().split("\\.")[0]);
     }
   }
 
-  private void makeButton(String buttonName, EventHandler<ActionEvent> buttonAction, Pane navigationPane) {
-    Button newButton = new Button();
-    String buttonLabel = myLanguageResources.getString(buttonName);
-    newButton.setText(buttonLabel);
-    newButton.setId(buttonName);
-    newButton.setOnAction(buttonAction);
-    newButton.getStyleClass().add("button");
-    navigationPane.getChildren().add(newButton);
+  private void resizeCells() {
+    if (myLastHeight != myGridScene.getHeight() || myLastWidth != myGridScene.getWidth()) {
+      myLastHeight = myGridScene.getHeight();
+      myLastWidth = myGridScene.getWidth();
+      visualizeGrid(myButtonHandler.getGrid(), myPropertyReader);
+    }
   }
 
   protected void visualizeGrid(Grid grid, PropertyReader propertyReader) {
     myPropertyReader = propertyReader;
     myGridGroup.getChildren().clear();
-    double x = myScene.getWidth() / 8;
-    double y = myScene.getHeight() / 8;
+    double x = myGridScene.getWidth() / 8;
+    double y = myGridScene.getHeight() / 8;
     int cellLabel = 0;
-    double cellSize = Math.min(GRID_FRACTION * myScene.getHeight(), GRID_FRACTION * myScene.getWidth()) / grid.getMyCells().size();
+    double cellSize =
+        Math.min(GRID_FRACTION * myGridScene.getHeight(), GRID_FRACTION * myGridScene.getWidth())
+            / grid.getMyCells().size();
     for (List<Cell> row : grid.getMyCells()) {
       for (Cell cell : row) {
-        visualizeCell(x, y, cellLabel, cellSize, cell, grid);
+        visualizeCell(x, y, cellLabel, cellSize, cell);
         x += cellSize;
         cellLabel++;
       }
       y += cellSize;
-      x = myScene.getWidth() / 8;
+      x = myGridScene.getWidth() / 8;
     }
   }
 
-  private void visualizeCell(double x, double y, int cellLabel, double cellSize, Cell cell, Grid grid) {
+  private void visualizeCell(double x, double y, int cellLabel, double cellSize, Cell cell) {
     Rectangle cellRectangle = new Rectangle(x, y, cellSize, cellSize);
     cellRectangle.setId("cell" + cellLabel);
     cellRectangle.setOnMouseClicked(e -> myButtonHandler.setCellState(cellLabel, myPropertyReader));
     Enum<?> currentState = cell.getMyState();
+
     String myFillAsString = myPropertyReader.getProperty(currentState.toString());
-    if(myFillAsString.split("\\.").length > 1){
-      String imagePath = "/visualization_resources/images/" + myFillAsString;
-      Image stateImage = null;
-      try {
-        stateImage = new Image(String.valueOf(getClass().getResource(imagePath).toURI()));
-      } catch (URISyntaxException e) {
-        e.printStackTrace();
-      }
-      ImagePattern stateImagePattern = new ImagePattern(stateImage);
-      cellRectangle.setFill(stateImagePattern);
-    }
-    else{
-      Color myColor = Color.valueOf(myFillAsString);
-      cellRectangle.setFill(myColor);
-    }
+    fillCell(cellRectangle, myFillAsString);
+
     cellRectangle.setStroke(Color.WHITE);
     myGridGroup.getChildren().add(cellRectangle);
   }
 
-  // Necessary for testing
+  private void fillCell(Rectangle cellRectangle, String myFillAsString) {
+    if (myFillAsString.split("\\.").length > 1) {
+      String imagePath = "/visualization_resources/images/" + myFillAsString;
+      Image stateImage;
+      try {
+        stateImage = new Image(String.valueOf(getClass().getResource(imagePath).toURI()));
+      } catch (URISyntaxException e) {
+        throw new VisualizationException(
+            String.format(myVisualizationErrors.getString("imageToCellError"),
+                myFillAsString));
+      }
+      ImagePattern stateImagePattern = new ImagePattern(stateImage);
+      cellRectangle.setFill(stateImagePattern);
+    } else {
+      Color myColor = Color.valueOf(myFillAsString);
+      cellRectangle.setFill(myColor);
+    }
+  }
+
+  protected Scene getScene() {
+    return myGridScene;
+  }
+
+  protected void setScene(Scene scene) {
+    myGridStage.setScene(scene);
+  }
+
   public Timeline getAnimation() {
     return myAnimation;
   }
 
-  // Necessary for testing
-  public Scene getScene(){
-    return myScene;
-  }
-
-  protected void setScene(Scene scene){
-    myStage.setScene(scene);
+  public ButtonHandler getButtonHandler() {
+    return myButtonHandler;
   }
 
   public static void main(String[] args) {

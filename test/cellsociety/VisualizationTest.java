@@ -1,14 +1,15 @@
 package cellsociety;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import cellsociety.visualization.ButtonHandler;
 import cellsociety.visualization.Visualization;
 import java.util.ResourceBundle;
 import javafx.animation.Animation.Status;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.input.KeyCode;
@@ -19,11 +20,10 @@ import org.junit.jupiter.api.Test;
 
 public class VisualizationTest extends DukeApplicationTest {
 
-  private Visualization myVisualization;
-  private Scene myScene;
   private Timeline myAnimation;
   private ResourceBundle myResources;
 
+  private Visualization myVisualization;
   private Button myRestartButton;
   private Button myPlayButton;
   private Button myPauseButton;
@@ -33,6 +33,7 @@ public class VisualizationTest extends DukeApplicationTest {
   private Button mySlowDownButton;
   private Button mySetColorsButton;
   private Button mySetPhotosButton;
+  private Button myNewViewButton;
   private ComboBox<String> mySimulations;
   private ComboBox<String> myStyles;
   private ComboBox<String> myLanguages;
@@ -41,13 +42,13 @@ public class VisualizationTest extends DukeApplicationTest {
   @Override
   public void start(Stage stage) {
     myVisualization = new Visualization();
-    myResources = ResourceBundle.getBundle(Visualization.LANGUAGE_FOLDER + "\\." + Visualization.DEFAULT_LANGUAGE);
+    myResources = ResourceBundle
+        .getBundle(Visualization.LANGUAGE_FOLDER + "\\." + Visualization.DEFAULT_LANGUAGE);
     try {
       myVisualization.start(stage);
     } catch (Exception e) {
       e.printStackTrace();
     }
-    myScene = myVisualization.getScene();
     myAnimation = myVisualization.getAnimation();
 
     myRestartButton = lookup("#RestartButton").query();
@@ -63,6 +64,7 @@ public class VisualizationTest extends DukeApplicationTest {
     myStyles = lookup("#SetStyle").query();
     myLanguages = lookup("#SetLanguage").query();
     myGridGroup = lookup("#GridGroup").query();
+    myNewViewButton = lookup("#NewView").query();
   }
 
   @Test
@@ -79,6 +81,7 @@ public class VisualizationTest extends DukeApplicationTest {
     assertEquals(myResources.getString("SetPhotos"), mySetPhotosButton.getText());
     assertEquals(myResources.getString("SetStyle"), myStyles.getPromptText());
     assertEquals(myResources.getString("SetLanguage"), myLanguages.getPromptText());
+    assertEquals(myResources.getString("NewView"), myNewViewButton.getText());
   }
 
   @Test
@@ -87,18 +90,24 @@ public class VisualizationTest extends DukeApplicationTest {
     assertEquals(36, myGridGroup.getChildren().size());
     select(mySimulations, "Blinker - GameOfLife");
     assertEquals(25, myGridGroup.getChildren().size());
-    select(mySimulations, "Boat - GameOfLife");
+    select(mySimulations, "AllBlocked - Percolation");
     assertEquals(25, myGridGroup.getChildren().size());
-    select(mySimulations, "Corner - GameOfLife");
+    select(mySimulations, "StraightLine - Percolation");
     assertEquals(25, myGridGroup.getChildren().size());
-    select(mySimulations, "Edges - GameOfLife");
-    assertEquals(25, myGridGroup.getChildren().size());
-    select(mySimulations, "Square - GameOfLife");
-    assertEquals(4, myGridGroup.getChildren().size());
-    select(mySimulations, "Toad - GameOfLife");
+    select(mySimulations, "RockDominant - RPS");
     assertEquals(36, myGridGroup.getChildren().size());
-    select(mySimulations, "Tub - GameOfLife");
+    select(mySimulations, "Checkerboard - Segregation");
+    assertEquals(36, myGridGroup.getChildren().size());
+    select(mySimulations, "Minimal - Segregation");
+    assertEquals(16, myGridGroup.getChildren().size());
+    select(mySimulations, "CenterOnFireWithSpace - SpreadingFire");
     assertEquals(25, myGridGroup.getChildren().size());
+    select(mySimulations, "OneOnFire - SpreadingFire");
+    assertEquals(25, myGridGroup.getChildren().size());
+    select(mySimulations, "AllFish - Wator");
+    assertEquals(25, myGridGroup.getChildren().size());
+    select(mySimulations, "FishSharkAlternation - Wator");
+    assertEquals(36, myGridGroup.getChildren().size());
   }
 
   @Test
@@ -171,7 +180,7 @@ public class VisualizationTest extends DukeApplicationTest {
     assertEquals("Reiniciar", myRestartButton.getText());
   }
 
-  @Test // FIXME
+  @Test
   public void testSaveSimulation() {
     select(mySimulations, "Beacon - GameOfLife");
     clickOn(mySaveSimulationButton);
@@ -181,25 +190,92 @@ public class VisualizationTest extends DukeApplicationTest {
     press(KeyCode.ENTER);
     press(KeyCode.ENTER);
     press(KeyCode.ENTER);
+    mySimulations = lookup("#SimulationSelect").query();
     assertTrue(mySimulations.getItems().contains("jce - GameOfLife"));
   }
 
-  @Test //FIXME
+  @Test
   public void testSetColor() {
     select(mySimulations, "Beacon - GameOfLife");
-    Rectangle cellRectangle = lookup("#cell14").query();
     clickOn(mySetColorsButton);
     press(KeyCode.R);
     press(KeyCode.E);
     press(KeyCode.D);
     press(KeyCode.ENTER);
     press(KeyCode.ENTER);
+    Rectangle cellRectangle = lookup("#cell14").query();
+    clickOn(cellRectangle);
+    cellRectangle = lookup("#cell14").query();
+    clickOn(cellRectangle);
     assertEquals(Color.RED, cellRectangle.getFill());
   }
 
-  @Test // FIXME
+  @Test
   public void testSetPhoto() {
+    select(mySimulations, "Beacon - GameOfLife");
+    clickOn(mySetPhotosButton);
+    press(KeyCode.F);
+    press(KeyCode.I);
+    press(KeyCode.S);
+    press(KeyCode.H);
+    press(KeyCode.PERIOD);
+    press(KeyCode.J);
+    press(KeyCode.P);
+    press(KeyCode.G);
+    press(KeyCode.ENTER);
+    press(KeyCode.ENTER);
+    Rectangle cellRectangle = lookup("#cell14").query();
+    clickOn(cellRectangle);
+    cellRectangle = lookup("#cell14").query();
+    clickOn(cellRectangle);
+    assertEquals("javafx.scene.paint.ImagePattern@77e9807f", cellRectangle.getFill().toString());
+  }
 
+  @Test
+  public void testGraphInitialization() {
+    select(mySimulations, "Beacon - GameOfLife");
+    clickOn(myNewViewButton);
+    assertNotEquals(null, myVisualization.getButtonHandler().getSimulationChart());
+  }
+
+  @Test
+  public void testGraphValuesGameOfLife() {
+    ButtonHandler handler = myVisualization.getButtonHandler();
+    select(mySimulations, "Beacon - GameOfLife");
+    clickOn(myNewViewButton);
+    clickOn(myStepButton);
+    assertEquals("Data[1,30,null]",
+        handler.getSimulationChart().getData().get(0).getData().get(1).toString());
+    assertEquals("Data[1,6,null]",
+        handler.getSimulationChart().getData().get(1).getData().get(1).toString());
+  }
+
+  @Test
+  public void testGraphValuesPercolation() {
+    ButtonHandler handler = myVisualization.getButtonHandler();
+    select(mySimulations, "StraightLine - Percolation");
+    clickOn(myNewViewButton);
+    clickOn(myStepButton);
+    assertEquals("Data[1,20,null]",
+        handler.getSimulationChart().getData().get(0).getData().get(1).toString());
+    assertEquals("Data[1,3,null]",
+        handler.getSimulationChart().getData().get(1).getData().get(1).toString());
+    assertEquals("Data[1,2,null]",
+        handler.getSimulationChart().getData().get(2).getData().get(1).toString());
+  }
+
+  @Test
+  public void testGraphValuesSpreadingFire() {
+    ButtonHandler handler = myVisualization.getButtonHandler();
+    select(mySimulations, "CenterOnFireWithSpace - SpreadingFire");
+    clickOn(myNewViewButton);
+    clickOn(myStepButton);
+    assertEquals("Data[1,9,null]",
+        handler.getSimulationChart().getData().get(0).getData().get(1).toString());
+    assertEquals("Data[1,16,null]",
+        handler.getSimulationChart().getData().get(1).getData().get(1).toString());
+    assertEquals("Data[1,0,null]",
+        handler.getSimulationChart().getData().get(2).getData().get(1).toString());
   }
 
 }
