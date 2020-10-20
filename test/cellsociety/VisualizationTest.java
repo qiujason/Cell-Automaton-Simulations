@@ -42,7 +42,8 @@ public class VisualizationTest extends DukeApplicationTest {
   @Override
   public void start(Stage stage) {
     myVisualization = new Visualization();
-    myResources = ResourceBundle.getBundle(Visualization.LANGUAGE_FOLDER + "\\." + Visualization.DEFAULT_LANGUAGE);
+    myResources = ResourceBundle
+        .getBundle(Visualization.LANGUAGE_FOLDER + "\\." + Visualization.DEFAULT_LANGUAGE);
     try {
       myVisualization.start(stage);
     } catch (Exception e) {
@@ -243,8 +244,10 @@ public class VisualizationTest extends DukeApplicationTest {
     select(mySimulations, "Beacon - GameOfLife");
     clickOn(myNewViewButton);
     clickOn(myStepButton);
-    assertEquals("Data[1,30,null]", handler.getSimulationChart().getData().get(0).getData().get(1).toString());
-    assertEquals("Data[1,6,null]", handler.getSimulationChart().getData().get(1).getData().get(1).toString());
+    assertEquals("Data[1,30,null]",
+        handler.getSimulationChart().getData().get(0).getData().get(1).toString());
+    assertEquals("Data[1,6,null]",
+        handler.getSimulationChart().getData().get(1).getData().get(1).toString());
   }
 
   @Test
@@ -253,9 +256,12 @@ public class VisualizationTest extends DukeApplicationTest {
     select(mySimulations, "StraightLine - Percolation");
     clickOn(myNewViewButton);
     clickOn(myStepButton);
-    assertEquals("Data[1,20,null]", handler.getSimulationChart().getData().get(0).getData().get(1).toString());
-    assertEquals("Data[1,3,null]", handler.getSimulationChart().getData().get(1).getData().get(1).toString());
-    assertEquals("Data[1,2,null]", handler.getSimulationChart().getData().get(2).getData().get(1).toString());
+    assertEquals("Data[1,20,null]",
+        handler.getSimulationChart().getData().get(0).getData().get(1).toString());
+    assertEquals("Data[1,3,null]",
+        handler.getSimulationChart().getData().get(1).getData().get(1).toString());
+    assertEquals("Data[1,2,null]",
+        handler.getSimulationChart().getData().get(2).getData().get(1).toString());
   }
 
   @Test
@@ -264,9 +270,12 @@ public class VisualizationTest extends DukeApplicationTest {
     select(mySimulations, "CenterOnFireWithSpace - SpreadingFire");
     clickOn(myNewViewButton);
     clickOn(myStepButton);
-    assertEquals("Data[1,9,null]", handler.getSimulationChart().getData().get(0).getData().get(1).toString());
-    assertEquals("Data[1,16,null]", handler.getSimulationChart().getData().get(1).getData().get(1).toString());
-    assertEquals("Data[1,0,null]", handler.getSimulationChart().getData().get(2).getData().get(1).toString());
+    assertEquals("Data[1,9,null]",
+        handler.getSimulationChart().getData().get(0).getData().get(1).toString());
+    assertEquals("Data[1,16,null]",
+        handler.getSimulationChart().getData().get(1).getData().get(1).toString());
+    assertEquals("Data[1,0,null]",
+        handler.getSimulationChart().getData().get(2).getData().get(1).toString());
   }
 
 }

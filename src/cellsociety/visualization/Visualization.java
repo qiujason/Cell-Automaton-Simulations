@@ -83,20 +83,23 @@ public class Visualization extends Application {
     myGridGroup.setId("GridGroup");
     myRoot.setCenter(myGridGroup);
     myAnimation = new Timeline();
-    myButtonHandler = new ButtonHandler(myAnimation, this, myLanguageResources, myVisualizationErrors);
+    myButtonHandler = new ButtonHandler(myAnimation, this, myLanguageResources,
+        myVisualizationErrors);
 
     setupAnimations(width, height);
     makeNavigationPane();
 
     Scene scene = new Scene(myRoot, width, height);
-    scene.getStylesheets().add(getClass().getResource("/" + STYLESHEET_FOLDER + "LightMode.css").toExternalForm());
+    scene.getStylesheets()
+        .add(getClass().getResource("/" + STYLESHEET_FOLDER + "LightMode.css").toExternalForm());
 
     return scene;
   }
 
   private void setupAnimations(double width, double height) {
     myAnimation.setCycleCount(Timeline.INDEFINITE);
-    KeyFrame frame = new KeyFrame(Duration.seconds(SIMULATION_DELAY), e -> myButtonHandler.step(myPropertyReader));
+    KeyFrame frame = new KeyFrame(Duration.seconds(SIMULATION_DELAY),
+        e -> myButtonHandler.step(myPropertyReader));
     myAnimation.getKeyFrames().add(frame);
 
     Timeline myGridUpdater = new Timeline();
@@ -119,16 +122,20 @@ public class Visualization extends Application {
     makeButton("PlayButton", event -> myButtonHandler.play(), buttonPane);
     makeButton("PauseButton", event -> myButtonHandler.pause(), buttonPane);
     makeButton("StepButton", event -> myButtonHandler.step(myPropertyReader), buttonPane);
-    makeButton("SavedSimulation", event -> myButtonHandler.saveSimulation(myPropertyReader, mySimulations), buttonPane);
+    makeButton("SavedSimulation",
+        event -> myButtonHandler.saveSimulation(myPropertyReader, mySimulations), buttonPane);
     makeButton("SpeedUp", event -> myButtonHandler.speedUp(myRoot), buttonPane);
     makeButton("SlowDown", event -> myButtonHandler.slowDown(myRoot), buttonPane);
-    makeButton("SetColors", event -> myButtonHandler.setColorsOrPhotos(myPropertyReader, COLORS), buttonPane);
-    makeButton("SetPhotos", event -> myButtonHandler.setColorsOrPhotos(myPropertyReader, PHOTOS), buttonPane);
+    makeButton("SetColors", event -> myButtonHandler.setColorsOrPhotos(myPropertyReader, COLORS),
+        buttonPane);
+    makeButton("SetPhotos", event -> myButtonHandler.setColorsOrPhotos(myPropertyReader, PHOTOS),
+        buttonPane);
     makeButton("NewView", event -> myButtonHandler.startNewView(), buttonPane);
     myRoot.setBottom(buttonPane);
   }
 
-  private void makeButton(String buttonName, EventHandler<ActionEvent> buttonAction, Pane navigationPane) {
+  private void makeButton(String buttonName, EventHandler<ActionEvent> buttonAction,
+      Pane navigationPane) {
     Button newButton = new Button();
     String buttonLabel = myLanguageResources.getString(buttonName);
     newButton.setText(buttonLabel);
@@ -205,17 +212,18 @@ public class Visualization extends Application {
     Path values;
     try {
       values = Paths.get(
-          Objects.requireNonNull(Visualization.class.getClassLoader().getResource(stylesheetFolder)).toURI());
+          Objects.requireNonNull(Visualization.class.getClassLoader().getResource(stylesheetFolder))
+              .toURI());
     } catch (URISyntaxException e) {
       throw new VisualizationException(myVisualizationErrors.getString("badComboBoxValue"));
     }
-    for(File value : Objects.requireNonNull(values.toFile().listFiles())){
+    for (File value : Objects.requireNonNull(values.toFile().listFiles())) {
       myBox.getItems().add(value.getName().split("\\.")[0]);
     }
   }
 
   private void resizeCells() {
-    if(myLastHeight != myGridScene.getHeight() || myLastWidth != myGridScene.getWidth()){
+    if (myLastHeight != myGridScene.getHeight() || myLastWidth != myGridScene.getWidth()) {
       myLastHeight = myGridScene.getHeight();
       myLastWidth = myGridScene.getWidth();
       visualizeGrid(myButtonHandler.getGrid(), myPropertyReader);
@@ -228,7 +236,9 @@ public class Visualization extends Application {
     double x = myGridScene.getWidth() / 8;
     double y = myGridScene.getHeight() / 8;
     int cellLabel = 0;
-    double cellSize = Math.min(GRID_FRACTION * myGridScene.getHeight(), GRID_FRACTION * myGridScene.getWidth()) / grid.getMyCells().size();
+    double cellSize =
+        Math.min(GRID_FRACTION * myGridScene.getHeight(), GRID_FRACTION * myGridScene.getWidth())
+            / grid.getMyCells().size();
     for (List<Cell> row : grid.getMyCells()) {
       for (Cell cell : row) {
         visualizeCell(x, y, cellLabel, cellSize, cell);
@@ -254,29 +264,29 @@ public class Visualization extends Application {
   }
 
   private void fillCell(Rectangle cellRectangle, String myFillAsString) {
-    if(myFillAsString.split("\\.").length > 1){
+    if (myFillAsString.split("\\.").length > 1) {
       String imagePath = "/visualization_resources/images/" + myFillAsString;
       Image stateImage;
       try {
         stateImage = new Image(String.valueOf(getClass().getResource(imagePath).toURI()));
       } catch (URISyntaxException e) {
-        throw new VisualizationException(String.format(myVisualizationErrors.getString("imageToCellError"),
-            myFillAsString));
+        throw new VisualizationException(
+            String.format(myVisualizationErrors.getString("imageToCellError"),
+                myFillAsString));
       }
       ImagePattern stateImagePattern = new ImagePattern(stateImage);
       cellRectangle.setFill(stateImagePattern);
-    }
-    else{
+    } else {
       Color myColor = Color.valueOf(myFillAsString);
       cellRectangle.setFill(myColor);
     }
   }
 
-  protected Scene getScene(){
+  protected Scene getScene() {
     return myGridScene;
   }
 
-  protected void setScene(Scene scene){
+  protected void setScene(Scene scene) {
     myGridStage.setScene(scene);
   }
 
@@ -284,7 +294,9 @@ public class Visualization extends Application {
     return myAnimation;
   }
 
-  public ButtonHandler getButtonHandler() { return myButtonHandler; }
+  public ButtonHandler getButtonHandler() {
+    return myButtonHandler;
+  }
 
   public static void main(String[] args) {
     launch(args);
