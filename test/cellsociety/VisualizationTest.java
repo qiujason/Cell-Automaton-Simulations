@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import cellsociety.visualization.Simulation;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 import javafx.animation.Animation.Status;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
@@ -39,14 +40,15 @@ public class VisualizationTest extends DukeApplicationTest {
   private Group myGridGroup;
 
   @Override
-  public void start(Stage stage) throws Exception {
+  public void start(Stage stage) {
     mySimulation = new Simulation();
     myResources = ResourceBundle.getBundle(Simulation.LANGUAGE_FOLDER + "\\." + Simulation.DEFAULT_LANGUAGE);
-
-    myScene = mySimulation.setupScene(Simulation.INITIAL_WIDTH, Simulation.INITIAL_HEIGHT, Simulation.DEFAULT_LANGUAGE);
-    stage.setScene(myScene);
-    stage.show();
-
+    try {
+      mySimulation.start(stage);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    myScene = mySimulation.getScene();
     myAnimation = mySimulation.getAnimation();
 
     myRestartButton = lookup("#RestartButton").query();
@@ -147,19 +149,6 @@ public class VisualizationTest extends DukeApplicationTest {
   }
 
   @Test
-  public void testSaveSimulation() {
-    select(mySimulations, "Beacon - GameOfLife");
-    clickOn(mySaveSimulationButton);
-    press(KeyCode.T);
-    press(KeyCode.E);
-    press(KeyCode.S);
-    press(KeyCode.ENTER);
-    press(KeyCode.ENTER);
-    press(KeyCode.ENTER);
-    assertTrue(mySimulations.getItems().contains("tes - GameOfLife"));
-  }
-
-  @Test
   public void testSetCellState() {
     select(mySimulations, "Beacon - GameOfLife");
     Rectangle cellRectangle = lookup("#cell14").query();
@@ -169,26 +158,49 @@ public class VisualizationTest extends DukeApplicationTest {
   }
 
   @Test
-  public void testSetColor() {
-
-  }
-
-  @Test
-  public void testSetPhoto() {
-
-  }
-
-  @Test
   public void testStyleChange() {
     assertEquals(Color.BLACK, myRestartButton.getTextFill());
-    select(myStyles, "lightMode");
+    select(myStyles, "DarkMode");
+    myRestartButton = lookup("#RestartButton").query();
     assertEquals(Color.WHITE, myRestartButton.getTextFill());
   }
 
   @Test
   public void testLanguageChange() {
     select(myLanguages, "Español");
+    myRestartButton = lookup("#RestartButton").query();
     assertEquals("Reiniciar", myRestartButton.getText());
+  }
+
+  @Test // FIXME
+  public void testSaveSimulation() {
+    select(mySimulations, "Beacon - GameOfLife");
+    clickOn(mySaveSimulationButton);
+    press(KeyCode.J);
+    press(KeyCode.C);
+    press(KeyCode.E);
+    press(KeyCode.ENTER);
+    press(KeyCode.ENTER);
+    press(KeyCode.ENTER);
+    assertTrue(mySimulations.getItems().contains("jce - GameOfLife"));
+  }
+
+  @Test //FIXME
+  public void testSetColor() {
+    select(mySimulations, "Beacon - GameOfLife");
+    Rectangle cellRectangle = lookup("#cell14").query();
+    clickOn(mySetColorsButton);
+    press(KeyCode.R);
+    press(KeyCode.E);
+    press(KeyCode.D);
+    press(KeyCode.ENTER);
+    press(KeyCode.ENTER);
+    assertEquals(Color.RED, cellRectangle.getFill());
+  }
+
+  @Test // FIXME
+  public void testSetPhoto() {
+
   }
 
 }

@@ -30,7 +30,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -47,27 +46,30 @@ public class Simulation extends Application {
   public static final String DEFAULT_LANGUAGE = "english";
   public static final String BUTTON_PROPERTIES = "visualization_resources.buttons";
   public static final String HEADER = "Jack, Hayden, and Jason's Simulation";
-  public static final double INITIAL_HEIGHT = 600;
+  public static final double INITIAL_HEIGHT = 800;
   public static final double INITIAL_WIDTH = 800;
   public static final double FRAMES_PER_SECOND = 2;
   public static final double SIMULATION_DELAY = 1 / FRAMES_PER_SECOND;
-
-  // TODO: Make it so these can be edited
-  private double GRID_SIZE = 3 * INITIAL_WIDTH / 4;
-  private double GRID_UPPER_LEFT_CORNER = INITIAL_WIDTH / 8;
+  public static final double UPDATE_RATE = 0.0166667;
+  public static final double GRID_FRACTION = 0.75;
+  public static final String COLORS = "Colors";
+  public static final String PHOTOS = "Photos";
 
   private Stage myStage;
   private Scene myScene;
   private BorderPane myRoot;
-  private Grid myGrid;
   private Group myGridGroup;
   private ResourceBundle myLanguageResources;
   private Timeline myAnimation;
+  private Timeline myGridUpdater;
   private PropertyReader myPropertyReader;
-  private List<Enum<?>> myStates;
   private ComboBox<String> mySimulations;
   private ComboBox<String> myStyles;
   private ComboBox<String> myLanguages;
+  private double myLastHeight;
+  private double myLastWidth;
+
+  private ButtonHandler myButtonHandler;
 
   @Override
   public void start(Stage stage) throws Exception {
@@ -86,9 +88,20 @@ public class Simulation extends Application {
     myRoot.setCenter(myGridGroup);
 
     myAnimation = new Timeline();
+
+    myButtonHandler = new ButtonHandler(myAnimation, this, myLanguageResources);
+
     myAnimation.setCycleCount(Timeline.INDEFINITE);
-    KeyFrame frame = new KeyFrame(Duration.seconds(SIMULATION_DELAY), e -> step());
+    KeyFrame frame = new KeyFrame(Duration.seconds(SIMULATION_DELAY), e -> myButtonHandler.step(myPropertyReader));
     myAnimation.getKeyFrames().add(frame);
+
+    myGridUpdater = new Timeline();
+    myGridUpdater.setCycleCount(Timeline.INDEFINITE);
+    KeyFrame cellUpdater = new KeyFrame(Duration.seconds(UPDATE_RATE), e -> updateCells());
+    myGridUpdater.getKeyFrames().add(cellUpdater);
+    myGridUpdater.play();
+    myLastHeight = height;
+    myLastWidth = width;
 
     makeNavigationPane();
     Scene scene = new Scene(myRoot, width, height);
@@ -97,17 +110,25 @@ public class Simulation extends Application {
     return scene;
   }
 
+  private void updateCells() {
+    if(myLastHeight != myScene.getHeight() || myLastWidth != myScene.getWidth()){
+      myLastHeight = myScene.getHeight();
+      myLastWidth = myScene.getWidth();
+      visualizeGrid(myButtonHandler.getGrid(), myPropertyReader);
+    }
+  }
+
   private void makeNavigationPane() {
     HBox buttonPane = new HBox();
-    makeButton("RestartButton", event -> restart(), buttonPane);
-    makeButton("PlayButton", event -> play(), buttonPane);
-    makeButton("PauseButton", event -> pause(), buttonPane);
-    makeButton("StepButton", event -> step(), buttonPane);
-    makeButton("SavedSimulation", event -> saveSimulation(), buttonPane);
-    makeButton("SpeedUp", event -> speedUp(), buttonPane);
-    makeButton("SlowDown", event -> slowDown(), buttonPane);
-    makeButton("SetColors", event -> setColors(), buttonPane);
-    makeButton("SetPhotos", event -> setPhotos(), buttonPane);
+    makeButton("RestartButton", event -> myButtonHandler.restart(mySimulations ,myPropertyReader), buttonPane);
+    makeButton("PlayButton", event -> myButtonHandler.play(), buttonPane);
+    makeButton("PauseButton", event -> myButtonHandler.pause(), buttonPane);
+    makeButton("StepButton", event -> myButtonHandler.step(myPropertyReader), buttonPane);
+    makeButton("SavedSimulation", event -> myButtonHandler.saveSimulation(myPropertyReader, mySimulations), buttonPane);
+    makeButton("SpeedUp", event -> myButtonHandler.speedUp(myRoot), buttonPane);
+    makeButton("SlowDown", event -> myButtonHandler.slowDown(myRoot), buttonPane);
+    makeButton("SetColors", event -> myButtonHandler.setColorsOrPhotos(myPropertyReader, COLORS), buttonPane);
+    makeButton("SetPhotos", event -> myButtonHandler.setColorsOrPhotos(myPropertyReader, PHOTOS), buttonPane);
     myRoot.setBottom(buttonPane);
 //    ResourceBundle buttons = ResourceBundle.getBundle(BUTTON_PROPERTIES);
 //    for(String button : buttons.keySet()){
@@ -126,7 +147,6 @@ public class Simulation extends Application {
 //        }
 //      }, buttonPane);
 //    }
-
     HBox comboBoxPane = new HBox();
 
     initializeSimulationOptions();
@@ -148,7 +168,7 @@ public class Simulation extends Application {
     mySimulations = new ComboBox<>();
     mySimulations.setId("SimulationSelect");
     mySimulations.setOnAction(event -> {
-      chooseSimulation();
+      myButtonHandler.chooseSimulation(mySimulations);
     });
     mySimulations.setPromptText(myLanguageResources.getString("SimulationSelect"));
     Path simulations = null;
@@ -174,7 +194,7 @@ public class Simulation extends Application {
   private void initializeStyleOptions() {
     myStyles = new ComboBox<>();
     myStyles.setId("SetStyle");
-    myStyles.setOnAction(event -> setStyle());
+    myStyles.setOnAction(event -> myButtonHandler.setStyle(myStyles));
     myStyles.setPromptText(myLanguageResources.getString("SetStyle"));
     Path styles = null;
     try {
@@ -191,7 +211,7 @@ public class Simulation extends Application {
   private void initializeLanguages() {
     myLanguages = new ComboBox<>();
     myLanguages.setId("SetLanguage");
-    myLanguages.setOnAction(event -> setLanguage());
+    myLanguages.setOnAction(event -> myButtonHandler.setLanguage(myLanguages));
     myLanguages.setPromptText(myLanguageResources.getString("SetLanguage"));
     Path languages = null;
     try {
@@ -200,8 +220,8 @@ public class Simulation extends Application {
     } catch (URISyntaxException e) {
       e.printStackTrace();
     }
-    for(File style : languages.toFile().listFiles()){
-      myLanguages.getItems().add(style.getName().split("\\.")[0]);
+    for(File language : languages.toFile().listFiles()){
+      myLanguages.getItems().add(language.getName().split("\\.")[0]);
     }
   }
 
@@ -215,119 +235,117 @@ public class Simulation extends Application {
     navigationPane.getChildren().add(newButton);
   }
 
-  public void restart() {
-    myAnimation.stop();
-    chooseSimulation();
-  }
+//  public void restart() {
+//    myAnimation.stop();
+//    chooseSimulation();
+//  }
+//
+//  public void play() {
+//    myAnimation.play();
+//  }
+//
+//  public void pause() {
+//    myAnimation.pause();
+//  }
+//
+//  public void step() {
+//    myGrid.updateNewStates();
+//    visualizeGrid();
+//  }
+//
+//  public void speedUp() {
+//    myAnimation.setRate(myAnimation.getRate() * 2);
+//    myRoot.setRight(new Text("x" + myAnimation.getRate()));
+//    if (myAnimation.getRate() == 1) {
+//      myRoot.setRight(null);
+//    }
+//  }
+//
+//  public void slowDown() {
+//    myAnimation.setRate(myAnimation.getRate() / 2);
+//    myRoot.setRight(new Text("x" + myAnimation.getRate()));
+//    if (myAnimation.getRate() == 1) {
+//      myRoot.setRight(null);
+//    }
+//  }
+//
+//  public void setColors() {
+//    TextInputDialog dialog = new TextInputDialog();
+//    dialog.setTitle(myLanguageResources.getString("SetColors"));
+//    dialog.setHeaderText(myLanguageResources.getString("SetColors"));
+//    String newColor = null;
+//    for(Enum<?> state : myStates){
+//      dialog.setContentText(myLanguageResources.getString("SetColorsDialogue") + state.toString());
+//      Optional<String> enteredColor = dialog.showAndWait();
+//      if (enteredColor.isPresent()) {
+//        newColor = enteredColor.get();
+//      }
+//      myPropertyReader.setProperty(state.toString(), newColor);
+//      dialog.setContentText("");
+//    }
+//    visualizeGrid();
+//  }
+//
+//  public void setPhotos() {
+//    TextInputDialog dialog = new TextInputDialog();
+//    dialog.setTitle(myLanguageResources.getString("SetPhotos"));
+//    dialog.setHeaderText(myLanguageResources.getString("SetPhotos"));
+//    String newColor = null;
+//    for(Enum<?> state : myStates){
+//      dialog.setContentText(myLanguageResources.getString("SetPhotosDialogue") + state.toString());
+//      Optional<String> enteredPhoto = dialog.showAndWait();
+//      if (enteredPhoto.isPresent()) {
+//        newColor = enteredPhoto.get();
+//      }
+//      myPropertyReader.setProperty(state.toString(), newColor);
+//    }
+//    visualizeGrid();
+//  }
+//
+//  public void setStyle() {
+//    myScene.getStylesheets().clear();
+//    myScene.getStylesheets().add(getClass().getResource("/" + STYLESHEET_FOLDER + myStyles.getValue() + ".css").toExternalForm());
+//  }
+//
+//  private void setLanguage() {
+//    myScene = setupScene(INITIAL_WIDTH, INITIAL_HEIGHT, myLanguages.getValue());
+//    myStage.setScene(myScene);
+//  }
+//
+//  private void chooseSimulation() {
+//    String pathName =
+//        PROPERTY_LISTS + "/" + mySimulations.getValue().split(" ")[2] + "/" + mySimulations
+//            .getValue().split(" ")[0] + ".properties";
+//    myPropertyReader = new PropertyReader(pathName);
+//    myStates = new ArrayList<>();
+//
+//    myGrid = myPropertyReader.gridFromPropertyFile();
+//    getSimulationStates();
+//    visualizeGrid();
+//  }
 
-  public void play() {
-    myAnimation.play();
-  }
-
-  public void pause() {
-    myAnimation.pause();
-  }
-
-  public void step() {
-    myGrid.updateNewStates();
-    visualizeGrid();
-  }
-
-  public void speedUp() {
-    myAnimation.setRate(myAnimation.getRate() * 2);
-    myRoot.setRight(new Text("x" + myAnimation.getRate()));
-    if (myAnimation.getRate() == 1) {
-      myRoot.setRight(null);
-    }
-  }
-
-  public void slowDown() {
-    myAnimation.setRate(myAnimation.getRate() / 2);
-    myRoot.setRight(new Text("x" + myAnimation.getRate()));
-    if (myAnimation.getRate() == 1) {
-      myRoot.setRight(null);
-    }
-  }
-
-  // FIXME: Enable saving colors
-  public void setColors() {
-    getSimulationStates();
-    TextInputDialog dialog = new TextInputDialog();
-    dialog.setTitle(myLanguageResources.getString("SetColors"));
-    dialog.setHeaderText(myLanguageResources.getString("SetColors"));
-    String newColor = null;
-    for(Enum<?> state : myStates){
-      dialog.setContentText(myLanguageResources.getString("SetColorsDialogue") + state.toString());
-      Optional<String> enteredColor = dialog.showAndWait();
-      if (enteredColor.isPresent()) {
-        newColor = enteredColor.get();
-      }
-      myPropertyReader.setProperty(state.toString(), newColor);
-    }
-    visualizeGrid();
-  }
-
-  // FIXME: Enable saving photos
-  public void setPhotos() {
-    getSimulationStates();
-    TextInputDialog dialog = new TextInputDialog();
-    dialog.setTitle(myLanguageResources.getString("SetPhotos"));
-    dialog.setHeaderText(myLanguageResources.getString("SetPhotos"));
-    String newColor = null;
-    for(Enum<?> state : myStates){
-      dialog.setContentText(myLanguageResources.getString("SetPhotosDialogue") + state.toString());
-      Optional<String> enteredPhoto = dialog.showAndWait();
-      if (enteredPhoto.isPresent()) {
-        newColor = enteredPhoto.get();
-      }
-      myPropertyReader.setProperty(state.toString(), newColor);
-    }
-    visualizeGrid();
-  }
-
-  public void setStyle() {
-    myScene.getStylesheets().clear();
-    myScene.getStylesheets().add(getClass().getResource("/" + STYLESHEET_FOLDER + myStyles.getValue() + ".css").toExternalForm());
-  }
-
-  private void setLanguage() {
-    myScene = setupScene(INITIAL_WIDTH, INITIAL_HEIGHT, myLanguages.getValue());
-    myStage.setScene(myScene);
-  }
-
-  private void chooseSimulation() {
-    String pathName =
-        PROPERTY_LISTS + "/" + mySimulations.getValue().split(" ")[2] + "/" + mySimulations
-            .getValue().split(" ")[0] + ".properties";
-    myPropertyReader = new PropertyReader(pathName);
-    myStates = new ArrayList<>();
-
-    myGrid = myPropertyReader.gridFromPropertyFile();
-    getSimulationStates();
-    visualizeGrid();
-  }
-
-  private void visualizeGrid() {
+  protected void visualizeGrid(Grid grid, PropertyReader propertyReader) {
+    myPropertyReader = propertyReader;
     myGridGroup.getChildren().clear();
-    double x = GRID_UPPER_LEFT_CORNER;
-    double y = GRID_UPPER_LEFT_CORNER;
+    double x = myScene.getWidth() / 8;
+    double y = myScene.getHeight() / 8;
     int cellLabel = 0;
-    double cellSize = GRID_SIZE / myGrid.getMyCells().size();
-    for (List<Cell> row : myGrid.getMyCells()) {
+    double cellSize = Math.min(GRID_FRACTION * myScene.getHeight(), GRID_FRACTION * myScene.getWidth()) / grid.getMyCells().size();
+    for (List<Cell> row : grid.getMyCells()) {
       for (Cell cell : row) {
-        visualizeCell(x, y, cellLabel, cellSize, cell);
+        visualizeCell(x, y, cellLabel, cellSize, cell, grid);
         x += cellSize;
         cellLabel++;
       }
       y += cellSize;
-      x = GRID_UPPER_LEFT_CORNER;
+      x = myScene.getWidth() / 8;
     }
   }
 
-  private void visualizeCell(double x, double y, int cellLabel, double cellSize, Cell cell) {
+  private void visualizeCell(double x, double y, int cellLabel, double cellSize, Cell cell, Grid grid) {
     Rectangle cellRectangle = new Rectangle(x, y, cellSize, cellSize);
     cellRectangle.setId("cell" + cellLabel);
-    cellRectangle.setOnMouseClicked(e -> setCellState(cellLabel));
+    cellRectangle.setOnMouseClicked(e -> myButtonHandler.setCellState(cellLabel, myPropertyReader));
     Enum<?> currentState = cell.getMyState();
     String myFillAsString = myPropertyReader.getProperty(currentState.toString());
     if(myFillAsString.split("\\.").length > 1){
@@ -349,88 +367,18 @@ public class Simulation extends Application {
     myGridGroup.getChildren().add(cellRectangle);
   }
 
-  private void setCellState(int cellLabel) {
-    int row = cellLabel / myGrid.getMyCells().get(0).size();
-    int column = cellLabel % myGrid.getMyCells().get(0).size();
-    Cell myCell = myGrid.getMyCells().get(row).get(column);
-    for(int i = 0; i < myStates.size() - 1; i++){
-      if(myCell.getMyState().equals(myStates.get(0))){
-        myCell.setMyState(myStates.get(i+1));
-        visualizeGrid();
-        return;
-      }
-    }
-    myCell.setMyState(myStates.get(0));
-    visualizeGrid();
-  }
-
-  private void getSimulationStates() {
-    String simType = myPropertyReader.getProperty("simulationType");
-    Class<?> clazz = null;
-
-    try {
-      clazz = Class.forName("cellsociety.model." + simType + "." + simType + "States");
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    }
-
-    if (clazz != null) {
-      for (Object state : clazz.getEnumConstants()){
-        myStates.add((Enum<?>) state);
-      }
-    }
-  }
-
-  // TODO: Generalize this method further
-  public void saveSimulation() {
-    TextInputDialog dialog = new TextInputDialog();
-    dialog.setTitle("Save Simulation");
-
-    String filename = null;
-    String author = null;
-    String description = null;
-
-    dialog.setContentText("SaveSimulationAs");
-    Optional<String> enteredFilename = dialog.showAndWait();
-    if (enteredFilename.isPresent()) {
-      filename = enteredFilename.get();
-    }
-    dialog.setContentText("Author");
-    Optional<String> enteredAuthor = dialog.showAndWait();
-    if (enteredAuthor.isPresent()) {
-      author = enteredAuthor.get();
-    }
-    dialog.setContentText("Description");
-    Optional<String> enteredDescription = dialog.showAndWait();
-    if (enteredDescription.isPresent()) {
-      description = enteredDescription.get();
-    }
-
-    String simType = myPropertyReader.getProperty("simulationType");
-
-    myGrid.saveCurrentGrid("data/" + INITIAL_STATES + "/" + simType + "/" + filename + ".csv");
-    File file = new File("data/" + PROPERTY_LISTS + "/" + simType + "/" + filename + ".properties");
-    try {
-      FileWriter outputFile = new FileWriter(file, false);
-      Properties savedProperty = new Properties();
-      savedProperty.put("simulationType", simType);
-      savedProperty.put("simulationTitle", filename);
-      savedProperty.put("configAuthor", author);
-      savedProperty.put("description", description);
-      savedProperty.put("csvFile", filename + ".csv");
-      for(Enum<?> state : myStates){
-        savedProperty.put(state.toString(), myPropertyReader.getProperty(state.toString()));
-      }
-      savedProperty.store(outputFile, null);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    mySimulations.getItems().add(filename + " - " + simType);
-  }
-
   // Necessary for testing
   public Timeline getAnimation() {
     return myAnimation;
+  }
+
+  // Necessary for testing
+  public Scene getScene(){
+    return myScene;
+  }
+
+  protected void setScene(Scene scene){
+    myStage.setScene(scene);
   }
 
   public static void main(String[] args) {
