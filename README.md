@@ -91,5 +91,5 @@ Extra credit:
 
 ### Impressions
 
-Overall, this was a difficult assignment that
+Overall, this was a difficult and complex assignment that nevertheless split up well between three people, making it a bit more manageable.  We were able to work mostly independently and resolve implementation issues fairly quickly.  We rarely had merge conflicts, which also made collaboration much easier.
 
