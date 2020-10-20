@@ -20,37 +20,39 @@ import javafx.scene.text.Text;
 
 public class ButtonHandler {
 
-  private Timeline myAnimation;
-  private Visualization myVisualization;
-  private ResourceBundle myLanguageResources;
+  private final Timeline myAnimation;
+  private final Visualization myVisualization;
+  private final ResourceBundle myLanguageResources;
+  private final ResourceBundle myVisualizationErrors;
   private List<Enum<?>> myStates;
   private Grid myGrid;
 
-  public ButtonHandler(Timeline animation, Visualization visualization, ResourceBundle languageResources) {
+  public ButtonHandler(Timeline animation, Visualization visualization, ResourceBundle languageResources, ResourceBundle visualizationErrors) {
     myAnimation = animation;
     myVisualization = visualization;
     myLanguageResources = languageResources;
+    myVisualizationErrors = visualizationErrors;
   }
 
-  public void restart(ComboBox<String> simulations, PropertyReader propertyReader) {
+  protected void restart(ComboBox<String> simulations) {
     myAnimation.stop();
     chooseSimulation(simulations);
   }
 
-  public void play() {
+  protected void play() {
     myAnimation.play();
   }
 
-  public void pause() {
+  protected void pause() {
     myAnimation.pause();
   }
 
-  public void step(PropertyReader propertyReader) {
+  protected void step(PropertyReader propertyReader) {
     myGrid.updateNewStates();
     myVisualization.visualizeGrid(myGrid, propertyReader);
   }
 
-  public void speedUp(BorderPane root) {
+  protected void speedUp(BorderPane root) {
     myAnimation.setRate(myAnimation.getRate() * 2);
     root.setRight(new Text("x" + myAnimation.getRate()));
     if (myAnimation.getRate() == 1) {
@@ -58,7 +60,7 @@ public class ButtonHandler {
     }
   }
 
-  public void slowDown(BorderPane root) {
+  protected void slowDown(BorderPane root) {
     myAnimation.setRate(myAnimation.getRate() / 2);
     root.setRight(new Text("x" + myAnimation.getRate()));
     if (myAnimation.getRate() == 1) {
@@ -66,7 +68,7 @@ public class ButtonHandler {
     }
   }
 
-  public void setColorsOrPhotos(PropertyReader propertyReader, String colorOrPhoto) {
+  protected void setColorsOrPhotos(PropertyReader propertyReader, String colorOrPhoto) {
     TextInputDialog dialog = new TextInputDialog();
     dialog.setTitle(myLanguageResources.getString("Set" + colorOrPhoto));
     dialog.setHeaderText(myLanguageResources.getString("Set" + colorOrPhoto));
@@ -83,7 +85,7 @@ public class ButtonHandler {
     myVisualization.visualizeGrid(myGrid, propertyReader);
   }
 
-  public void setStyle(ComboBox<String> styles) {
+  protected void setStyle(ComboBox<String> styles) {
     myVisualization.getScene().getStylesheets().clear();
     myVisualization.getScene().getStylesheets().add(getClass().getResource("/" + Visualization.STYLESHEET_FOLDER + styles.getValue() + ".css").toExternalForm());
   }
@@ -108,18 +110,16 @@ public class ButtonHandler {
 
   private void getSimulationStates(PropertyReader propertyReader) {
     String simType = propertyReader.getProperty("simulationType");
-    Class<?> clazz = null;
+    Class<?> clazz;
 
     try {
       clazz = Class.forName("cellsociety.model.Cells." + simType + "." + simType + "States");
     } catch (ClassNotFoundException e) {
-      e.printStackTrace();
+      throw new VisualizationException(String.format(myVisualizationErrors.getString("simulationClassNotFound"), simType));
     }
 
-    if (clazz != null) {
-      for (Object state : clazz.getEnumConstants()){
-        myStates.add((Enum<?>) state);
-      }
+    for (Object state : clazz.getEnumConstants()){
+      myStates.add((Enum<?>) state);
     }
   }
 
@@ -138,8 +138,7 @@ public class ButtonHandler {
     myVisualization.visualizeGrid(myGrid, propertyReader);
   }
 
-  // TODO: Generalize this method further
-  public void saveSimulation(PropertyReader propertyReader, ComboBox<String> simulations) {
+  protected void saveSimulation(PropertyReader propertyReader, ComboBox<String> simulations) {
     TextInputDialog dialog = new TextInputDialog();
     dialog.setTitle(myLanguageResources.getString("SavedSimulation"));
     dialog.setHeaderText(myLanguageResources.getString("SavedSimulation"));
@@ -181,7 +180,7 @@ public class ButtonHandler {
       }
       savedProperty.store(outputFile, null);
     } catch (IOException e) {
-      e.printStackTrace();
+      throw new VisualizationException(String.format(myVisualizationErrors.getString("simulationSaveError"), filename));
     }
     simulations.getItems().add(filename + " - " + simType);
   }

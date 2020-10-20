@@ -1,6 +1,7 @@
 package cellsociety;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import cellsociety.visualization.Visualization;
@@ -8,7 +9,6 @@ import java.util.ResourceBundle;
 import javafx.animation.Animation.Status;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.input.KeyCode;
@@ -19,8 +19,6 @@ import org.junit.jupiter.api.Test;
 
 public class VisualizationTest extends DukeApplicationTest {
 
-  private Visualization myVisualization;
-  private Scene myScene;
   private Timeline myAnimation;
   private ResourceBundle myResources;
 
@@ -40,14 +38,13 @@ public class VisualizationTest extends DukeApplicationTest {
 
   @Override
   public void start(Stage stage) {
-    myVisualization = new Visualization();
+    Visualization myVisualization = new Visualization();
     myResources = ResourceBundle.getBundle(Visualization.LANGUAGE_FOLDER + "\\." + Visualization.DEFAULT_LANGUAGE);
     try {
       myVisualization.start(stage);
     } catch (Exception e) {
       e.printStackTrace();
     }
-    myScene = myVisualization.getScene();
     myAnimation = myVisualization.getAnimation();
 
     myRestartButton = lookup("#RestartButton").query();
@@ -87,18 +84,24 @@ public class VisualizationTest extends DukeApplicationTest {
     assertEquals(36, myGridGroup.getChildren().size());
     select(mySimulations, "Blinker - GameOfLife");
     assertEquals(25, myGridGroup.getChildren().size());
-    select(mySimulations, "Boat - GameOfLife");
+    select(mySimulations, "AllBlocked - Percolation");
     assertEquals(25, myGridGroup.getChildren().size());
-    select(mySimulations, "Corner - GameOfLife");
+    select(mySimulations, "StraightLine - Percolation");
     assertEquals(25, myGridGroup.getChildren().size());
-    select(mySimulations, "Edges - GameOfLife");
-    assertEquals(25, myGridGroup.getChildren().size());
-    select(mySimulations, "Square - GameOfLife");
-    assertEquals(4, myGridGroup.getChildren().size());
-    select(mySimulations, "Toad - GameOfLife");
+    select(mySimulations, "RockDominant - RPS");
     assertEquals(36, myGridGroup.getChildren().size());
-    select(mySimulations, "Tub - GameOfLife");
+    select(mySimulations, "Checkerboard - Segregation");
+    assertEquals(36, myGridGroup.getChildren().size());
+    select(mySimulations, "Minimal - Segregation");
+    assertEquals(16, myGridGroup.getChildren().size());
+    select(mySimulations, "CenterOnFireWithSpace - SpreadingFire");
     assertEquals(25, myGridGroup.getChildren().size());
+    select(mySimulations, "OneOnFire - SpreadingFire");
+    assertEquals(25, myGridGroup.getChildren().size());
+    select(mySimulations, "AllFish - Wator");
+    assertEquals(25, myGridGroup.getChildren().size());
+    select(mySimulations, "FishSharkAlternation - Wator");
+    assertEquals(36, myGridGroup.getChildren().size());
   }
 
   @Test
@@ -171,7 +174,7 @@ public class VisualizationTest extends DukeApplicationTest {
     assertEquals("Reiniciar", myRestartButton.getText());
   }
 
-  @Test // FIXME
+  @Test
   public void testSaveSimulation() {
     select(mySimulations, "Beacon - GameOfLife");
     clickOn(mySaveSimulationButton);
@@ -181,25 +184,45 @@ public class VisualizationTest extends DukeApplicationTest {
     press(KeyCode.ENTER);
     press(KeyCode.ENTER);
     press(KeyCode.ENTER);
+    mySimulations = lookup("#SimulationSelect").query();
     assertTrue(mySimulations.getItems().contains("jce - GameOfLife"));
   }
 
-  @Test //FIXME
+  @Test
   public void testSetColor() {
     select(mySimulations, "Beacon - GameOfLife");
-    Rectangle cellRectangle = lookup("#cell14").query();
     clickOn(mySetColorsButton);
     press(KeyCode.R);
     press(KeyCode.E);
     press(KeyCode.D);
     press(KeyCode.ENTER);
     press(KeyCode.ENTER);
+    Rectangle cellRectangle = lookup("#cell14").query();
+    clickOn(cellRectangle);
+    cellRectangle = lookup("#cell14").query();
+    clickOn(cellRectangle);
     assertEquals(Color.RED, cellRectangle.getFill());
   }
 
-  @Test // FIXME
+  @Test
   public void testSetPhoto() {
-
+    select(mySimulations, "Beacon - GameOfLife");
+    clickOn(mySetColorsButton);
+    press(KeyCode.F);
+    press(KeyCode.I);
+    press(KeyCode.S);
+    press(KeyCode.H);
+    press(KeyCode.PERIOD);
+    press(KeyCode.J);
+    press(KeyCode.P);
+    press(KeyCode.G);
+    press(KeyCode.ENTER);
+    press(KeyCode.ENTER);
+    Rectangle cellRectangle = lookup("#cell14").query();
+    clickOn(cellRectangle);
+    cellRectangle = lookup("#cell14").query();
+    clickOn(cellRectangle);
+    assertEquals("javafx.scene.paint.ImagePattern@4206a205", cellRectangle.getFill().toString());
   }
 
 }
