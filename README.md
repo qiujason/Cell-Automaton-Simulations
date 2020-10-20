@@ -40,6 +40,7 @@ Data files needed:
 * myStyles.css file pertaining to styling for the visualization
 * jpg files pertaining to the images for the visualization of the states
 * ConfigurationErrors and OptionalKey properties file in the resources folder of the configuration package
+* Visualization resources, such as VisualizationErrors, language properties files, stylesheets, and images associated with certain states
 
 Features implemented:
 
@@ -60,7 +61,6 @@ Features implemented:
     * A grid or graph view of the simulation can be viewed, with the graph immediately showing the current state of the grid.
     * Support for English, Spanish, and French.
 
-
 Errors Handled:
 
 * necessary and optional properties missing from the properties files
@@ -69,6 +69,8 @@ Errors Handled:
 * invalid value given in CSV data
 * type of cellular automata simulation not supported by the program
 * unable to write to a data file
+* invalid colors or photos for states in a properties file
+* invalid/nonexistant state classes
 
 ### Notes/Assumptions
 
