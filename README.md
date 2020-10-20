@@ -51,6 +51,22 @@ Features implemented:
     * Properties files are utilized to pass in specific information into the program
     
 * Simulation:
+    * Users can run one of many cellular automata models including:
+        * Game Of Life
+        * Percolation
+        * Rock, Paper, Scissors
+        * Segregation
+        * Spreading of Fire
+        * Wa-tor Predator Prey Model
+    * Users can decide on neighbors each cell interacts with
+        * Complete neighborhood: cell interacts with all 8 neighbors
+        * Cardinal neighborhood: cell interacts with 4 neighbors on its edges
+        * Ordinal neighborhood: cell interacts with 4 neighbors touching its corners
+    * Users can decide on the edges of the model
+        * Finite: model is limited by the bounds of the grid
+        * Toroidal: model wraps around to the other side vertically and horizontally
+        * Infinite Horizontal: model wraps around horizontally
+        * Infinite Vertical: model wraps around vertically
 
 * Visualization:
     * Users can easily change between simulations, pause them, play them, step through them, speed them up, or slow them down.
