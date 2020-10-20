@@ -1,33 +1,32 @@
-//package cellsociety.model;
-//
-//import static org.junit.jupiter.api.Assertions.*;
-//
-//import cellsociety.configuration.Grid;
-//import cellsociety.configuration.PropertyReader;
-//import cellsociety.model.RPS.RPSCell;
-//import cellsociety.model.RPS.RPSStates;
-//import org.junit.jupiter.api.Test;
-//
-//class RPSTest {
-//
-//  @Test
-//  void getNewStateAdjacentFilled() {
-//    PropertyReader reader = new PropertyReader("property_lists/RPS/diagonal.properties");
-//    Grid grid = reader.gridFromPropertyFile();
-//    assertEquals(RPSStates.UNFILLED, grid.getMyCells().get(1).get(0).getMyState());
-//    grid.updateNewStates();
-//    assertEquals(RPSStates.FILLED, grid.getMyCells().get(1).get(0).getMyState());
-//  }
-//
-//  @Test
-//  void getNewStateOfBlockedWithAdjacentFilled() {
-//    PropertyReader reader = new PropertyReader("property_lists/RPS/diagonal.properties");
-//    Grid grid = reader.gridFromPropertyFile();
-//    assertEquals(RPSStates.BLOCKED, grid.getMyCells().get(0).get(1).getMyState());
-//    grid.updateNewStates();
-//    assertEquals(RPSStates.BLOCKED, grid.getMyCells().get(0).get(1).getMyState());
-//  }
-//
+package cellsociety.model;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import cellsociety.configuration.Grid;
+import cellsociety.configuration.PropertyReader;
+import cellsociety.model.Cells.RPS.RPSStates;
+import org.junit.jupiter.api.Test;
+
+class RPSTest {
+
+  @Test
+  void getNewStateWin() {
+    PropertyReader reader = new PropertyReader("property_lists/RPS/rockDominant.properties");
+    Grid grid = reader.gridFromPropertyFile();
+    assertEquals(RPSStates.ROCK, grid.getMyCells().get(1).get(1).getMyState());
+    grid.updateNewStates();
+    assertEquals(RPSStates.ROCK, grid.getMyCells().get(1).get(1).getMyState());
+  }
+
+  @Test
+  void getNewStateLoss() {
+    PropertyReader reader = new PropertyReader("property_lists/RPS/rockDominant.properties");
+    Grid grid = reader.gridFromPropertyFile();
+    assertEquals(RPSStates.PAPER, grid.getMyCells().get(0).get(0).getMyState());
+    grid.updateNewStates();
+    assertEquals(RPSStates.ROCK, grid.getMyCells().get(0).get(0).getMyState());
+  }
+
 //  @Test
 //  void getNewStateWithAdjacentFilledDiagonal() {
 //    PropertyReader reader = new PropertyReader("property_lists/RPS/diagonal.properties");
@@ -106,4 +105,4 @@
 //    }
 //  }
 //
-//}
+}

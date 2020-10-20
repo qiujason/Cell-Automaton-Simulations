@@ -2,16 +2,14 @@ package cellsociety.visualization;
 
 import cellsociety.configuration.Grid;
 import cellsociety.configuration.PropertyReader;
-import cellsociety.model.Cell;
-import cellsociety.model.GameOfLife.GameOfLifeStates;
+import cellsociety.model.Cells.Cell;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.EnumSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
@@ -49,8 +47,6 @@ public class Simulation extends Application {
   public static final double INITIAL_WIDTH = 800;
   public static final double FRAMES_PER_SECOND = 2;
   public static final double SIMULATION_DELAY = 1 / FRAMES_PER_SECOND;
-//  public static final Color ALIVE_COLOR = Color.BLACK;
-//  public static final Color DEAD_COLOR = Color.WHITE;
 
   // TODO: Make it so these can be edited
   private double GRID_SIZE = 3 * INITIAL_WIDTH / 4;
@@ -63,6 +59,7 @@ public class Simulation extends Application {
   private ResourceBundle myResources;
   private Timeline myAnimation;
   private PropertyReader myPropertyReader;
+  private List<Enum<?>> myStates;
   private ComboBox<String> mySimulations;
 
   @Override
@@ -188,55 +185,22 @@ public class Simulation extends Application {
   }
 
   private void setColors() {
-    // TODO: Refactor duplication
-    String simType = myPropertyReader.getProperty("simulationType");
-
-    Class<?> clazz = null;
-
-    try {
-      clazz = Class.forName("cellsociety.model." + simType + "." + simType + "States");
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    }
-
-    Object[] myStates = new Object[0];
-    if (clazz != null) {
-      myStates = clazz.getEnumConstants();
-    }
-
+    getSimulationStates();
     JFrame saver = new JFrame();
-    for(Object state : myStates){
-      Enum<?> currentState = (Enum<?>) state;
-      String newColor = JOptionPane.showInputDialog(saver, "Input Color for State " + currentState.toString());
+    for(Enum<?> state : myStates){
+      String newColor = JOptionPane.showInputDialog(saver, "Input Color for State " + state.toString());
       myPropertyReader.setProperty(state.toString(), newColor);
     }
-
     visualizeGrid();
   }
 
   private void setPhotos() {
-    String simType = myPropertyReader.getProperty("simulationType");
-
-    Class<?> clazz = null;
-
-    try {
-      clazz = Class.forName("cellsociety.model." + simType + "." + simType + "States");
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    }
-
-    Object[] myStates = new Object[0];
-    if (clazz != null) {
-      myStates = clazz.getEnumConstants();
-    }
-
+    getSimulationStates();
     JFrame saver = new JFrame();
-    for(Object state : myStates){
-      Enum<?> currentState = (Enum<?>) state;
-      String newPhoto = JOptionPane.showInputDialog(saver, "Choose photo for State " + currentState.toString());
+    for(Enum<?> state : myStates){
+      String newPhoto = JOptionPane.showInputDialog(saver, "Choose photo for State " + state.toString());
       myPropertyReader.setProperty(state.toString(), newPhoto);
     }
-
     visualizeGrid();
   }
 
@@ -245,8 +209,10 @@ public class Simulation extends Application {
         PROPERTY_LISTS + "/" + mySimulations.getValue().split(" ")[2] + "/" + mySimulations
             .getValue().split(" ")[0] + ".properties";
     myPropertyReader = new PropertyReader(pathName);
+    myStates = new ArrayList<>();
 
     myGrid = myPropertyReader.gridFromPropertyFile();
+    getSimulationStates();
     visualizeGrid();
   }
 
@@ -274,12 +240,20 @@ public class Simulation extends Application {
     Enum<?> currentState = cell.getMyState();
     String myFillAsString = myPropertyReader.getProperty(currentState.toString());
     if(myFillAsString.split("\\.").length > 1){
-      Image stateImage = new Image("visualizationResources/images/" + myFillAsString);
+      String imagePath = "/visualization_resources/images/" + myFillAsString;
+      Image stateImage = null;
+      try {
+        stateImage = new Image(String.valueOf(getClass().getResource(imagePath).toURI()));
+      } catch (URISyntaxException e) {
+        e.printStackTrace();
+      }
       ImagePattern stateImagePattern = new ImagePattern(stateImage);
       cellRectangle.setFill(stateImagePattern);
     }
-    Color myColor = Color.valueOf(myFillAsString);
-    cellRectangle.setFill(myColor);
+    else{
+      Color myColor = Color.valueOf(myFillAsString);
+      cellRectangle.setFill(myColor);
+    }
     cellRectangle.setStroke(Color.WHITE);
     myGridGroup.getChildren().add(cellRectangle);
   }
@@ -288,8 +262,19 @@ public class Simulation extends Application {
     int row = cellLabel / myGrid.getMyCells().get(0).size();
     int column = cellLabel % myGrid.getMyCells().get(0).size();
     Cell myCell = myGrid.getMyCells().get(row).get(column);
-    String simType = myPropertyReader.getProperty("simulationType");
+    for(int i = 0; i < myStates.size() - 1; i++){
+      if(myCell.getMyState().equals(myStates.get(0))){
+        myCell.setMyState(myStates.get(i+1));
+        visualizeGrid();
+        return;
+      }
+    }
+    myCell.setMyState(myStates.get(0));
+    visualizeGrid();
+  }
 
+  private void getSimulationStates() {
+    String simType = myPropertyReader.getProperty("simulationType");
     Class<?> clazz = null;
 
     try {
@@ -298,22 +283,14 @@ public class Simulation extends Application {
       e.printStackTrace();
     }
 
-    Object[] myStates = new Object[0];
     if (clazz != null) {
-      myStates = clazz.getEnumConstants();
-    }
-
-    for(int i = 0; i < myStates.length - 1; i++){
-      if(myCell.getMyState().equals((Enum<?>) myStates[i])){
-        myCell.setMyState((Enum<?>) myStates[i+1]);
-        visualizeGrid();
-        return;
+      for (Object state : clazz.getEnumConstants()){
+        myStates.add((Enum<?>) state);
       }
     }
-    myCell.setMyState((Enum<?>) myStates[0]);
-    visualizeGrid();
   }
 
+  // TODO: Generalize this method further
   private void saveSimulation() {
     JFrame saver = new JFrame();
     String filename = JOptionPane.showInputDialog(saver, "SaveSimulationAs");
@@ -325,13 +302,16 @@ public class Simulation extends Application {
     myGrid.saveCurrentGrid("data/" + INITIAL_STATES + "/" + simType + "/" + filename + ".csv");
     File file = new File("data/" + PROPERTY_LISTS + "/" + simType + "/" + filename + ".properties");
     try {
-      FileWriter outputFile = new FileWriter(file,false);
+      FileWriter outputFile = new FileWriter(file, false);
       Properties savedProperty = new Properties();
       savedProperty.put("simulationType", simType);
       savedProperty.put("simulationTitle", filename);
       savedProperty.put("configAuthor", author);
       savedProperty.put("description", description);
       savedProperty.put("csvFile", filename + ".csv");
+      for(Enum<?> state : myStates){
+        savedProperty.put(state.toString(), myPropertyReader.getProperty(state.toString()));
+      }
       savedProperty.store(outputFile, null);
     } catch (IOException e) {
       e.printStackTrace();

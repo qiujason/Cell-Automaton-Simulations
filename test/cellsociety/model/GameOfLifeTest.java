@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import cellsociety.configuration.Grid;
 import cellsociety.configuration.PropertyReader;
-import cellsociety.model.GameOfLife.GameOfLifeCell;
-import cellsociety.model.GameOfLife.GameOfLifeStates;
+import cellsociety.model.Cells.GameOfLife.GameOfLifeCell;
+import cellsociety.model.Cells.GameOfLife.GameOfLifeStates;
 import org.junit.jupiter.api.Test;
 
 class GameOfLifeTest {
@@ -15,7 +15,7 @@ class GameOfLifeTest {
     PropertyReader reader = new PropertyReader("property_lists/GameOfLife/square.properties");
     Grid grid = reader.gridFromPropertyFile();
     int numberOfLiveNeighbors = grid.getMyCells().get(0).get(0).getMyNeighbors()
-        .getNumberOfNeighborsWithState(GameOfLifeStates.ALIVE, false);
+        .getNeighborsWithState(GameOfLifeStates.ALIVE).size();
     assertEquals(3, numberOfLiveNeighbors);
   }
 
@@ -24,7 +24,7 @@ class GameOfLifeTest {
     PropertyReader reader = new PropertyReader("property_lists/GameOfLife/boat.properties");
     Grid grid = reader.gridFromPropertyFile();
     int numberOfLiveNeighbors = grid.getMyCells().get(1).get(1).getMyNeighbors()
-        .getNumberOfNeighborsWithState(GameOfLifeStates.ALIVE, false);
+        .getNeighborsWithState(GameOfLifeStates.ALIVE).size();
     assertEquals(2, numberOfLiveNeighbors);
   }
 
@@ -33,7 +33,7 @@ class GameOfLifeTest {
     PropertyReader reader = new PropertyReader("property_lists/GameOfLife/boat.properties");
     Grid grid = reader.gridFromPropertyFile();
     int numberOfLiveNeighbors = grid.getMyCells().get(2).get(2).getMyNeighbors()
-        .getNumberOfNeighborsWithState(GameOfLifeStates.ALIVE, false);
+        .getNeighborsWithState(GameOfLifeStates.ALIVE).size();
     assertEquals(5, numberOfLiveNeighbors);
   }
 
@@ -43,7 +43,7 @@ class GameOfLifeTest {
     Grid grid = reader.gridFromPropertyFile();
     assertEquals(GameOfLifeStates.ALIVE, grid.getMyCells().get(0).get(0).getMyState()); // assert alive
     assertEquals(2, grid.getMyCells().get(0).get(0).getMyNeighbors()
-        .getNumberOfNeighborsWithState(GameOfLifeStates.ALIVE, false)); // assert 2 neighbors
+        .getNeighborsWithState(GameOfLifeStates.ALIVE).size()); // assert 2 neighbors
     grid.updateNewStates();
     assertEquals(GameOfLifeStates.ALIVE, grid.getMyCells().get(0).get(0).getMyState()); // assert alive
   }
@@ -54,7 +54,7 @@ class GameOfLifeTest {
     Grid grid = reader.gridFromPropertyFile();
     assertEquals(GameOfLifeStates.ALIVE, grid.getMyCells().get(2).get(1).getMyState()); // assert alive
     assertEquals(3, grid.getMyCells().get(2).get(1).getMyNeighbors()
-          .getNumberOfNeighborsWithState(GameOfLifeStates.ALIVE, false)); // assert 3 neighbors
+          .getNeighborsWithState(GameOfLifeStates.ALIVE).size()); // assert 3 neighbors
     grid.updateNewStates();
     assertEquals(GameOfLifeStates.ALIVE, grid.getMyCells().get(2).get(1).getMyState());
   }
@@ -65,7 +65,7 @@ class GameOfLifeTest {
     Grid grid = reader.gridFromPropertyFile();
     assertEquals(GameOfLifeStates.DEAD, grid.getMyCells().get(2).get(1).getMyState()); // assert dead
     assertEquals(3, grid.getMyCells().get(2).get(1).getMyNeighbors()
-        .getNumberOfNeighborsWithState(GameOfLifeStates.ALIVE, false)); // assert 3 neighbors
+        .getNeighborsWithState(GameOfLifeStates.ALIVE).size()); // assert 3 neighbors
     grid.updateNewStates();
     assertEquals(GameOfLifeStates.ALIVE, grid.getMyCells().get(2).get(1).getMyState());
   }
@@ -76,7 +76,7 @@ class GameOfLifeTest {
     Grid grid = reader.gridFromPropertyFile();
     assertEquals(GameOfLifeStates.ALIVE, grid.getMyCells().get(2).get(2).getMyState()); // assert alive
     assertTrue(grid.getMyCells().get(2).get(2).getMyNeighbors()
-        .getNumberOfNeighborsWithState(GameOfLifeStates.ALIVE, false) > 3); // assert overpopulation
+        .getNeighborsWithState(GameOfLifeStates.ALIVE).size() > 3); // assert overpopulation
     grid.updateNewStates();
     assertEquals(GameOfLifeStates.DEAD, grid.getMyCells().get(2).get(2).getMyState());
   }
@@ -87,7 +87,7 @@ class GameOfLifeTest {
     Grid grid = reader.gridFromPropertyFile();
     assertEquals(GameOfLifeStates.ALIVE, grid.getMyCells().get(0).get(0).getMyState()); // assert alive
     assertTrue(grid.getMyCells().get(0).get(0).getMyNeighbors()
-        .getNumberOfNeighborsWithState(GameOfLifeStates.ALIVE, false) < 2); // assert underpopulation
+        .getNeighborsWithState(GameOfLifeStates.ALIVE).size() < 2); // assert underpopulation
     grid.updateNewStates();
     assertEquals(GameOfLifeStates.DEAD, grid.getMyCells().get(0).get(0).getMyState());
   }

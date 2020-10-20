@@ -1,6 +1,6 @@
 package cellsociety.configuration;
 
-import cellsociety.model.Cell;
+import cellsociety.model.Cells.Cell;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import java.io.FileReader;
@@ -16,12 +16,9 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class TotalLocationGrid extends Grid{
-  private Random random;
-  private int total;
+  private static final Random random = new Random(1);
   public TotalLocationGrid(Path cellFile, String simulationName, Map optional) throws ConfigurationException {
     super(cellFile, simulationName, optional);
-    total = 0;
-    random = new Random(1);
   }
 
   @Override
@@ -43,7 +40,6 @@ public class TotalLocationGrid extends Grid{
       String[] headerRow = iterator.next();
       rows = (int) removeHiddenChars(headerRow[0]);
       cols = (int) removeHiddenChars(headerRow[1]);
-      total = (int) removeHiddenChars(headerRow[2]);
     } else {
       throw new ConfigurationException(String.format(resourceBundle.getString("otherSimulationCreationErrors"), "no header row"));
     }
@@ -66,18 +62,20 @@ public class TotalLocationGrid extends Grid{
       Method method = modelStates.getMethod("values");
       Enum<?>[] states = ((Enum<?>[]) method.invoke(null));
       Enum<?> state = states[random.nextInt(states.length)];
-      if(usedCells.get() >= total){
+      if(usedCells.get() >= Integer.parseInt((String) optional.get("totalNumber"))){
         state = states[0];
+      }
+      if(state != states[0]){
+        usedCells.incrementAndGet();
       }
 
       // create a new cell from simulation name with defined state
       Class<?> simulation = Class.forName(modelPackagePath + simulationName + "Cell");
-      Constructor<?> simConstructor = simulation.getConstructor(Enum.class);
+      Constructor<?> simConstructor = simulation.getConstructor(Enum.class, Map.class);
       ret = (Cell) simConstructor.newInstance(state, optional);
     } catch (ClassNotFoundException e) {
       throw new ConfigurationException(String.format(resourceBundle.getString("simulationNotSupported"), simulationName));
     } catch (Exception e) {
-      e.printStackTrace();
       throw new ConfigurationException(String.format(resourceBundle.getString("otherSimulationCreationErrors"), e.getMessage()));
     }
     return ret;

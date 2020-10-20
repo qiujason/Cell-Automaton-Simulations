@@ -4,8 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import cellsociety.configuration.Grid;
 import cellsociety.configuration.PropertyReader;
-import cellsociety.model.Segregation.SegregationCell;
-import cellsociety.model.Segregation.SegregationStates;
+import cellsociety.model.Cells.Cell;
+import cellsociety.model.Cells.Segregation.SegregationCell;
+import cellsociety.model.Cells.Segregation.SegregationStates;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
