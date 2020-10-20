@@ -75,13 +75,21 @@ Errors Handled:
 Assumptions or Simplifications:
 
 * All data to configure a simulation will be passed in by properties files and a corresponding csv file
+* Data (properties and csv files) must be in the specified folder corresponding to their simulation
+* Each properties file includes the states associated with the given simulation and a color or photo associated with each state
     
 Interesting data files:
 
+* The Checkerboard segregation simulation is one of the more complex simulations that has numerous different end states based on probabilities.
+
 Known Bugs:
+
+* One small bug is that after changing languages, cells no longer dynamically resize with the window when it's changed (likely something related to the scene being reloaded).
 
 Extra credit:
 
 
 ### Impressions
+
+Overall, this was a difficult assignment that
 
