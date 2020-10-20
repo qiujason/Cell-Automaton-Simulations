@@ -127,14 +127,14 @@ Value v = thing.getValue();
 v.update(13);
 ```
 
-* Move to the next generation: update all cells in a simulation from their current state to their next state
+* Move to the next generation: update all cells in a visualization from their current state to their next state
 ```java
 Something thing = new Something();
 Value v = thing.getValue();
 v.update(13);
 ```
 
-* Switch simulations: load a new simulation from a data file, replacing the current running simulation with the newly loaded one
+* Switch simulations: load a new visualization from a data file, replacing the current running visualization with the newly loaded one
 ```java
 Something thing = new Something();
 Value v = thing.getValue();

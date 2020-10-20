@@ -6,8 +6,8 @@
 ## Design Overview
 
 Our main classes will include a `Simulation`, `Cell`, `Grid`, and `Neighborhood` classes. `Simulation`
-will be used to visualize the actual simulation.  `Cell` serve as an object for each cell in the
-simulation. `Grid` will configure the locations of cells by storing their locations in a 2D array and
+will be used to visualize the actual visualization.  `Cell` serve as an object for each cell in the
+visualization. `Grid` will configure the locations of cells by storing their locations in a 2D array and
 updating itself on each frame. `Neighborhood` will be used to assess the neighbors of a cell and update
 the cell based on its neighbors.
 
@@ -91,7 +91,7 @@ public class Neighborhood {
    * Probably one of the major challenges we'll face as the project progresses will be dealing with different
     sets of rules for different games and different types of neighborhoods.  While the basic implementation
     of the GUI and Cell objects will remain the same, the actual interactions could be very different
-    from simulation to simulation.
+    from visualization to visualization.
  
    * We also needed to decide whether to work with 2D arrays or lists of lists for the implementation of the grid.
    We decided to go with a list of list because it allows the possibility to expand the grid size if that ever
