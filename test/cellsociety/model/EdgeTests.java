@@ -49,9 +49,9 @@ public class EdgeTests {
   void getToroidalCorner() {
     PropertyReader reader = new PropertyReader("property_lists/Percolation/Diagonal.properties");
     Grid grid = reader.gridFromPropertyFile();
-    assertEquals(grid.getMyCells().get(1).get(4), grid.getMyCells().get(2).get(0).getMyNeighbors().getMyCells()[0][0]);
-    assertEquals(grid.getMyCells().get(2).get(4), grid.getMyCells().get(2).get(0).getMyNeighbors().getMyCells()[1][0]);
-    assertEquals(grid.getMyCells().get(3).get(4), grid.getMyCells().get(2).get(0).getMyNeighbors().getMyCells()[2][0]);
+    assertEquals(grid.getMyCells().get(4).get(4), grid.getMyCells().get(0).get(0).getMyNeighbors().getMyCells()[0][0]);
+    assertEquals(grid.getMyCells().get(0).get(4), grid.getMyCells().get(0).get(0).getMyNeighbors().getMyCells()[1][0]);
+    assertEquals(grid.getMyCells().get(4).get(0), grid.getMyCells().get(0).get(0).getMyNeighbors().getMyCells()[0][1]);
   }
 
   @Test
@@ -67,9 +67,9 @@ public class EdgeTests {
   void getInfiniteVerticalCorner() {
     PropertyReader reader = new PropertyReader("property_lists/Percolation/Diagonal.properties");
     Grid grid = reader.gridFromPropertyFile();
-    assertEquals(grid.getMyCells().get(1).get(4), grid.getMyCells().get(2).get(0).getMyNeighbors().getMyCells()[0][0]);
+    assertEquals(grid.getMyCells().get(0).get(0), grid.getMyCells().get(2).get(0).getMyNeighbors().getMyCells()[0][0]);
     assertEquals(grid.getMyCells().get(2).get(4), grid.getMyCells().get(2).get(0).getMyNeighbors().getMyCells()[1][0]);
-    assertEquals(grid.getMyCells().get(3).get(4), grid.getMyCells().get(2).get(0).getMyNeighbors().getMyCells()[2][0]);
+    assertEquals(grid.getMyCells().get(3).get(4), grid.getMyCells().get(2).get(0).getMyNeighbors().getMyCells()[0][1]);
   }
 
   @Test
@@ -85,9 +85,9 @@ public class EdgeTests {
   void getInfiniteHorizontalCorner() {
     PropertyReader reader = new PropertyReader("property_lists/GameOfLife/tub.properties");
     Grid grid = reader.gridFromPropertyFile();
-    assertEquals(grid.getMyCells().get(1).get(4), grid.getMyCells().get(2).get(0).getMyNeighbors().getMyCells()[0][0]);
-    assertEquals(grid.getMyCells().get(2).get(4), grid.getMyCells().get(2).get(0).getMyNeighbors().getMyCells()[1][0]);
-    assertEquals(grid.getMyCells().get(3).get(4), grid.getMyCells().get(2).get(0).getMyNeighbors().getMyCells()[2][0]);
+    assertEquals(grid.getMyCells().get(4).get(4), grid.getMyCells().get(0).get(0).getMyNeighbors().getMyCells()[0][0]);
+    assertEquals(grid.getMyCells().get(0).get(4), grid.getMyCells().get(0).get(0).getMyNeighbors().getMyCells()[1][0]);
+    assertEquals(grid.getMyCells().get(4).get(0), grid.getMyCells().get(0).get(0).getMyNeighbors().getMyCells()[0][1]);
   }
 
 }
