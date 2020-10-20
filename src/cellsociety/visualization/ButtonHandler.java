@@ -21,14 +21,14 @@ import javafx.scene.text.Text;
 public class ButtonHandler {
 
   private Timeline myAnimation;
-  private Simulation mySimulation;
+  private Visualization myVisualization;
   private ResourceBundle myLanguageResources;
   private List<Enum<?>> myStates;
   private Grid myGrid;
 
-  public ButtonHandler(Timeline animation, Simulation simulation, ResourceBundle languageResources) {
+  public ButtonHandler(Timeline animation, Visualization visualization, ResourceBundle languageResources) {
     myAnimation = animation;
-    mySimulation = simulation;
+    myVisualization = visualization;
     myLanguageResources = languageResources;
   }
 
@@ -47,7 +47,7 @@ public class ButtonHandler {
 
   public void step(PropertyReader propertyReader) {
     myGrid.updateNewStates();
-    mySimulation.visualizeGrid(myGrid, propertyReader);
+    myVisualization.visualizeGrid(myGrid, propertyReader);
   }
 
   public void speedUp(BorderPane root) {
@@ -80,29 +80,30 @@ public class ButtonHandler {
       propertyReader.setProperty(state.toString(), newColorOrPhoto);
       dialog.setContentText("");
     }
-    mySimulation.visualizeGrid(myGrid, propertyReader);
+    myVisualization.visualizeGrid(myGrid, propertyReader);
   }
 
   public void setStyle(ComboBox<String> styles) {
-    mySimulation.getScene().getStylesheets().clear();
-    mySimulation.getScene().getStylesheets().add(getClass().getResource("/" + Simulation.STYLESHEET_FOLDER + styles.getValue() + ".css").toExternalForm());
+    myVisualization.getScene().getStylesheets().clear();
+    myVisualization.getScene().getStylesheets().add(getClass().getResource("/" + Visualization.STYLESHEET_FOLDER + styles.getValue() + ".css").toExternalForm());
   }
 
   protected void setLanguage(ComboBox<String> languages) {
-    Scene scene = mySimulation.setupScene(mySimulation.getScene().getWidth(), mySimulation.getScene().getHeight(), languages.getValue());
-    mySimulation.setScene(scene);
+    Scene scene = myVisualization
+        .setupScene(myVisualization.getScene().getWidth(), myVisualization.getScene().getHeight(), languages.getValue());
+    myVisualization.setScene(scene);
   }
 
   protected void chooseSimulation(ComboBox<String> simulations) {
     String pathName =
-        Simulation.PROPERTY_LISTS + "/" + simulations.getValue().split(" ")[2] + "/" + simulations
+        Visualization.PROPERTY_LISTS + "/" + simulations.getValue().split(" ")[2] + "/" + simulations
             .getValue().split(" ")[0] + ".properties";
     PropertyReader propertyReader = new PropertyReader(pathName);
     myStates = new ArrayList<>();
 
     myGrid = propertyReader.gridFromPropertyFile();
     getSimulationStates(propertyReader);
-    mySimulation.visualizeGrid(myGrid, propertyReader);
+    myVisualization.visualizeGrid(myGrid, propertyReader);
   }
 
   private void getSimulationStates(PropertyReader propertyReader) {
@@ -129,12 +130,12 @@ public class ButtonHandler {
     for(int i = 0; i < myStates.size() - 1; i++){
       if(myCell.getMyState().equals(myStates.get(0))){
         myCell.setMyState(myStates.get(i+1));
-        mySimulation.visualizeGrid(myGrid, propertyReader);
+        myVisualization.visualizeGrid(myGrid, propertyReader);
         return;
       }
     }
     myCell.setMyState(myStates.get(0));
-    mySimulation.visualizeGrid(myGrid, propertyReader);
+    myVisualization.visualizeGrid(myGrid, propertyReader);
   }
 
   // TODO: Generalize this method further
@@ -165,8 +166,8 @@ public class ButtonHandler {
 
     String simType = propertyReader.getProperty("simulationType");
 
-    myGrid.saveCurrentGrid("data/" + Simulation.INITIAL_STATES + "/" + simType + "/" + filename + ".csv");
-    File file = new File("data/" + Simulation.PROPERTY_LISTS + "/" + simType + "/" + filename + ".properties");
+    myGrid.saveCurrentGrid("data/" + Visualization.INITIAL_STATES + "/" + simType + "/" + filename + ".csv");
+    File file = new File("data/" + Visualization.PROPERTY_LISTS + "/" + simType + "/" + filename + ".properties");
     try {
       FileWriter outputFile = new FileWriter(file, false);
       Properties savedProperty = new Properties();

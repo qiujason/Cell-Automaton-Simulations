@@ -3,9 +3,8 @@ package cellsociety;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import cellsociety.visualization.Simulation;
+import cellsociety.visualization.Visualization;
 import java.util.ResourceBundle;
-import java.util.concurrent.TimeUnit;
 import javafx.animation.Animation.Status;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
@@ -20,7 +19,7 @@ import org.junit.jupiter.api.Test;
 
 public class VisualizationTest extends DukeApplicationTest {
 
-  private Simulation mySimulation;
+  private Visualization myVisualization;
   private Scene myScene;
   private Timeline myAnimation;
   private ResourceBundle myResources;
@@ -41,15 +40,15 @@ public class VisualizationTest extends DukeApplicationTest {
 
   @Override
   public void start(Stage stage) {
-    mySimulation = new Simulation();
-    myResources = ResourceBundle.getBundle(Simulation.LANGUAGE_FOLDER + "\\." + Simulation.DEFAULT_LANGUAGE);
+    myVisualization = new Visualization();
+    myResources = ResourceBundle.getBundle(Visualization.LANGUAGE_FOLDER + "\\." + Visualization.DEFAULT_LANGUAGE);
     try {
-      mySimulation.start(stage);
+      myVisualization.start(stage);
     } catch (Exception e) {
       e.printStackTrace();
     }
-    myScene = mySimulation.getScene();
-    myAnimation = mySimulation.getAnimation();
+    myScene = myVisualization.getScene();
+    myAnimation = myVisualization.getAnimation();
 
     myRestartButton = lookup("#RestartButton").query();
     myPlayButton = lookup("#PlayButton").query();

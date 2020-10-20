@@ -1,4 +1,4 @@
-simulation
+visualization
 ====
 
 This project implements a cellular automata simulator.

@@ -4,16 +4,11 @@ import cellsociety.configuration.Grid;
 import cellsociety.configuration.PropertyReader;
 import cellsociety.model.Cells.Cell;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.Properties;
 import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -21,11 +16,9 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -33,11 +26,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class Simulation extends Application {
+public class Visualization extends Application {
 
   public static final String STYLESHEET_FOLDER = "visualization_resources/stylesheets/";
   public static final String INITIAL_STATES = "initial_states";
@@ -130,23 +122,7 @@ public class Simulation extends Application {
     makeButton("SetColors", event -> myButtonHandler.setColorsOrPhotos(myPropertyReader, COLORS), buttonPane);
     makeButton("SetPhotos", event -> myButtonHandler.setColorsOrPhotos(myPropertyReader, PHOTOS), buttonPane);
     myRoot.setBottom(buttonPane);
-//    ResourceBundle buttons = ResourceBundle.getBundle(BUTTON_PROPERTIES);
-//    for(String button : buttons.keySet()){
-//      EventHandler<ActionEvent> me = event -> {
-//        try {
-//          this.getClass().getMethod(buttons.getString(button));
-//        } catch (NoSuchMethodException e) {
-//          e.printStackTrace();
-//        }
-//      };
-//      makeButton(button, event -> {
-//        try {
-//          this.getClass().getMethod(buttons.getString(button));
-//        } catch (NoSuchMethodException e) {
-//          e.printStackTrace();
-//        }
-//      }, buttonPane);
-//    }
+
     HBox comboBoxPane = new HBox();
 
     initializeSimulationOptions();
@@ -174,7 +150,7 @@ public class Simulation extends Application {
     Path simulations = null;
     try {
       simulations = Paths.get(
-          Objects.requireNonNull(Simulation.class.getClassLoader().getResource(PROPERTY_LISTS))
+          Objects.requireNonNull(Visualization.class.getClassLoader().getResource(PROPERTY_LISTS))
               .toURI());
     } catch (URISyntaxException e) {
       e.printStackTrace();
@@ -199,7 +175,7 @@ public class Simulation extends Application {
     Path styles = null;
     try {
       styles = Paths.get(
-          Objects.requireNonNull(Simulation.class.getClassLoader().getResource(STYLESHEET_FOLDER)).toURI());
+          Objects.requireNonNull(Visualization.class.getClassLoader().getResource(STYLESHEET_FOLDER)).toURI());
     } catch (URISyntaxException e) {
       e.printStackTrace();
     }
@@ -216,7 +192,7 @@ public class Simulation extends Application {
     Path languages = null;
     try {
       languages = Paths.get(
-          Objects.requireNonNull(Simulation.class.getClassLoader().getResource(LANGUAGE_FOLDER)).toURI());
+          Objects.requireNonNull(Visualization.class.getClassLoader().getResource(LANGUAGE_FOLDER)).toURI());
     } catch (URISyntaxException e) {
       e.printStackTrace();
     }
@@ -234,95 +210,6 @@ public class Simulation extends Application {
     newButton.getStyleClass().add("button");
     navigationPane.getChildren().add(newButton);
   }
-
-//  public void restart() {
-//    myAnimation.stop();
-//    chooseSimulation();
-//  }
-//
-//  public void play() {
-//    myAnimation.play();
-//  }
-//
-//  public void pause() {
-//    myAnimation.pause();
-//  }
-//
-//  public void step() {
-//    myGrid.updateNewStates();
-//    visualizeGrid();
-//  }
-//
-//  public void speedUp() {
-//    myAnimation.setRate(myAnimation.getRate() * 2);
-//    myRoot.setRight(new Text("x" + myAnimation.getRate()));
-//    if (myAnimation.getRate() == 1) {
-//      myRoot.setRight(null);
-//    }
-//  }
-//
-//  public void slowDown() {
-//    myAnimation.setRate(myAnimation.getRate() / 2);
-//    myRoot.setRight(new Text("x" + myAnimation.getRate()));
-//    if (myAnimation.getRate() == 1) {
-//      myRoot.setRight(null);
-//    }
-//  }
-//
-//  public void setColors() {
-//    TextInputDialog dialog = new TextInputDialog();
-//    dialog.setTitle(myLanguageResources.getString("SetColors"));
-//    dialog.setHeaderText(myLanguageResources.getString("SetColors"));
-//    String newColor = null;
-//    for(Enum<?> state : myStates){
-//      dialog.setContentText(myLanguageResources.getString("SetColorsDialogue") + state.toString());
-//      Optional<String> enteredColor = dialog.showAndWait();
-//      if (enteredColor.isPresent()) {
-//        newColor = enteredColor.get();
-//      }
-//      myPropertyReader.setProperty(state.toString(), newColor);
-//      dialog.setContentText("");
-//    }
-//    visualizeGrid();
-//  }
-//
-//  public void setPhotos() {
-//    TextInputDialog dialog = new TextInputDialog();
-//    dialog.setTitle(myLanguageResources.getString("SetPhotos"));
-//    dialog.setHeaderText(myLanguageResources.getString("SetPhotos"));
-//    String newColor = null;
-//    for(Enum<?> state : myStates){
-//      dialog.setContentText(myLanguageResources.getString("SetPhotosDialogue") + state.toString());
-//      Optional<String> enteredPhoto = dialog.showAndWait();
-//      if (enteredPhoto.isPresent()) {
-//        newColor = enteredPhoto.get();
-//      }
-//      myPropertyReader.setProperty(state.toString(), newColor);
-//    }
-//    visualizeGrid();
-//  }
-//
-//  public void setStyle() {
-//    myScene.getStylesheets().clear();
-//    myScene.getStylesheets().add(getClass().getResource("/" + STYLESHEET_FOLDER + myStyles.getValue() + ".css").toExternalForm());
-//  }
-//
-//  private void setLanguage() {
-//    myScene = setupScene(INITIAL_WIDTH, INITIAL_HEIGHT, myLanguages.getValue());
-//    myStage.setScene(myScene);
-//  }
-//
-//  private void chooseSimulation() {
-//    String pathName =
-//        PROPERTY_LISTS + "/" + mySimulations.getValue().split(" ")[2] + "/" + mySimulations
-//            .getValue().split(" ")[0] + ".properties";
-//    myPropertyReader = new PropertyReader(pathName);
-//    myStates = new ArrayList<>();
-//
-//    myGrid = myPropertyReader.gridFromPropertyFile();
-//    getSimulationStates();
-//    visualizeGrid();
-//  }
 
   protected void visualizeGrid(Grid grid, PropertyReader propertyReader) {
     myPropertyReader = propertyReader;
