@@ -75,7 +75,7 @@ public abstract class Grid {
   private void establishNeighbors() {
     for (List<Cell> cells : myCells) {
       for (Cell cell : cells) {
-        cell.setMyNeighbors(this, (String)optional.get("neighborPolicy"));
+        cell.setMyNeighbors(this, (String)optional.get("neighborPolicy"), (String)optional.get("edgePolicy"));
       }
     }
   }

@@ -2,6 +2,7 @@ package cellsociety.model.Cells;
 
 import cellsociety.configuration.ConfigurationException;
 import cellsociety.configuration.Grid;
+import cellsociety.model.Neighborhoods.CompleteNeighborhood;
 import cellsociety.model.Neighborhoods.Neighborhood;
 import java.lang.reflect.Constructor;
 import java.util.ResourceBundle;
@@ -10,7 +11,7 @@ public abstract class Cell {
 
   private static final String NEIGHBORHOODS_PATH = "cellsociety.model.Neighborhoods.";
   private static final ResourceBundle modelErrorsResourceBundle = ResourceBundle
-      .getBundle(Cell.class.getPackageName() + ".ModelErrors");
+      .getBundle(Cell.class.getPackageName() + ".resources.ModelErrors");
 
   protected Enum<?> myState;
   protected Enum<?> nextState;
@@ -34,12 +35,12 @@ public abstract class Cell {
 
   public void setMyState(Enum<?> newState) { myState = newState; }
 
-  public void setMyNeighbors(Grid grid, String neighborhoodPolicy) {
+  public void setMyNeighbors(Grid grid, String neighborhoodPolicy, String edgePolicy) {
     try {
       Class<?> neighborhood = Class
           .forName(NEIGHBORHOODS_PATH + neighborhoodPolicy + "Neighborhood");
-      Constructor<?> neighborConstructor = neighborhood.getConstructor(Cell.class, Grid.class);
-      myNeighbors = (Neighborhood) neighborConstructor.newInstance(this, grid);
+      Constructor<?> neighborConstructor = neighborhood.getConstructor(Cell.class, Grid.class, String.class);
+      myNeighbors = (Neighborhood) neighborConstructor.newInstance(this, grid, edgePolicy);
     } catch (ClassNotFoundException e) {
       throw new ConfigurationException(String.format(modelErrorsResourceBundle.getString("unrecognizedNeighborhoodPolicy"), neighborhoodPolicy));
     } catch (Exception e) {
