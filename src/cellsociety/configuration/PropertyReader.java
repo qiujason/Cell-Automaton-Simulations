@@ -1,6 +1,5 @@
 package cellsociety.configuration;
 
-import cellsociety.model.Neighborhoods.CompleteNeighborhood;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,6 +13,19 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 import javafx.util.Pair;
 
+/**
+ * This class is designed to analyze simulation properties files and generate the appropriate grid
+ * for the simulation to work on and the front-end visualization to display.
+ *
+ * If the front-end passes in a faulty String path, the data in the properties file isn't properly
+ * formatted or has missing required properties, the constructor will throw a Configuration Exception.
+ *
+ * Because the class generates grids, it inherently relies on the Grid abstract class and its subclasses.
+ *
+ * Example: PropertyReader reader = new PropertyReader("property_lists/GameOfLife/square.properties");
+ *
+ * @author Hayden Lau
+ * */
 public class PropertyReader {
 
   private final Pair[] defaultOptionalKeys = new Pair[] {
@@ -30,7 +42,6 @@ public class PropertyReader {
   private final String[] REQUIRED_KEYS = new String[] {
       "simulationType", "simulationTitle", "configAuthor", "description", "csvFile"
   };
-  private final String CONFIGURATION_PATH = "cellsociety.configuration.";
 
   private final ResourceBundle configurationErrorsResourceBundle = ResourceBundle
       .getBundle(PropertyReader.class.getPackageName() + ".resources.ConfigurationErrors");
@@ -40,6 +51,10 @@ public class PropertyReader {
   private final Properties properties;
   private final String file;
 
+  /**
+   * @param propertyFile - string corresponding to the file path for the properties file
+   * @throws ConfigurationException if the file is missing required keys, has a bad simulation format, or the file doesn't exist
+   */
   public PropertyReader(String propertyFile) throws ConfigurationException {
     file = propertyFile;
     try {
@@ -65,7 +80,14 @@ public class PropertyReader {
     }
   }
 
-  public String getProperty(String key) {
+  /**
+   * gets a property value given a key string
+   *
+   * @param key key pertaining to the property requested
+   * @return value pertaining to the property key
+   * @throws ConfigurationException if the property pertaining to the key doesn't exist
+   */
+  public String getProperty(String key) throws ConfigurationException {
     String property = properties.getProperty(key);
     if (property == null) {
       throw new ConfigurationException(
@@ -74,7 +96,14 @@ public class PropertyReader {
     return property;
   }
 
-  public void setProperty(String key, String value) {
+  /**
+   * allows for the simulation to write property values into the properties file
+   *
+   * @param key property key to be written to
+   * @param value value to be stored
+   * @throws ConfigurationException if there was an error writing to the file
+   */
+  public void setProperty(String key, String value) throws ConfigurationException {
     properties.setProperty(key, value);
     try {
       properties.store(new FileOutputStream(this.getClass().getResource("/" + file).getPath()),null);
@@ -84,6 +113,13 @@ public class PropertyReader {
     }
   }
 
+  /**
+   * generates a Map of property keys and values to be passed into grid constructors for the different types of simulations
+   *
+   * @param simulationType type of simulation to generate a HashMap of optional keys for to pass into the simulation
+   * @return HashMap of optional keys pertaining to the simulation type and their values
+   * @throws ConfigurationException if a necessary optional key is missing from the properties
+   */
   public HashMap<String, Object> optionalKeyMap(String simulationType) throws ConfigurationException{
     HashMap<String, Object> optionalKeyMap = new HashMap<>();
     String optionalKeysForSimulation = optionalKeyResourceBundle.getString(simulationType);
@@ -98,6 +134,12 @@ public class PropertyReader {
     return optionalKeyMap;
   }
 
+  /**
+   * based on the simulation type and the initial configuration type, this method creates a grid using reflection
+   *
+   * @return appropriate Grid based on the simulation Type, and initial configuration type
+   * @throws ConfigurationException if the CSV file is bad, the simulation requested isn't supported, or if there was an error while generating the grid
+   */
   public Grid gridFromPropertyFile() throws ConfigurationException {
     Path path;
     Grid grid;
@@ -115,6 +157,7 @@ public class PropertyReader {
     String initialConfiguration = properties.getProperty("initialStatePolicy");
 
     try {
+      String CONFIGURATION_PATH = "cellsociety.configuration.";
       Class<?> configurationGrid = Class.forName(CONFIGURATION_PATH + initialConfiguration + "Grid");
       Constructor<?> gridConstructor = configurationGrid.getConstructor(Path.class, String.class, Map.class);
       grid = (Grid) gridConstructor.newInstance(path, simulationName, optionalKeyMap(simulationName));
