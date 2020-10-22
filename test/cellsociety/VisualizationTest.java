@@ -43,7 +43,7 @@ public class VisualizationTest extends DukeApplicationTest {
   public void start(Stage stage) {
     myVisualization = new Visualization();
     myResources = ResourceBundle
-        .getBundle(Visualization.LANGUAGE_FOLDER + "\\." + Visualization.DEFAULT_LANGUAGE);
+        .getBundle(Visualization.class.getPackageName() + Visualization.LANGUAGE_FOLDER + Visualization.DEFAULT_LANGUAGE);
     try {
       myVisualization.start(stage);
     } catch (Exception e) {
