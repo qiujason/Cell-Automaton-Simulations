@@ -16,7 +16,7 @@ import java.util.Random;
 
 /**
  * This class is designed to develop a Grid of Cells based on the size of the grid stored in the csv
- * file and random probability.
+ * file and random probability for each cell.
  *
  * Exceptions can be thrown if the file passed into the constructor has faulty information, the data
  * in the csv file doesn't match the proper format, or if the simulation requested isn't supported.
