@@ -4,7 +4,6 @@ import cellsociety.model.Cells.Cell;
 import com.opencsv.CSVWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -12,6 +11,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+/**
+ * this abstract class serves as the basis for the specific types of grid models and houses common
+ * methods and protected variables such as the list of cells
+ *
+ * relies on its sub classes and the PropertyReader class to pass the necessary values in
+ *
+ * @author Hayden Lau
+ */
 public abstract class Grid {
 
   protected static final String MODEL_PATH = "cellsociety.model.Cells.";
@@ -21,6 +28,16 @@ public abstract class Grid {
   protected final String simulationName;
   protected final Map optional;
 
+  /**
+   * serves as the general constructor that gets utilized by the subclasses
+   *
+   * creates the list of list of cells and stores the necessary information for the simulation
+   *
+   * @param cellFile path of csv file pertaining to the grid being created
+   * @param simulationName simulation type to specify for cell types
+   * @param optional map of optional keys and their values
+   * @throws ConfigurationException if there is an error in building the array of cells
+   */
   public Grid(Path cellFile, String simulationName, Map optional) throws ConfigurationException {
     this.simulationName = simulationName;
     this.optional = optional;
@@ -31,8 +48,21 @@ public abstract class Grid {
     }
   }
 
+  /**
+   * builds out the grid of cells based on the type of grid implemented by its sub classes
+   *
+   * @param cellFile the path of csv file to create the simulation from
+   * @return list of list of cells that represent the grid
+   * @throws ConfigurationException if there is an error while building the grid
+   */
   abstract List<List<Cell>> build2DArray(Path cellFile) throws ConfigurationException;
 
+  /**
+   * saves the current grid format into the filePath parameter
+   *
+   * @param filePath csv file to save the current grid configuration to
+   * @throws ConfigurationException throws an exception if there is an error writing to the file
+   */
   public void saveCurrentGrid(String filePath) throws ConfigurationException {
     File file = new File(filePath);
     try {
