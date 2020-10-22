@@ -17,7 +17,7 @@ import java.util.ResourceBundle;
  *
  * relies on its sub classes and the PropertyReader class to pass the necessary values in
  *
- * @author Hayden Lau
+ * @author Hayden Lau and Jason Qiu
  */
 public abstract class Grid {
 
@@ -125,10 +125,18 @@ public abstract class Grid {
     }
   }
 
+  /**
+   * getter method for the cells
+   *
+   * @return the list of list of cells
+   */
   public List<List<Cell>> getMyCells() {
     return myCells;
   }
 
+  /**
+   * for each cell determines the next state and then updates the state
+   */
   public void updateNewStates() {
     myCells.forEach(cells -> cells.forEach(Cell::setNewState));
     myCells.forEach(cells -> cells.forEach(Cell::updateCell));
