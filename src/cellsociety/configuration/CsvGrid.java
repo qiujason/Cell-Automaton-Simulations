@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *This class is designed to develop a Grid of Cells based on the data stored in a CSV file.
+ * This class is designed to develop a Grid of Cells based on the data stored in a CSV file.
  *
  * Exceptions can be thrown if the file passed into the constructor has faulty information, the data
  * in the csv file doesn't match the proper format, or if the simulation requested isn't supported.

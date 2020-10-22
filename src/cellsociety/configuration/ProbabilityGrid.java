@@ -14,12 +14,43 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+/**
+ * This class is designed to develop a Grid of Cells based on the size of the grid stored in the csv
+ * file and random probability.
+ *
+ * Exceptions can be thrown if the file passed into the constructor has faulty information, the data
+ * in the csv file doesn't match the proper format, or if the simulation requested isn't supported.
+ *
+ * This class relies on its parent class, Grid, as well as the PropertyReader class to pass in proper data.
+ *
+ * Grid grid = new ProbabilityGrid(Path.of("test/test_data/na.csv"), "NA", optionalKeyMap);
+ *
+ * @author Hayden Lau
+ */
 public class ProbabilityGrid extends Grid{
   private static final Random random = new Random(1);
+
+  /**
+   * this constructor serves to call the Grid constructor and generates a CsvGrid of the simulation requested
+   * with the data passed in through the parameters
+   *
+   * @param cellFile path of the csv file containing the data
+   * @param simulationName name of the type of the simulation to be created
+   * @param optional map containing the optional keys and values necessary to generate the simulation
+   * @throws ConfigurationException
+   */
   public ProbabilityGrid(Path cellFile, String simulationName, Map optional) throws ConfigurationException {
     super(cellFile, simulationName, optional);
   }
 
+  /**
+   * builds out a list of list of cells that represent the graph based on the csv file's header row and a probability
+   * passed in through the optional key map stored in the parent's instance variable
+   *
+   * @param cellFile the path of csv file to create the simulation from
+   * @return list of list of cells that represent the grid
+   * @throws ConfigurationException if there is an error while building the grid
+   */
   @Override
   List<List<Cell>> build2DArray(Path cellFile) throws ConfigurationException {
     List<List<Cell>> ret = new ArrayList<>();
