@@ -34,9 +34,10 @@ public class Visualization extends Application {
   public static final String STYLESHEET_FOLDER = "visualization_resources/stylesheets/";
   public static final String INITIAL_STATES = "initial_states";
   public static final String PROPERTY_LISTS = "property_lists";
-  public static final String LANGUAGE_FOLDER = "visualization_resources/languages";
-  public static final String DEFAULT_LANGUAGE = "english";
-  public static final String VISUALIZATION_ERRORS = "visualization_resources.VisualizationErrors";
+  public static final String LANGUAGE_FOLDER = ".resources.languages.";
+  public static final String LANGUAGE_FOLDER_DATA = "visualization_resources/languages_data";
+  public static final String DEFAULT_LANGUAGE = "English";
+  public static final String VISUALIZATION_ERRORS = ".resources.VisualizationErrors";
   public static final String HEADER = "Jack, Hayden, and Jason's Simulation";
   public static final double INITIAL_HEIGHT = 800;
   public static final double INITIAL_WIDTH = 800;
@@ -75,8 +76,9 @@ public class Visualization extends Application {
   }
 
   public Scene setupScene(double width, double height, String language) {
-    myLanguageResources = ResourceBundle.getBundle(LANGUAGE_FOLDER + "\\." + language);
-    myVisualizationErrors = ResourceBundle.getBundle(VISUALIZATION_ERRORS);
+    myLanguageResources =
+        ResourceBundle.getBundle(Visualization.class.getPackageName() + LANGUAGE_FOLDER + language);
+    myVisualizationErrors = ResourceBundle.getBundle(Visualization.class.getPackageName() + VISUALIZATION_ERRORS);
 
     myRoot = new BorderPane();
     myGridGroup = new Group();
@@ -205,7 +207,7 @@ public class Visualization extends Application {
     myLanguages.setId("SetLanguage");
     myLanguages.setOnAction(event -> myButtonHandler.setLanguage(myLanguages));
     myLanguages.setPromptText(myLanguageResources.getString("SetLanguage"));
-    getComboBoxValues(LANGUAGE_FOLDER, myLanguages);
+    getComboBoxValues(LANGUAGE_FOLDER_DATA, myLanguages);
   }
 
   private void getComboBoxValues(String stylesheetFolder, ComboBox<String> myBox) {
