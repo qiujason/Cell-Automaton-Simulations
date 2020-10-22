@@ -36,7 +36,7 @@ public class Visualization extends Application {
   public static final String PROPERTY_LISTS = "property_lists";
   public static final String LANGUAGE_FOLDER = ".resources.languages.";
   public static final String LANGUAGE_FOLDER_DATA = "visualization_resources/languages_data";
-  public static final String DEFAULT_LANGUAGE = "english";
+  public static final String DEFAULT_LANGUAGE = "English";
   public static final String VISUALIZATION_ERRORS = ".resources.VisualizationErrors";
   public static final String HEADER = "Jack, Hayden, and Jason's Simulation";
   public static final double INITIAL_HEIGHT = 800;
