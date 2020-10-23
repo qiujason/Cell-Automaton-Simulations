@@ -30,7 +30,8 @@ Jason Qiu - jq39
                                 new rules class and state class. Reflection will take care of the rest
                                 and instantiate the new simulation models via the name of the class
  
- * New Types of Grids - 
+ * New Types of Grids - new types of grids can be added as simply as deciding on an apt name, writing in the new build2DArray 
+ method and then having the intialConfigurationPolicy equal to that in a properties file
  
  * Additional Functional Buttons - To add a new button, the button would have to be added to each language
                                     properties file, the `initializeButton()` method, and have its associated
@@ -45,9 +46,12 @@ Jason Qiu - jq39
 
 #### Core Classes
 
- * PropertyReader - 
+ * PropertyReader - the property reader is the class that handles reading in the properties file and
+ generating the grid. It stores the properties in the files as well as optional keys. It also is the
+ class that generates the Grid based on the properties file.
  
- * Grid (CSV/Probability/TotalLocation) - 
+ * Grid (CSV/Probability/TotalLocation) - the Grid class is the core abstract class by which the grids
+ are instantiated wtihin the simulation. It stores the various cells in a list of lists.
   
  * Cell (GameOfLife/Percolation/RPS/Segregation/SpreadingFire/Wator) - the cell class is the core
  abstract class by which cells are instantiated within the simulation. They store the values and
