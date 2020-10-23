@@ -7,7 +7,7 @@ public class OrdinalNeighborhood extends Neighborhood {
 
   public OrdinalNeighborhood(Cell cell, Grid grid, String edgePolicy) {
     super(cell, grid, edgePolicy, 4);
-    setActiveNeighbors(new boolean[][] {
+    setActiveNeighbors(new boolean[][]{
         {true, false, true},
         {false, false, false},
         {true, false, true}

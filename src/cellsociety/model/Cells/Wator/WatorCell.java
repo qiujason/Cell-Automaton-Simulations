@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+/**
+ * Cell class representing the Wa-tor predator and prey simulation
+ * @author Jason Qiu
+ */
 public class WatorCell extends Cell {
 
   private static final Random random = new Random();
@@ -12,12 +16,21 @@ public class WatorCell extends Cell {
   private final double thresholdForBirth;
   private int turnsWithoutBirth;
 
+  /**
+   * instantiates a wator cell
+   *
+   * @param state    enum representing the initial state of the cell
+   * @param optional map containing the optional parameters of the simulation
+   */
   public WatorCell(Enum<?> state, Map optional) {
     super(state);
     this.thresholdForBirth = Double.parseDouble((String) optional.get("thresholdForBirth"));
     turnsWithoutBirth = 0;
   }
 
+  /**
+   * describes the rules for getting the next state of the cell
+   */
   @Override
   public void setNewState() {
     WatorCell nextCell = this;
@@ -39,10 +52,17 @@ public class WatorCell extends Cell {
     }
   }
 
+  /**
+   * for sharks: kills the cell (fish)
+   */
   protected void kill() {
     nextState = WatorStates.DEAD;
   }
 
+  /**
+   * returns a random neighbor that is empty
+   * @return WatorCell representing a random neighbor
+   */
   protected WatorCell getRandomAdjacentEmptyCell() {
     List<Cell> empty = myNeighbors.getNeighborsWithState(WatorStates.EMPTY);
     if (empty.size() > 0) {
@@ -100,6 +120,10 @@ public class WatorCell extends Cell {
     }
   }
 
+  /**
+   * testing purposes: sets a random seed for the Random class
+   * @param seed long representing the seed
+   */
   public static void setRandomSeed(long seed) {
     random.setSeed(seed);
   }

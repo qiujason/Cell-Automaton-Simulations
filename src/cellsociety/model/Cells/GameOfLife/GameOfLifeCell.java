@@ -11,7 +11,7 @@ public class GameOfLifeCell extends Cell {
 
   @Override
   public void setNewState() {
-    switch(myNeighbors.getNeighborsWithState(GameOfLifeStates.ALIVE).size()) {
+    switch (myNeighbors.getNeighborsWithState(GameOfLifeStates.ALIVE).size()) {
       case 2 -> {
         if (myState == GameOfLifeStates.ALIVE) {
           nextState = GameOfLifeStates.ALIVE;

@@ -5,7 +5,7 @@ package cellsociety.configuration;
  *
  * @author Hayden Lau
  */
-public class ConfigurationException extends RuntimeException{
+public class ConfigurationException extends RuntimeException {
 
   /**
    * exception for Configuration package

@@ -19,7 +19,8 @@ public abstract class Neighborhood {
   private final int neighborhoodSize;
   private boolean[][] activeNeighbors;
 
-  public Neighborhood(Cell cell, Grid grid, String edgePolicy, int neighborhoodSize) { // Builds a neighborhood for a given cell
+  public Neighborhood(Cell cell, Grid grid, String edgePolicy,
+      int neighborhoodSize) { // Builds a neighborhood for a given cell
     mainCell = cell;
     myCells = getMyCellsWithEdgePolicy(edgePolicy, grid.getMyCells());
     this.neighborhoodSize = neighborhoodSize;

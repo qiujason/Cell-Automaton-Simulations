@@ -7,7 +7,7 @@ public class CompleteNeighborhood extends Neighborhood {
 
   public CompleteNeighborhood(Cell cell, Grid grid, String edgePolicy) {
     super(cell, grid, edgePolicy, 8);
-    setActiveNeighbors(new boolean[][] {
+    setActiveNeighbors(new boolean[][]{
         {true, true, true},
         {true, false, true},
         {true, true, true}

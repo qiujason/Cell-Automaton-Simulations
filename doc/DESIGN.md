@@ -24,11 +24,16 @@ Jason Qiu - jq39
 
  * New Simulations - new simulations are very easy to add as they only require a csv file with a header 
                     denoting the grid rows and columns and number values denoting the initial states of 
-                    each cell.
+                    each cell. Additionally, a new properties file should be added which contains basic
+                    elements of the simulation (simulation type, title, author, description, csv file name,
+                    and optional parameters such as neighbor policy, edge policy, grid type, optional
+                    inputs, and color mappings).
 
  * New Types of Simulations - new types of simulations are very easy to add as they only require a 
                                 new rules class and state class. Reflection will take care of the rest
-                                and instantiate the new simulation models via the name of the class
+                                and instantiate the new simulation models via the name of the class.
+                                In the Opt ionalKey.properties file, the simulation type needs to be 
+                                added along with a list of optional keys it should expect.
  
  * New Types of Grids - new types of grids can be added as simply as deciding on an apt name, writing in the new build2DArray 
  method and then having the intialConfigurationPolicy equal to that in a properties file

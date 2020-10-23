@@ -101,7 +101,8 @@ public class Visualization extends Application {
   public Scene setupScene(double width, double height, String language) {
     myLanguageResources =
         ResourceBundle.getBundle(Visualization.class.getPackageName() + LANGUAGE_FOLDER + language);
-    myVisualizationErrors = ResourceBundle.getBundle(Visualization.class.getPackageName() + VISUALIZATION_ERRORS);
+    myVisualizationErrors = ResourceBundle
+        .getBundle(Visualization.class.getPackageName() + VISUALIZATION_ERRORS);
 
     myRoot = new BorderPane();
     myGridGroup = new Group();
