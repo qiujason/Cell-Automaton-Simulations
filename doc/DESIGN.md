@@ -32,11 +32,14 @@ Jason Qiu - jq39
  
  * New Types of Grids - 
  
- * Additional Functional Buttons - 
+ * Additional Functional Buttons - To add a new button, the button would have to be added to each language
+                                    properties file, the `initializeButton()` method, and have its associated
+                                    function implemented in `ButtonHandler`
  
- * Colors/Styling -
+ * Colors/Styling - Adding a new GUI layout is as simple as creating a new css file in the stylesheets
+                    folder
  
- * Languages - 
+ * Languages - Languages are similarly easy to add, since they only require a property file to be implemented.
 
 ## High-level Design
 
@@ -63,9 +66,12 @@ Jason Qiu - jq39
  can't be instantiated because the specific neighborhood class has to pass in a 2D grid of booleans
  representing what neighbors it should keep track of. 
  
- * Visualization - 
+ * Visualization - This class is where the actual JavaFX application is run and where the GUI is initialized 
+ and displayed.  This class initializes buttons, styles, languages, and also handles rendering cells.
  
- * ButtonHandler - 
+ * ButtonHandler - The `ButtonHandler` holds all methods used by buttons.  While Visualization creates 
+ and displays the buttons, the methods in `ButtonHandler` are what actually perform the associated actions 
+ of each button.
  
 ## Assumptions that Affect the Design
 
