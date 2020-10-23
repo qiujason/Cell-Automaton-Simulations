@@ -22,9 +22,13 @@ Jason Qiu - jq39
 
 #### What Features are Easy to Add
 
- * New Simulations - 
+ * New Simulations - new simulations are very easy to add as they only require a csv file with a header 
+                    denoting the grid rows and columns and number values denoting the initial states of 
+                    each cell.
 
- * New Types of Simulations - 
+ * New Types of Simulations - new types of simulations are very easy to add as they only require a 
+                                new rules class and state class. Reflection will take care of the rest
+                                and instantiate the new simulation models via the name of the class
  
  * New Types of Grids - 
  
@@ -42,11 +46,22 @@ Jason Qiu - jq39
  
  * Grid (CSV/Probability/TotalLocation) - 
   
- * Cell (GameOfLife/Percolation/RPS/Segregation/SpreadingFire/Wator) - 
+ * Cell (GameOfLife/Percolation/RPS/Segregation/SpreadingFire/Wator) - the cell class is the core
+ abstract class by which cells are instantiated within the simulation. They store the values and
+ changes of states within each cell and support interactions with its neighbors. Specific simulation
+ cell class inherit the cell class and the specific rules for the simulation is implemented there.
  
- * Edge(Finite/InfiniteHorizontal/InfiniteVertical/Toroidal) - 
+ * Edge (Finite/InfiniteHorizontal/InfiniteVertical/Toroidal) - the edge class is the core abstract 
+ class by which cells determine its neighbors. The class is made specifically so that cells on the edge
+ can make decisions on what neighbors to include depending on the type of edge class. Edge classes inherit
+ this class to implement the specific decisions for that type of edge policy.
  
- * Neighborhood(Cardinal/Ordinal/Complete) - 
+ * Neighborhood(Cardinal/Ordinal/Complete) - the neighborhood is the core abstract class by which cells 
+ can keep track of its neighbors. The class is made so that cells create a grid of neighbors so that
+ it can easily access the states and interact with its neighbors. Neighbor classes inherit this class
+ to implement what type of neighbor policy to follow. The core class has no abstract methods but it
+ can't be instantiated because the specific neighborhood class has to pass in a 2D grid of booleans
+ representing what neighbors it should keep track of. 
  
  * Visualization - 
  
@@ -59,6 +74,9 @@ Jason Qiu - jq39
  * Users will have properties files and CSV files if they want to add in new simulations
 
  * Folders and files have to follow a certain formatting and naming (ex. GameOfLife/beacon.properties)
+    * The naming has to be consistent and follow case conventions exactly
+    * Reflection is used extensively throughout the project, so many files have to follow a specific
+    format (like simulation_name + Cell or neighbor_policy + Neighborhood for class names)
   
 ## Significant differences from Original Plan
 
@@ -81,4 +99,4 @@ put in properties files that contain the required keys and values corresponding 
 
 #### Other Features not yet Done
 
- * Different cell shapes
+ * Different grid location shapes (square, hexagonal, etc.)

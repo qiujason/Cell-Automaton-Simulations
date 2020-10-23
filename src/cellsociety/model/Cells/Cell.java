@@ -17,11 +17,18 @@ public abstract class Cell {
   protected Enum<?> nextState;
   protected Neighborhood myNeighbors;
 
+  /**
+   * initializes a superclass cell with state
+   * @param state enum that represents the current state of the cell
+   */
   public Cell(Enum<?> state) {
     myState = state;
     nextState = null;
   }
 
+  /**
+   *
+   */
   public void updateCell() {
     if (nextState != null) {
       myState = nextState;
