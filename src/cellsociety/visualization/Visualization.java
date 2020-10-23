@@ -29,6 +29,15 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+/**
+ * This class creates a simulation application and initializes the buttons, stylesheet, and language
+ * associated with it.  It also renders the cells associated with a simulation.
+ *
+ * The class is tied to ButtonHandler, since this class manages the visualization of buttons, while
+ * ButtonHandler manages the actual button functionality.
+ *
+ * @author Jack Ellwood
+ */
 public class Visualization extends Application {
 
   public static final String STYLESHEET_FOLDER = "visualization_resources/stylesheets/";
@@ -64,6 +73,11 @@ public class Visualization extends Application {
 
   private ButtonHandler myButtonHandler;
 
+  /**
+   * Starts the simulation application
+   *
+   * @param stage which the simulation is rendered in
+   */
   @Override
   public void start(Stage stage) {
     stage.setTitle(HEADER);
@@ -75,6 +89,15 @@ public class Visualization extends Application {
     myButtonHandler.initializeNewView();
   }
 
+  /**
+   * Initializes the scene, including setting up animations, creating the navigation pane, and using
+   * a stylesheet to format the GUI
+   *
+   * @param width initial width of the simulation window
+   * @param height initial height of the simulation window
+   * @param language initial language used for application
+   * @return the scene to display
+   */
   public Scene setupScene(double width, double height, String language) {
     myLanguageResources =
         ResourceBundle.getBundle(Visualization.class.getPackageName() + LANGUAGE_FOLDER + language);
@@ -292,14 +315,29 @@ public class Visualization extends Application {
     myGridStage.setScene(scene);
   }
 
+  /**
+   * Used to access the current animation (used by VisualizationTest to test some button functionality)
+   *
+   * @return the current animation
+   */
   public Timeline getAnimation() {
     return myAnimation;
   }
 
+  /**
+   * Gets the current ButtonHandler being used by the application (also used in VisualizationTest)
+   *
+   * @return the current ButtonHandler
+   */
   public ButtonHandler getButtonHandler() {
     return myButtonHandler;
   }
 
+  /**
+   * Main method that runs the application
+   *
+   * @param args command line arguments (none required)
+   */
   public static void main(String[] args) {
     launch(args);
   }

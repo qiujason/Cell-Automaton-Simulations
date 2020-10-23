@@ -22,6 +22,16 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+/**
+ * This class handles all methods associated with simulation buttons.  It depends on the Visualization
+ * class for some data and also stores instance variables associated with a given simulation.
+ *
+ * Use this class to add new buttons and functionality into the simulation.  To add a new button,
+ * make sure to add its associated method here, in the Visualization class, and in the language
+ * properties files.
+ *
+ * @author Jack Ellwood
+ */
 public class ButtonHandler {
 
   private final Timeline myAnimation;
@@ -34,6 +44,14 @@ public class ButtonHandler {
   private LineChart<Number, Number> mySimulationChart;
   private int myIterationCounter;
 
+  /**
+   * ButtonHandler constructor
+   *
+   * @param animation current animation used by simulation
+   * @param visualization associated visualization class
+   * @param languageResources language being used
+   * @param visualizationErrors exceptions to be thrown
+   */
   public ButtonHandler(Timeline animation, Visualization visualization,
       ResourceBundle languageResources, ResourceBundle visualizationErrors) {
     myAnimation = animation;
@@ -269,6 +287,11 @@ public class ButtonHandler {
     return myGrid;
   }
 
+  /**
+   * Used to access the current chart view of the simulation (used for testing)
+   *
+   * @return current simulation chart
+   */
   public LineChart<Number, Number> getSimulationChart() {
     return mySimulationChart;
   }
