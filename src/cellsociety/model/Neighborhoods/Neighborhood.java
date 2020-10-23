@@ -9,6 +9,12 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class instantiates a neighborhood class which stores all the neighbors of a specific cell.
+ * There are no abstract methods to implement but it can't be directly instantiated. Rather, subclasses
+ * store a 2D boolean array containing the active neighbors depending on the neighbor policy implemented.
+ * @author Jason Qiu and Hayden Lau
+ */
 public abstract class Neighborhood {
 
   private static final int NEIGHBORHOOD_LENGTH = 3; // size of row and col
@@ -19,6 +25,13 @@ public abstract class Neighborhood {
   private final int neighborhoodSize;
   private boolean[][] activeNeighbors;
 
+  /**
+   * instantiates a new neighborhood
+   * @param cell Cell representing the cell that the neighbors are surrounding
+   * @param grid Grid containing all cells
+   * @param edgePolicy String representing the type of edge to be implemented
+   * @param neighborhoodSize int representing the number of neighbors based on the neighborhood policy
+   */
   public Neighborhood(Cell cell, Grid grid, String edgePolicy,
       int neighborhoodSize) { // Builds a neighborhood for a given cell
     mainCell = cell;
@@ -58,6 +71,11 @@ public abstract class Neighborhood {
     return new int[]{-1, -1};
   }
 
+  /**
+   * returns the neighboring cells of a certain state
+   * @param state enum representing a simulation state
+   * @return list of neighboring cells that have the current state
+   */
   public List<Cell> getNeighborsWithState(Enum<?> state) {
     List<Cell> cells = new ArrayList<>();
     for (int r = 0; r < NEIGHBORHOOD_LENGTH; r++) {
@@ -74,15 +92,27 @@ public abstract class Neighborhood {
     return cells;
   }
 
+  /**
+   * gets number of active neighbors (size of neighborhood - null cells)
+   * @return int representing number of active neighbors
+   */
   public int getNumActiveNeighbors() {
     return neighborhoodSize - getNumberOfNullCells();
   }
 
-  // for testing purposes
+  /**
+   * testing purposes: returns the 2D array of the neighborhood
+   * @return 2D cell array representing the neighborhood
+   */
   public Cell[][] getMyCells() {
     return myCells;
   }
 
+  /**
+   * initializes active neighbors from subclass
+   * @param activeNeighbors boolean 2D array representing what neighbors are to be activated for the
+   *                        neighborhood policy
+   */
   protected void setActiveNeighbors(boolean[][] activeNeighbors) {
     this.activeNeighbors = activeNeighbors;
   }

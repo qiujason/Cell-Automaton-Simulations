@@ -4,6 +4,11 @@ import cellsociety.model.Cells.Cell;
 import java.util.Map;
 import java.util.Random;
 
+/**
+ * Cell class representing the Segregation simulation
+ *
+ * @author Jason Qiu
+ */
 public class SegregationCell extends Cell {
 
   private static final Random random = new Random();
@@ -15,12 +20,21 @@ public class SegregationCell extends Cell {
   private final double satisfiedThreshold;
   private SegregationStates satisfiedState;
 
+  /**
+   * instantiates a segregation cell
+   *
+   * @param state    enum representing the initial state of the cell
+   * @param optional map containing the optional parameters of the simulation
+   */
   public SegregationCell(Enum<?> state, Map optional) {
     super(state);
     this.satisfiedThreshold = Double.parseDouble((String) optional.get("satisfiedThreshold"));
     satisfiedState = SegregationStates.UNSATISFIED;
   }
 
+  /**
+   * describes the rules for getting the next state of the cell
+   */
   @Override
   public void setNewState() {
     if (myState != SegregationStates.EMPTY) {
@@ -42,6 +56,9 @@ public class SegregationCell extends Cell {
     }
   }
 
+  /**
+   * updates cell's next state depending on current state and amount of states available to satisfy
+   */
   @Override
   public void updateCell() {
     if (satisfiedState == SegregationStates.UNSATISFIED) {
@@ -55,22 +72,40 @@ public class SegregationCell extends Cell {
     }
   }
 
+  /**
+   * returns its satisfied state
+   * @return SegregationState representing its satisfaction with its current position
+   */
   public SegregationStates getSatisfiedState() {
     return satisfiedState;
   }
 
+  /**
+   * testing purposes: sets a random seed for the Random class
+   *
+   * @param seed long representing the seed
+   */
   public static void setRandomSeed(long seed) {
     random.setSeed(seed);
   }
 
+  /**
+   * testing purposes: resets static variable unsatisfied A
+   */
   public static void resetUnsatisfiedA() {
     unsatisfiedA = 0;
   }
 
+  /**
+   * testing purposes: resets static variable unsatisfied B
+   */
   public static void resetUnsatisfiedB() {
     unsatisfiedB = 0;
   }
 
+  /**
+   * testing purposes: resets static variable number of empty that can be moved
+   */
   public static void resetNumEmptyCanBeMoved() {
     numEmptyCanBeMoved = 0;
   }

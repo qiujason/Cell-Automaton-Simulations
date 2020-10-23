@@ -32,7 +32,7 @@ Jason Qiu - jq39
  * New Types of Simulations - new types of simulations are very easy to add as they only require a 
                                 new rules class and state class. Reflection will take care of the rest
                                 and instantiate the new simulation models via the name of the class.
-                                In the Opt ionalKey.properties file, the simulation type needs to be 
+                                In the OptionalKey.properties file, the simulation type needs to be 
                                 added along with a list of optional keys it should expect.
  
  * New Types of Grids - new types of grids can be added as simply as deciding on an apt name, writing in the new build2DArray 
@@ -56,7 +56,8 @@ Jason Qiu - jq39
  class that generates the Grid based on the properties file.
  
  * Grid (CSV/Probability/TotalLocation) - the Grid class is the core abstract class by which the grids
- are instantiated wtihin the simulation. It stores the various cells in a list of lists.
+ are instantiated wtihin the simulation. It stores the various cells in a list of lists. The grid instantiates
+ each cell as well and places them within its corresponding position within the grid.
   
  * Cell (GameOfLife/Percolation/RPS/Segregation/SpreadingFire/Wator) - the cell class is the core
  abstract class by which cells are instantiated within the simulation. They store the values and

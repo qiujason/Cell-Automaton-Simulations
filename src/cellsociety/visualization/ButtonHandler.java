@@ -23,9 +23,10 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
- * This class handles all methods associated with simulation buttons.  It depends on the Visualization
- * class for some data and also stores instance variables associated with a given simulation.
- *
+ * This class handles all methods associated with simulation buttons.  It depends on the
+ * Visualization class for some data and also stores instance variables associated with a given
+ * simulation.
+ * <p>
  * Use this class to add new buttons and functionality into the simulation.  To add a new button,
  * make sure to add its associated method here, in the Visualization class, and in the language
  * properties files.
@@ -47,9 +48,9 @@ public class ButtonHandler {
   /**
    * ButtonHandler constructor
    *
-   * @param animation current animation used by simulation
-   * @param visualization associated visualization class
-   * @param languageResources language being used
+   * @param animation           current animation used by simulation
+   * @param visualization       associated visualization class
+   * @param languageResources   language being used
    * @param visualizationErrors exceptions to be thrown
    */
   public ButtonHandler(Timeline animation, Visualization visualization,

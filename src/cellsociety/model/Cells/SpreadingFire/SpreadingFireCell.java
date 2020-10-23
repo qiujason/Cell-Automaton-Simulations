@@ -6,6 +6,7 @@ import java.util.Random;
 
 /**
  * Cell class representing the Wa-tor predator and prey simulation
+ *
  * @author Jason Qiu
  */
 public class SpreadingFireCell extends Cell {
@@ -15,15 +16,19 @@ public class SpreadingFireCell extends Cell {
   private final double catchFireProbability;
 
   /**
+   * instantiates a spreading fire cell
    *
-   * @param state
-   * @param optional
+   * @param state    enum representing the initial state of the cell
+   * @param optional map containing the optional parameters of the simulation
    */
   public SpreadingFireCell(Enum<?> state, Map optional) {
     super(state);
     catchFireProbability = Double.parseDouble((String) optional.get("probCatch"));
   }
 
+  /**
+   * describes the rules for getting the next state of the cell
+   */
   @Override
   public void setNewState() {
     if (myState == SpreadingFireStates.TREE) {
@@ -38,6 +43,11 @@ public class SpreadingFireCell extends Cell {
     }
   }
 
+  /**
+   * testing purposes: sets a random seed for the Random class
+   *
+   * @param seed long representing the seed
+   */
   public static void setRandomSeed(long seed) {
     random.setSeed(seed);
   }

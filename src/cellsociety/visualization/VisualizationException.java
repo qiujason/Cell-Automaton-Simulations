@@ -13,7 +13,7 @@ public class VisualizationException extends RuntimeException {
    *
    * @param message associated error message
    */
-  public VisualizationException(String message){
+  public VisualizationException(String message) {
     super(message);
   }
 

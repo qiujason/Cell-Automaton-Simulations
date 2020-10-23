@@ -32,7 +32,7 @@ import javafx.util.Duration;
 /**
  * This class creates a simulation application and initializes the buttons, stylesheet, and language
  * associated with it.  It also renders the cells associated with a simulation.
- *
+ * <p>
  * The class is tied to ButtonHandler, since this class manages the visualization of buttons, while
  * ButtonHandler manages the actual button functionality.
  *
@@ -93,8 +93,8 @@ public class Visualization extends Application {
    * Initializes the scene, including setting up animations, creating the navigation pane, and using
    * a stylesheet to format the GUI
    *
-   * @param width initial width of the simulation window
-   * @param height initial height of the simulation window
+   * @param width    initial width of the simulation window
+   * @param height   initial height of the simulation window
    * @param language initial language used for application
    * @return the scene to display
    */
@@ -317,7 +317,8 @@ public class Visualization extends Application {
   }
 
   /**
-   * Used to access the current animation (used by VisualizationTest to test some button functionality)
+   * Used to access the current animation (used by VisualizationTest to test some button
+   * functionality)
    *
    * @return the current animation
    */

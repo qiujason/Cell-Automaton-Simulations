@@ -7,6 +7,7 @@ import java.util.Random;
 
 /**
  * Cell class representing the Wa-tor predator and prey simulation
+ *
  * @author Jason Qiu
  */
 public class WatorCell extends Cell {
@@ -61,6 +62,7 @@ public class WatorCell extends Cell {
 
   /**
    * returns a random neighbor that is empty
+   *
    * @return WatorCell representing a random neighbor
    */
   protected WatorCell getRandomAdjacentEmptyCell() {
@@ -122,6 +124,7 @@ public class WatorCell extends Cell {
 
   /**
    * testing purposes: sets a random seed for the Random class
+   *
    * @param seed long representing the seed
    */
   public static void setRandomSeed(long seed) {
