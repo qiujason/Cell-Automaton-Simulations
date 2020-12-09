@@ -1,0 +1,10 @@
+.root {
+  -fx-background-color: blue;
+}
+
+.button {
+  -fx-font-size: 14 pt;
+  -fx-font-family: "Fantasy";
+  -fx-background-color: White;
+  -fx-text-fill: Black;
+}
